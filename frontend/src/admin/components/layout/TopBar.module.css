@@ -1,0 +1,90 @@
+.topbar {
+  height: var(--topbar-height);
+  background: rgba(10, 8, 2, 0.45);
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  border-bottom: 1px solid rgba(197, 160, 40, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-8);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.left { display: flex; align-items: center; gap: var(--space-4); }
+.pageTitle {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: #EDE8D8;
+  margin: 0;
+}
+
+/* ── Right side ──────────────────────────────────────────────────────────── */
+.right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.actions { display: flex; align-items: center; gap: var(--space-3); }
+
+/* User info */
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--gold-soft);
+  color: var(--ash-deep);
+  font-size: 13px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.userMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  line-height: 1;
+}
+.userName {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: #EDE8D8;
+  white-space: nowrap;
+}
+.userRole {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.50);
+  white-space: nowrap;
+}
+
+/* Logout button */
+.logoutBtn {
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-md);
+  color: rgba(255, 255, 255, 0.60);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+  flex-shrink: 0;
+}
+.logoutBtn:hover {
+  background: rgba(220, 38, 38, 0.20);
+  border-color: rgba(252, 165, 165, 0.40);
+  color: #fca5a5;
+}
+.logoutBtn svg { display: block; }
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .topbar { padding: 0 var(--space-4); }
+  .userMeta { display: none; }
+}

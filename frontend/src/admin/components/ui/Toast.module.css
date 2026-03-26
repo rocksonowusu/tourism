@@ -1,0 +1,69 @@
+/* ── Toast stack (fixed bottom-right) ───────────────────────────────────── */
+.stack {
+  position: fixed;
+  bottom: var(--space-5, 24px);
+  right: var(--space-5, 24px);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3, 10px);
+  pointer-events: none;
+  max-width: 360px;
+  width: calc(100vw - 48px);
+}
+
+/* ── Individual toast ────────────────────────────────────────────────────── */
+.toast {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3, 10px);
+  padding: 12px var(--space-4, 16px);
+  border-radius: var(--radius-md, 8px);
+  box-shadow: 0 4px 16px rgba(0,0,0,.14);
+  font-size: var(--text-sm, 13px);
+  font-weight: 500;
+  color: var(--white-pure, #fff);
+  pointer-events: all;
+  animation: slideIn 200ms ease;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(24px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+/* ── Type variants ───────────────────────────────────────────────────────── */
+.success { background: var(--green,  #10B981); }
+.error   { background: var(--red,    #EF4444); }
+.info    { background: var(--blue,   #3B82F6); }
+
+/* ── Icon ────────────────────────────────────────────────────────────────── */
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  opacity: .9;
+}
+.icon svg { display: block; }
+
+/* ── Message ─────────────────────────────────────────────────────────────── */
+.message { flex: 1; line-height: 1.4; }
+
+/* ── Close button ────────────────────────────────────────────────────────── */
+.close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  opacity: .7;
+  padding: 2px;
+  border-radius: 4px;
+  transition: opacity 150ms;
+  flex-shrink: 0;
+}
+.close:hover { opacity: 1; }
+.close svg { display: block; }

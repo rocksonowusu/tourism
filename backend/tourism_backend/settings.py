@@ -28,14 +28,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-
-
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-fallback-key-change-in-production')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['tourism-j3nz.onrender.com']
+ALLOWED_HOSTS = [
+    'tourism-j3nz.onrender.com',
+    'localhost',
+    '127.0.0.1',
+]
 
 
 # Application definition
@@ -47,12 +49,23 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Third-party
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
+    'corsheaders',
     'cloudinary_storage',
-    'cloudinary'
+    'cloudinary',
+    # Local apps
+    'app_health_check',
+    'tourism_events',
+    # Filtering
+    'django_filters',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',          # Must be before CommonMiddleware
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -123,13 +136,150 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.0/howto/static-files/
+# ---------------------------------------------------------------------------
+# Static files
+# ---------------------------------------------------------------------------
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'   # collectstatic output dir
+
+# Extra static dirs (optional, add more as needed)
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
+
+# ---------------------------------------------------------------------------
+# Media files (local development)
+# ---------------------------------------------------------------------------
+# In production, Cloudinary handles media uploads (configured below).
+# Locally, files land in BASE_DIR/media/ and are served by Django's dev server.
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+
+# ---------------------------------------------------------------------------
+# Cloudinary (used as DEFAULT_FILE_STORAGE in production / always)
+# ---------------------------------------------------------------------------
 
 cloudinary.config(
     cloud_name=os.getenv('CLOUD_NAME'),
     api_key=os.getenv('API_KEY'),
-    api_secret=os.getenv('API_SECRET')
+    api_secret=os.getenv('API_SECRET'),
 )
+
+# Use Cloudinary for all media uploads
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv('CLOUD_NAME'),
+    'API_KEY': os.getenv('API_KEY'),
+    'API_SECRET': os.getenv('API_SECRET'),
+    'MEDIA_TAG': 'tourism_media',            # tag added to every upload
+    'INVALID_VIDEO_ERROR_MESSAGE': 'Invalid video format.',
+    'EXCLUDE_DELETE_ORPHANED_MEDIA_PATHS': ('tourism/',),
+    'PREFIX': 'tourism',                     # folder prefix in Cloudinary
+}
+
+
+# ---------------------------------------------------------------------------
+# Django REST Framework
+# ---------------------------------------------------------------------------
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+    # ── Authentication ─────────────────────────────────────────────────────
+    # JWT Bearer tokens are primary; Session auth is kept so the
+    # Django admin / browsable API still work without extra steps.
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    # ── Default permission: public reads, writes need a valid token ────────
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+    # Global filter backends applied to every view
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ],
+    # Pagination — clients can override with ?page_size=N (max 100)
+    'DEFAULT_PAGINATION_CLASS': 'tourism_backend.pagination.StandardPagination',
+    'PAGE_SIZE': 10,
+}
+
+
+# ---------------------------------------------------------------------------
+# Simple JWT
+# ---------------------------------------------------------------------------
+from datetime import timedelta  # noqa: E402
+
+SIMPLE_JWT = {
+    # Access tokens expire after 1 day; refresh tokens last 30 days.
+    'ACCESS_TOKEN_LIFETIME':  timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
+
+    # Issue a new refresh token on every /token/refresh call
+    # (old one is blacklisted — requires token_blacklist app).
+    'ROTATE_REFRESH_TOKENS':  True,
+    'BLACKLIST_AFTER_ROTATION': True,
+
+    # Standard Bearer scheme used by all clients
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+
+    # Include the token type ("access" / "refresh") in the payload
+    'TOKEN_TYPE_CLAIM': 'token_type',
+
+    # Allow sliding-window tokens (optional, disabled by default)
+    'SLIDING_TOKEN_LIFETIME':         timedelta(days=1),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=30),
+
+    # Algorithm & keys
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+}
+
+
+# ---------------------------------------------------------------------------
+# CORS
+# ---------------------------------------------------------------------------
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+]
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+
+# ---------------------------------------------------------------------------
+# Default primary key
+# ---------------------------------------------------------------------------
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

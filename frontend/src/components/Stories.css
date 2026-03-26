@@ -1,0 +1,261 @@
+/* ══════════════════════════════════════════════════════════════
+   Stories — full-width carousel
+   ══════════════════════════════════════════════════════════════ */
+
+.stories {
+  padding: 88px 0 100px;
+  background: var(--white-off, #FAFAF7);
+  overflow: hidden;
+}
+
+/* ── Header ──────────────────────────────────────────────────── */
+.stories__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 44px;
+  gap: 16px;
+}
+.stories__eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--gold-warm, #E5B83C);
+  margin: 0 0 6px;
+}
+.stories__title {
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 800;
+  color: var(--ash-deep, #1A1508);
+  letter-spacing: -.02em;
+  margin: 0;
+}
+
+/* Arrow buttons */
+.stories__nav-btns {
+  display: flex;
+  gap: 10px;
+}
+.stories__nav-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.70);
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(10px) saturate(1.2);
+  -webkit-backdrop-filter: blur(10px) saturate(1.2);
+  color: var(--ash-deep, #1A1508);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background .2s, border-color .2s, transform .15s, box-shadow .2s;
+  flex-shrink: 0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.stories__nav-btn:hover {
+  background: var(--gold-warm, #E5B83C);
+  border-color: var(--gold-warm, #E5B83C);
+  color: var(--dark, #1A1508);
+  transform: scale(1.08);
+  box-shadow: 0 4px 14px rgba(197,160,40,0.25);
+}
+
+/* ── Carousel layout ─────────────────────────────────────────── */
+.stories__carousel {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+
+/* ── Image panel ─────────────────────────────────────────────── */
+.stories__img-wrap {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  aspect-ratio: 4/3;
+  background: var(--ash-pale, #E5E5E5);
+  box-shadow: 0 12px 40px rgba(0,0,0,.12);
+}
+
+.stories__img-inner {
+  position: absolute;
+  inset: 0;
+  will-change: transform, opacity;
+}
+.stories__img-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Active — fully visible */
+.stories__img--active {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  transition: opacity .52s ease, transform .52s ease;
+}
+
+/* Exit to left (going next) */
+.stories__img--exit-next {
+  opacity: 0;
+  transform: translateX(-6%) scale(.97);
+  transition: opacity .52s ease, transform .52s ease;
+}
+
+/* Exit to right (going prev) */
+.stories__img--exit-prev {
+  opacity: 0;
+  transform: translateX(6%) scale(.97);
+  transition: opacity .52s ease, transform .52s ease;
+}
+
+/* Category badge */
+.stories__cat {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  background: var(--gold-warm, #E5B83C);
+  color: var(--dark, #1A1508);
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 11px;
+  border-radius: 20px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  z-index: 2;
+}
+
+/* Progress bar */
+.stories__progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(0,0,0,.10);
+  z-index: 2;
+}
+.stories__progress-bar {
+  height: 100%;
+  background: var(--gold-warm, #E5B83C);
+  width: 0%;
+  animation: storiesProgress linear forwards;
+}
+@keyframes storiesProgress {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+/* ── Text panel ──────────────────────────────────────────────── */
+.stories__body {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  will-change: transform, opacity;
+}
+
+.stories__body--active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity .52s ease .06s, transform .52s ease .06s;
+}
+.stories__body--exit-next {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .52s ease, transform .52s ease;
+}
+.stories__body--exit-prev {
+  opacity: 0;
+  transform: translateY(-14px);
+  transition: opacity .52s ease, transform .52s ease;
+}
+
+.stories__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--ash-light, #888);
+}
+.stories__meta svg { color: var(--ash-light, #888); flex-shrink: 0; }
+.stories__dot { color: var(--ash-pale, #ccc); }
+
+.stories__slide-title {
+  font-size: clamp(20px, 2.4vw, 28px);
+  font-weight: 800;
+  color: var(--ash-deep, #1A1508);
+  line-height: 1.3;
+  letter-spacing: -.02em;
+  margin: 0;
+}
+
+.stories__slide-excerpt {
+  font-size: 14.5px;
+  color: var(--ash-medium, #5A5A5A);
+  line-height: 1.72;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.stories__read-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gold-rich, #C5A028);
+  text-decoration: none;
+  letter-spacing: .03em;
+  transition: gap .2s, color .2s;
+}
+.stories__read-link:hover {
+  color: var(--dark, #1A1508);
+  gap: 11px;
+}
+
+/* ── Dot nav ─────────────────────────────────────────────────── */
+.stories__dots {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 4px;
+}
+.stories__dot-btn {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(0,0,0,.18);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background .3s, width .3s, border-radius .3s, transform .2s;
+}
+.stories__dot-btn--active {
+  background: var(--gold-warm, #E5B83C);
+  width: 24px;
+  border-radius: 4px;
+  transform: none;
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .stories__carousel {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .stories__img-wrap { aspect-ratio: 16/9; }
+  .stories__slide-excerpt { -webkit-line-clamp: 3; line-clamp: 3; }
+}
+@media (max-width: 560px) {
+  .stories { padding: 60px 0 72px; }
+  .stories__header { flex-direction: column; align-items: flex-start; gap: 20px; }
+  .stories__slide-title { font-size: 20px; }
+}

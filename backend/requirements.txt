@@ -5,9 +5,13 @@ cloudinary==1.44.1
 Django==6.0.3
 django-cloudinary-storage==0.3.0
 django-cors-headers==4.9.0
+django-filter==25.2
 djangorestframework==3.17.1
+djangorestframework_simplejwt==5.5.1
+dotenv==0.9.9
 idna==3.11
 pillow==12.1.1
+PyJWT==2.12.1
 python-dotenv==1.2.2
 requests==2.32.5
 six==1.17.0

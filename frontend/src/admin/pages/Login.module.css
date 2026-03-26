@@ -1,0 +1,170 @@
+/* ── Full-bleed page ─────────────────────────────────────────── */
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  gap: 20px;
+  position: relative;
+  isolation: isolate;
+}
+
+/* Elephant background image + dark overlay */
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: url('https://images.unsplash.com/photo-1549366021-9f761d450615?w=1600&q=90');
+  background-size: cover;
+  background-position: center 40%;
+  background-repeat: no-repeat;
+}
+.bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(10, 8, 2, 0.78) 0%,
+    rgba(10, 8, 2, 0.62) 50%,
+    rgba(10, 8, 2, 0.70) 100%
+  );
+}
+
+/* ── Back link ───────────────────────────────────────────────── */
+.backLink {
+  position: fixed;
+  top: 22px;
+  left: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: color 0.2s, gap 0.2s;
+  z-index: 10;
+}
+.backLink:hover {
+  color: #fff;
+  gap: 10px;
+}
+.backLink svg {
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.backLink:hover svg {
+  transform: translateX(-2px);
+}
+
+/* ── Login card — frosted glass ──────────────────────────────── */
+.card {
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: var(--radius-xl, 16px);
+  padding: 38px 40px 36px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.35),
+    0 2px 0 rgba(255, 255, 255, 0.12) inset;
+  backdrop-filter: blur(22px) saturate(1.6);
+  -webkit-backdrop-filter: blur(22px) saturate(1.6);
+}
+
+/* ── Brand ───────────────────────────────────────────────────── */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.brandIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: var(--gold-rich, #C5A028);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
+}
+.brandName {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+}
+.brandName span { color: var(--gold-warm, #E5B83C); }
+.brandSub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
+  margin-top: 1px;
+}
+
+/* ── Headings ────────────────────────────────────────────────── */
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.sub {
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.60);
+  margin-bottom: 24px;
+}
+
+/* ── Form ────────────────────────────────────────────────────── */
+.form  { display: flex; flex-direction: column; gap: 18px; }
+
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(220, 38, 38, 0.20);
+  border: 1px solid rgba(220, 38, 38, 0.45);
+  border-radius: var(--radius-md, 8px);
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #fca5a5;
+}
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+.input {
+  height: 42px;
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--radius-md, 8px);
+  padding: 0 12px;
+  font-size: 14px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.10);
+  transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+  outline: none;
+  width: 100%;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.input::placeholder { color: rgba(255, 255, 255, 0.35); }
+.input:focus {
+  border-color: var(--gold-warm, #E5B83C);
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 0 0 3px rgba(229, 184, 60, 0.22);
+}
+
+/* ── Footer ──────────────────────────────────────────────────── */
+.footer {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+  text-align: center;
+}

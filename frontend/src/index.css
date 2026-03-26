@@ -1,0 +1,352 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* ── Gold palette (from admin tokens) ─────────────────────────────────── */
+  --gold-rich:    #C5A028;
+  --gold-soft:    #D4AF37;
+  --gold-warm:    #E5B83C;
+  --gold-antique: #B8860B;
+  --gold-pale:    #FBF3D5;
+  --gold-tint:    #FEF9E6;
+
+  /* ── Dark / neutral ──────────────────────────────────────────────────── */
+  --dark:         #1A1508;
+  --dark-mid:     #2C2410;
+  --ash-deep:     #2C2C2C;
+  --ash-medium:   #6B6B6B;
+  --ash-light:    #9CA3AF;
+  --ash-pale:     #E5E5E5;
+  --ash-soft:     #F3F4F6;
+  --white:        #FFFFFF;
+  --white-warm:   #FEF9E6;
+  --white-off:    #F9F7F2;
+
+  /* ── Accent ──────────────────────────────────────────────────────────── */
+  --accent:       #C5A028;   /* = gold-rich, used for CTA */
+  --accent-hover: #B8860B;
+  --red:          #EF4444;
+  --green:        #10B981;
+
+  /* ── Legacy aliases (used by older CSS files) ────────────────────────── */
+  --primary-color:   #C5A028;
+  --secondary-color: #B8860B;
+  --accent-color:    #E5B83C;
+  --dark-bg:         #1A1508;
+  --light-bg:        #F9F7F2;
+  --text-dark:       #1A1508;
+  --text-light:      #6B6B6B;
+  --border-color:    #E5E5E5;
+
+  /* ── Typography ──────────────────────────────────────────────────────── */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --text-xs:   11px;
+  --text-sm:   13px;
+  --text-base: 15px;
+  --text-md:   17px;
+  --text-lg:   20px;
+  --text-xl:   24px;
+  --text-2xl:  32px;
+  --text-3xl:  42px;
+  --text-4xl:  56px;
+
+  /* ── Spacing ─────────────────────────────────────────────────────────── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* ── Radius ──────────────────────────────────────────────────────────── */
+  --radius-sm:  4px;
+  --radius-md:  8px;
+  --radius-lg:  12px;
+  --radius-xl:  20px;
+  --radius-2xl: 28px;
+
+  /* ── Shadows ─────────────────────────────────────────────────────────── */
+  --shadow-sm: 0 1px 4px rgba(0,0,0,.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,.10);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,.14);
+  --shadow-gold: 0 4px 24px rgba(197,160,40,.22);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--ash-deep);
+  background: var(--white);
+  font-size: var(--text-base);
+  line-height: 1.6;
+}
+
+.app {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* ── Container ───────────────────────────────────────────────────────────── */
+.container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+button { cursor: pointer; border: none; font-family: var(--font-sans); transition: all .2s ease; }
+
+.btn-primary {
+  background: var(--gold-rich);
+  color: var(--white);
+  padding: 12px 28px;
+  border-radius: var(--radius-xl);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: .01em;
+  box-shadow: var(--shadow-gold);
+}
+.btn-primary:hover {
+  background: var(--gold-antique);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 28px rgba(197,160,40,.32);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--ash-deep);
+  padding: 12px 28px;
+  border-radius: var(--radius-xl);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  border: 1.5px solid var(--ash-pale);
+}
+.btn-secondary:hover {
+  border-color: var(--gold-soft);
+  color: var(--gold-rich);
+}
+
+.btn-outline-gold {
+  background: transparent;
+  color: var(--gold-rich);
+  padding: 11px 28px;
+  border-radius: var(--radius-xl);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  border: 1.5px solid var(--gold-soft);
+}
+.btn-outline-gold:hover {
+  background: var(--gold-pale);
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--ash-soft); }
+::-webkit-scrollbar-thumb { background: var(--gold-soft); border-radius: 4px; }
+
+/* ── Fade-in animation ───────────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-in { animation: fadeUp .5s ease both; }
+
+h1,h2,h3,h4,h5,h6 { font-weight: 700; line-height: 1.15; color: var(--ash-deep); }
+p { color: var(--ash-medium); line-height: 1.65; }
+a { text-decoration: none; color: inherit; }
+
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: var(--text-dark);
+  background-color: #ffffff;
+}
+
+.app {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--light-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4f46e5;
+}
+
+/* Smooth Scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Buttons */
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 12px 28px;
+}
+
+.btn-primary:hover {
+  background-color: #4f46e5;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+  padding: 10px 26px;
+}
+
+.btn-secondary:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+/* Text Utilities */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+p {
+  line-height: 1.6;
+  color: var(--text-light);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.6s ease-out;
+}
+
+.slide-in-right {
+  animation: slideInRight 0.6s ease-out;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Scroll-reveal system
+   Elements start hidden and animate in when they enter the viewport.
+   Apply .sr to a wrapper, .sr--child to each animatable child.
+   The hook adds .sr--visible when the element intersects.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Section / wrapper level — slides up + fades in */
+.sr {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.sr--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Individual child elements (staggered by JS) */
+.sr--child {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.sr--child.sr--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* From-left variant */
+.sr--left {
+  opacity: 0;
+  transform: translateX(-28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.sr--left.sr--visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* From-right variant */
+.sr--right {
+  opacity: 0;
+  transform: translateX(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.sr--right.sr--visible {
+  opacity: 1;
+  transform: translateX(0);
+}

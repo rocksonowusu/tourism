@@ -1,0 +1,13 @@
+.spinner {
+  display: inline-block;
+  border-radius: 50%;
+  border: 2px solid var(--ash-pale);
+  border-top-color: var(--gold-rich);
+  animation: spin 0.65s linear infinite;
+}
+.sm  { width: 16px; height: 16px; }
+.md  { width: 24px; height: 24px; }
+.lg  { width: 36px; height: 36px; border-width: 3px; }
+.xl  { width: 48px; height: 48px; border-width: 3px; }
+.center { display: flex; align-items: center; justify-content: center; padding: 40px; }
+@keyframes spin { to { transform: rotate(360deg); } }
