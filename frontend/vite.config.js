@@ -8,7 +8,7 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',
+        target: 'https://tourism-j3nz.onrender.com',
         changeOrigin: true,
         // No rewrite — Django expects the full /api/... path
       }
