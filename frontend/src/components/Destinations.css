@@ -81,8 +81,17 @@
   from { opacity: 0; transform: translateY(22px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+.dest__grid--animate .dest__card-link {
+  animation: destCardIn 0.42s ease both;
+}
 .dest__grid--animate .dest__card {
   animation: destCardIn 0.42s ease both;
+}
+
+.dest__card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
 }
 
 .dest__card {

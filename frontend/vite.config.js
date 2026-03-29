@@ -6,11 +6,12 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
+    // Dev-only proxy: forwards /api requests to local Django when VITE_API_URL
+    // is empty (i.e. during local development with `python manage.py runserver`)
     proxy: {
       '/api': {
-        target: 'https://tourism-j3nz.onrender.com',
+        target: 'http://localhost:8000',
         changeOrigin: true,
-        // No rewrite — Django expects the full /api/... path
       }
     }
   }

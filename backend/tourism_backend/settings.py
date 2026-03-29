@@ -251,9 +251,21 @@ SIMPLE_JWT = {
 # CORS
 # ---------------------------------------------------------------------------
 
+# Base origins that are always allowed
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     'http://127.0.0.1:3000',
+]
+
+# Add the production frontend URL from an environment variable
+# Set FRONTEND_URL on Render, e.g. https://tourism-xyz.vercel.app
+_frontend_url = os.getenv('FRONTEND_URL', '')
+if _frontend_url:
+    CORS_ALLOWED_ORIGINS.append(_frontend_url.rstrip('/'))
+
+# Also allow all *.vercel.app preview/production domains
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r'^https://.*\.vercel\.app$',
 ]
 
 CORS_ALLOW_METHODS = [

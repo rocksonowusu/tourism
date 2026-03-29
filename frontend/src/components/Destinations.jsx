@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import './Destinations.css'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 
@@ -256,6 +257,7 @@ export default function Destinations({ destinations = [], loading }) {
     const placeholders = PLACEHOLDER_POOL[i % PLACEHOLDER_POOL.length]
     return {
       id:       d.id,
+      slug:     d.slug,
       name:     d.name,
       location: d.location ?? '',
       region:   extractRegion(d.location),
@@ -321,7 +323,13 @@ export default function Destinations({ destinations = [], loading }) {
         ) : (
           <div key={gridKey} className="dest__grid dest__grid--animate">
             {displayItems.slice(0, 12).map((item, i) => (
-              <SiteCard key={item.id ?? i} item={item} delay={i * 0.05} />
+              <Link
+                key={item.id ?? i}
+                to={item.slug ? `/sites/${item.slug}` : '#'}
+                className="dest__card-link"
+              >
+                <SiteCard item={item} delay={i * 0.05} />
+              </Link>
             ))}
           </div>
         )}

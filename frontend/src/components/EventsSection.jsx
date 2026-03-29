@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import './EventsSection.css'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 
@@ -95,12 +96,13 @@ export default function EventsSection({ events = [], loading }) {
   const displayEvents = events.length
     ? events.map(e => ({
         id:          e.id,
+        slug:        e.slug,
         name:        e.name ?? e.title,
         date:        e.date ?? e.start_date,
         location:    e.location ?? '',
         description: e.description ?? '',
         category:    e.category ?? 'Event',
-        image:       e.image ?? e.featured_image ?? MOCK_EVENTS[0].image,
+        image:       e.media?.[0]?.file_url ?? e.image ?? e.featured_image ?? MOCK_EVENTS[0].image,
       }))
     : MOCK_EVENTS
 
@@ -136,6 +138,10 @@ export default function EventsSection({ events = [], loading }) {
 
             {/* Left: featured card */}
             {featured && (
+              <Link
+                to={featured.slug ? `/events/${featured.slug}` : '#'}
+                className="ev__featured-link"
+              >
               <article className="ev__featured fade-in">
                 <div className="ev__featured-img">
                   <img
@@ -174,22 +180,28 @@ export default function EventsSection({ events = [], loading }) {
                   {featured.description && (
                     <p className="ev__featured-desc">{featured.description}</p>
                   )}
-                  <button className="ev__featured-cta">
+                  <span className="ev__featured-cta">
                     Learn more <IconArrow />
-                  </button>
+                  </span>
                 </div>
               </article>
+              </Link>
             )}
 
             {/* Right: stacked event list */}
             <div className="ev__list sr" ref={listRef}>
               {sideEvents.map((event, i) => {
                 const d = formatDate(event.date)
+                const eventLink = event.slug ? `/events/${event.slug}` : '#'
                 return (
-                  <article
+                  <Link
                     key={event.id ?? i}
-                    className="ev__list-item fade-in sr--child"
+                    to={eventLink}
+                    className="ev__list-item-link"
                     style={{ animationDelay: `${(i + 1) * 0.08}s` }}
+                  >
+                  <article
+                    className="ev__list-item fade-in sr--child"
                   >
                     <div className="ev__list-thumb">
                       <img
@@ -214,6 +226,7 @@ export default function EventsSection({ events = [], loading }) {
                     </div>
                     <div className="ev__list-arrow"><IconArrow /></div>
                   </article>
+                  </Link>
                 )
               })}
             </div>

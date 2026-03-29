@@ -12,6 +12,10 @@ import Stories        from './components/Stories'
 import Newsletter     from './components/Newsletter'
 import Footer         from './components/Footer'
 
+// Detail pages
+import EventDetail from './pages/EventDetail'
+import SiteDetail  from './pages/SiteDetail'
+
 // Admin
 import { AuthProvider } from './admin/context/AuthContext'
 import { ToastProvider } from './admin/context/ToastContext'
@@ -104,6 +108,10 @@ export default function App() {
         <Routes>
           {/* Public site */}
           <Route path="/" element={<PublicSite />} />
+
+          {/* Detail pages */}
+          <Route path="/events/:slug" element={<EventDetail />} />
+          <Route path="/sites/:slug"  element={<SiteDetail />} />
 
           {/* Admin — standalone login */}
           <Route path="/admin/login" element={<Login />} />
