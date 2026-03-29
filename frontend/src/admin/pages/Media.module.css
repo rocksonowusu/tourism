@@ -171,3 +171,17 @@
 .deleteText  { flex: 1; }
 .deleteMsg   { font-size: var(--text-sm); font-weight: 600; color: #EDE8D8; margin: 0 0 6px; }
 .deleteHint  { font-size: var(--text-xs); color: rgba(237,232,216,0.55); line-height: 1.6; margin: 0; }
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .topRow { flex-direction: column; align-items: stretch; }
+  .filters { flex-wrap: wrap; }
+  .gallery { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-3); }
+  .row2 { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  .gallery { grid-template-columns: repeat(2, 1fr); }
+  .img, .videoThumb { height: 110px; }
+  .pagination { justify-content: center; }
+}

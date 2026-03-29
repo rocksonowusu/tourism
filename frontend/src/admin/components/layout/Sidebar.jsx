@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import styles from './Sidebar.module.css'
 
@@ -47,9 +47,10 @@ const NAV = [
   { to: '/admin/media',  label: 'Media',     Icon: IconImage                 },
 ]
 
-export default function Sidebar() {
+export default function Sidebar({ open, onClose }) {
   const { user, logout } = useAuth()
   const navigate         = useNavigate()
+  const location         = useLocation()
 
   const handleLogout = async () => {
     await logout()
@@ -57,7 +58,7 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className={styles.sidebar}>
+    <aside className={`${styles.sidebar} ${open ? styles.sidebarOpen : ''}`}>
       {/* Brand */}
       <div className={styles.brand}>
         <span className={styles.brandIcon}><IconBrand /></span>
@@ -75,6 +76,7 @@ export default function Sidebar() {
                 className={({ isActive }) =>
                   [styles.navLink, isActive ? styles.active : ''].join(' ')
                 }
+                onClick={() => onClose && onClose()}
               >
                 <span className={styles.navIcon}><Icon /></span>
                 <span className={styles.navLabel}>{label}</span>

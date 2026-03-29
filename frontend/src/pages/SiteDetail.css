@@ -548,11 +548,19 @@
 @media (max-width: 600px) {
   .std__hero {
     height: 45vh;
-    min-height: 300px;
+    min-height: 280px;
+  }
+
+  .std__hero-inner {
+    padding-bottom: 1.5rem;
   }
 
   .std__hero-title {
     font-size: 1.5rem;
+  }
+
+  .std__body {
+    padding: 1.5rem 0 2.5rem;
   }
 
   .std__gallery-grid {
@@ -567,6 +575,60 @@
     grid-template-columns: 1fr;
   }
 
+  .std__about,
+  .std__gallery,
+  .std__events {
+    margin-bottom: 1.5rem;
+  }
+
+  .std__hero-dots {
+    bottom: 1rem;
+    right: 1rem;
+  }
+
   .std__lb-prev { left: 0.5rem; }
   .std__lb-next { right: 0.5rem; }
+  .std__lb-prev,
+  .std__lb-next {
+    width: 36px;
+    height: 36px;
+  }
+  .std__lb-close {
+    width: 36px;
+    height: 36px;
+    top: 0.75rem;
+    right: 0.75rem;
+  }
+  .std__lb-img {
+    max-width: 96vw;
+    max-height: 80vh;
+    border-radius: var(--radius-sm, 6px);
+  }
+}
+
+@media (max-width: 400px) {
+  .std__hero {
+    min-height: 240px;
+  }
+
+  .std__hero-meta {
+    gap: 0.4rem;
+  }
+
+  .std__meta-chip {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
+  }
+
+  .std__gallery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .std__sidebar-card {
+    padding: 1rem;
+  }
+
+  .std__event-card-img {
+    height: 110px;
+  }
 }

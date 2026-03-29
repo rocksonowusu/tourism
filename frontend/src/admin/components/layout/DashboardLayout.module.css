@@ -48,3 +48,32 @@
   flex-direction: column;
   gap: var(--space-6);
 }
+
+/* ── Overlay (mobile only) ─────────────────────────────────────────────── */
+.overlay {
+  display: none;
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+  .content {
+    padding: var(--space-4);
+    gap: var(--space-4);
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: var(--space-3);
+    gap: var(--space-3);
+  }
+}

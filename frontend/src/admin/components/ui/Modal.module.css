@@ -43,3 +43,24 @@
 
 @keyframes fadeIn  { from { opacity: 0 } }
 @keyframes slideUp { from { transform: translateY(12px); opacity: 0 } }
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .overlay { padding: var(--space-3); align-items: flex-end; }
+  .dialog {
+    max-height: calc(100dvh - 24px);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+  .header { padding: var(--space-4); }
+  .body   { padding: var(--space-4); }
+  .footer { padding: var(--space-3) var(--space-4); }
+  .title  { font-size: var(--text-md); }
+}
+
+@media (max-width: 480px) {
+  .overlay { padding: 0; }
+  .dialog {
+    max-height: 100dvh;
+    border-radius: 0;
+  }
+}

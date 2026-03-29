@@ -83,8 +83,40 @@
 }
 .logoutBtn svg { display: block; }
 
+/* ── Hamburger button (hidden on desktop) ──────────────────────────────── */
+.menuBtn {
+  display: none;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid rgba(197, 160, 40, 0.25);
+  border-radius: var(--radius-md);
+  color: var(--gold-warm);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+.menuBtn:hover {
+  background: rgba(197, 160, 40, 0.12);
+  border-color: rgba(197, 160, 40, 0.4);
+}
+.menuBtn svg { display: block; }
+
 /* ── Responsive ──────────────────────────────────────────────────────────── */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  .menuBtn { display: flex; }
   .topbar { padding: 0 var(--space-4); }
+  .pageTitle { font-size: var(--text-md); }
+  .actions { display: none; }
+}
+
+@media (max-width: 640px) {
   .userMeta { display: none; }
+}
+
+@media (max-width: 480px) {
+  .topbar { padding: 0 var(--space-3); }
+  .pageTitle { font-size: var(--text-sm); }
 }
