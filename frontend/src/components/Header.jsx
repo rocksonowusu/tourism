@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import './Header.css'
 
 const IconMenu = () => (
@@ -34,21 +35,21 @@ export default function Header() {
       <div className="container header__inner">
 
         {/* Logo */}
-        <a href="/" className="header__logo">
+        <Link to="/" className="header__logo">
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
             <circle cx="12" cy="9" r="2.5"/>
           </svg>
           <span>Visit Ghana</span>
-        </a>
+        </Link>
 
         {/* Nav — center */}
         <nav className={`header__nav ${menuOpen ? 'header__nav--open' : ''}`}>
-          <a href="#destinations" className="header__link">Destinations</a>
-          <a href="#events"       className="header__link">Events</a>
-          <a href="#culture"      className="header__link">Culture</a>
-          <a href="#plan"         className="header__link">Plan Your Trip</a>
-          <a href="#contact"      className="header__link">Contact</a>
+          <Link to="/sites"  className="header__link" onClick={() => setMenuOpen(false)}>Destinations</Link>
+          <Link to="/events" className="header__link" onClick={() => setMenuOpen(false)}>Events</Link>
+          <a href="/#culture"      className="header__link" onClick={() => setMenuOpen(false)}>Culture</a>
+          <a href="/#plan"         className="header__link" onClick={() => setMenuOpen(false)}>Plan Your Trip</a>
+          <a href="/#contact"      className="header__link" onClick={() => setMenuOpen(false)}>Contact</a>
         </nav>
 
         {/* Right actions */}
@@ -56,7 +57,7 @@ export default function Header() {
           <button className="header__search-btn" aria-label="Search">
             <IconSearch />
           </button>
-          <a href="/admin/login" className="header__signin">Admin Login</a>
+          <Link to="/admin/login" className="header__signin">Admin Login</Link>
           <button
             className="header__burger"
             onClick={() => setMenuOpen(o => !o)}

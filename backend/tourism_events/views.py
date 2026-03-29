@@ -138,18 +138,41 @@ class EventViewSet(viewsets.ModelViewSet):
             parser_classes=[MultiPartParser, FormParser])
     def upload_media(self, request, pk=None):
         """
-        Upload one or more image/video files for an event.
+        Upload one or more image/video files for an event (max 5 total per event).
 
         Form fields:
-          file     – one or more files  (required)
+          file     – one or more files  (required, max 5 at a time)
           caption  – shared caption text (optional)
         """
+        MAX_MEDIA = 5
         event = self.get_object()
         files = request.FILES.getlist('file')
 
         if not files:
             return Response(
                 {'detail': 'No files provided. Send at least one file field.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if len(files) > MAX_MEDIA:
+            return Response(
+                {'detail': f'You can upload at most {MAX_MEDIA} files at a time.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        existing_count = event.media.count()
+        if existing_count >= MAX_MEDIA:
+            return Response(
+                {'detail': f'This event already has {existing_count} media files (max {MAX_MEDIA}). '
+                           'Delete some before uploading more.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        available_slots = MAX_MEDIA - existing_count
+        if len(files) > available_slots:
+            return Response(
+                {'detail': f'This event has {existing_count} media file(s). '
+                           f'You can only upload {available_slots} more (max {MAX_MEDIA} total).'},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -280,18 +303,41 @@ class TouristSiteViewSet(viewsets.ModelViewSet):
             parser_classes=[MultiPartParser, FormParser])
     def upload_media(self, request, pk=None):
         """
-        Upload one or more image/video files for a tourist site.
+        Upload one or more image/video files for a tourist site (max 5 total per site).
 
         Form fields:
-          file     – one or more files  (required)
+          file     – one or more files  (required, max 5 at a time)
           caption  – shared caption text (optional)
         """
+        MAX_MEDIA = 5
         site  = self.get_object()
         files = request.FILES.getlist('file')
 
         if not files:
             return Response(
                 {'detail': 'No files provided. Send at least one file field.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if len(files) > MAX_MEDIA:
+            return Response(
+                {'detail': f'You can upload at most {MAX_MEDIA} files at a time.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        existing_count = site.media.count()
+        if existing_count >= MAX_MEDIA:
+            return Response(
+                {'detail': f'This site already has {existing_count} media files (max {MAX_MEDIA}). '
+                           'Delete some before uploading more.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        available_slots = MAX_MEDIA - existing_count
+        if len(files) > available_slots:
+            return Response(
+                {'detail': f'This site has {existing_count} media file(s). '
+                           f'You can only upload {available_slots} more (max {MAX_MEDIA} total).'},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 

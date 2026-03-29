@@ -96,9 +96,18 @@ class Event(models.Model):
                       help_text='SEO-friendly URL identifier. Auto-generated from title.')
     description = models.TextField()
     location    = models.CharField(max_length=255)
+    latitude    = models.DecimalField(
+                      max_digits=9, decimal_places=6, null=True, blank=True,
+                      help_text='GPS latitude of the event venue.')
+    longitude   = models.DecimalField(
+                      max_digits=9, decimal_places=6, null=True, blank=True,
+                      help_text='GPS longitude of the event venue.')
     date        = models.DateTimeField(null=True, blank=True)
     price       = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     is_featured = models.BooleanField(default=False)
+    highlights  = models.JSONField(
+                      default=list, blank=True,
+                      help_text='List of package highlights / inclusions shown on the detail page.')
     created_at  = models.DateTimeField(auto_now_add=True)
     updated_at  = models.DateTimeField(auto_now=True)
 
@@ -149,6 +158,41 @@ class Event(models.Model):
         if self.date is None:
             return False
         return self.date >= timezone.now()
+
+    @property
+    def season_label(self) -> str:
+        """
+        Fun, human-friendly status label based on how far the event is
+        from today.  Returns a dict with `text`, `emoji`, and `tone`
+        (for frontend colour coding).
+        """
+        if self.date is None:
+            return 'date-tba'
+
+        now  = timezone.now()
+        diff = self.date - now
+        days = diff.total_seconds() / 86400      # fractional days
+
+        # ── Future events ────────────────────────────────────────
+        if days > 0:
+            hours = diff.total_seconds() / 3600
+            if hours <= 6:
+                return 'happening-now'       # within 6 hours
+            if days <= 3:
+                return 'almost-here'         # 1-3 days
+            if days <= 14:
+                return 'coming-soon'         # within 2 weeks
+            if days <= 60:
+                return 'mark-calendar'       # 2 weeks – 2 months
+            return 'on-the-horizon'          # 2+ months away
+
+        # ── Past events ──────────────────────────────────────────
+        past_days = abs(days)
+        if past_days <= 3:
+            return 'just-missed'             # ended 1-3 days ago
+        if past_days <= 30:
+            return 'recently-ended'          # last month
+        return 'throwback'                   # older than a month
 
     @property
     def media_count(self) -> int:

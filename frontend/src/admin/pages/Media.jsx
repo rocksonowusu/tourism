@@ -66,6 +66,7 @@ const IconChevRight = () => (
 )
 
 const TYPE_LABELS = { image: 'Image', video: 'Video' }
+const MAX_MEDIA = 5
 
 export default function Media() {
   const { addToast } = useToast()
@@ -82,14 +83,14 @@ export default function Media() {
   const [filterType,   setFilterType]   = useState('')
   const [filterParent, setFilterParent] = useState('')
 
-  const [uploadModal, setUploadModal] = useState(false)
-  const [uploadFile,  setUploadFile]  = useState(null)
-  const [uploadType,  setUploadType]  = useState('image')
-  const [uploadCapt,  setUploadCapt]  = useState('')
-  const [uploadSite,  setUploadSite]  = useState('')
-  const [uploadEvent, setUploadEvent] = useState('')
-  const [uploading,   setUploading]   = useState(false)
-  const [uploadErr,   setUploadErr]   = useState('')
+  const [uploadModal,  setUploadModal]  = useState(false)
+  const [uploadFiles,  setUploadFiles]  = useState([])   // array of File objects
+  const [uploadCapt,   setUploadCapt]   = useState('')
+  const [uploadSite,   setUploadSite]   = useState('')
+  const [uploadEvent,  setUploadEvent]  = useState('')
+  const [uploading,    setUploading]    = useState(false)
+  const [uploadErr,    setUploadErr]    = useState('')
+  const [parentMediaCount, setParentMediaCount] = useState(0)
 
   const [delItem,  setDelItem]  = useState(null)
   const [deleting, setDeleting] = useState(false)
@@ -123,26 +124,61 @@ export default function Media() {
 
   // ── Upload ────────────────────────────────────────────────────────────
   const openUpload = () => {
-    setUploadFile(null); setUploadType('image')
-    setUploadCapt(''); setUploadSite(''); setUploadEvent(''); setUploadErr('')
+    setUploadFiles([]); setUploadCapt(''); setUploadSite(''); setUploadEvent('')
+    setUploadErr(''); setParentMediaCount(0)
     setUploadModal(true)
   }
 
+  // Fetch existing media count when parent changes
+  const handleParentChange = async (id) => {
+    if (tab === 'events') setUploadEvent(id)
+    else                  setUploadSite(id)
+    if (!id) { setParentMediaCount(0); return }
+    try {
+      const fn = tab === 'events' ? api.events.detail : api.sites.detail
+      const data = await fn(Number(id))
+      setParentMediaCount(data?.media_count ?? data?.media?.length ?? 0)
+    } catch { setParentMediaCount(0) }
+  }
+
+  const availableSlots = MAX_MEDIA - parentMediaCount
+
+  const handleFilesSelected = (fileList) => {
+    const newFiles = Array.from(fileList)
+    setUploadFiles(prev => {
+      const combined = [...prev, ...newFiles]
+      if (combined.length > availableSlots) {
+        setUploadErr(`Only ${availableSlots} slot(s) remaining. You selected ${combined.length} file(s).`)
+        return combined.slice(0, Math.max(availableSlots, 0))
+      }
+      setUploadErr('')
+      return combined
+    })
+  }
+
+  const removeFile = (index) => {
+    setUploadFiles(prev => prev.filter((_, i) => i !== index))
+    setUploadErr('')
+  }
+
   const handleUpload = async () => {
-    if (!uploadFile) { setUploadErr('Please select a file.'); return }
+    if (uploadFiles.length === 0) { setUploadErr('Please select at least one file.'); return }
     const parentId = tab === 'events' ? uploadEvent : uploadSite
-    if (!parentId)  { setUploadErr(`Please select a ${tab === 'events' ? 'event' : 'site'}.`); return }
+    if (!parentId) { setUploadErr(`Please select a ${tab === 'events' ? 'event' : 'site'}.`); return }
+    if (uploadFiles.length > availableSlots) {
+      setUploadErr(`Only ${availableSlots} slot(s) remaining (max ${MAX_MEDIA} per ${tab === 'events' ? 'event' : 'site'}).`)
+      return
+    }
 
     const form = new FormData()
-    form.append('file', uploadFile)
-    form.append('media_type', uploadType)
+    uploadFiles.forEach(f => form.append('file', f))
     if (uploadCapt) form.append('caption', uploadCapt)
 
     setUploading(true); setUploadErr('')
     try {
       const fn = tab === 'events' ? api.events.upload : api.sites.upload
       await fn(Number(parentId), form)
-      addToast({ message: 'Media uploaded successfully.', type: 'success' })
+      addToast({ message: `${uploadFiles.length} file(s) uploaded successfully.`, type: 'success' })
       setUploadModal(false)
       load()
     } catch (e) {
@@ -277,12 +313,14 @@ export default function Media() {
         open={uploadModal}
         title={`Upload ${tab === 'events' ? 'Event' : 'Site'} Media`}
         onClose={() => setUploadModal(false)}
-        width={500}
+        width={560}
         footer={
           <div className={s.modalFooter}>
             {uploadErr && <span className={s.err}>{uploadErr}</span>}
             <Button variant="ghost"   size="sm" onClick={() => setUploadModal(false)} disabled={uploading}>Cancel</Button>
-            <Button variant="primary" size="sm" onClick={handleUpload} loading={uploading}>Upload</Button>
+            <Button variant="primary" size="sm" onClick={handleUpload} loading={uploading}>
+              Upload {uploadFiles.length > 0 ? `(${uploadFiles.length})` : ''}
+            </Button>
           </div>
         }
       >
@@ -295,40 +333,78 @@ export default function Media() {
               id="m-parent"
               className={s.input}
               value={tab === 'events' ? uploadEvent : uploadSite}
-              onChange={e => tab === 'events' ? setUploadEvent(e.target.value) : setUploadSite(e.target.value)}
+              onChange={e => handleParentChange(e.target.value)}
             >
               <option value="">— select —</option>
               {parents.map(p => <option key={p.id} value={p.id}>{p.title ?? p.name}</option>)}
             </select>
           </div>
 
+          {/* Slot indicator */}
+          {(uploadEvent || uploadSite) && (
+            <div className={s.slotBar}>
+              <span className={s.slotLabel}>
+                {parentMediaCount} / {MAX_MEDIA} media slots used
+              </span>
+              <div className={s.slotTrack}>
+                <div className={s.slotFill} style={{ width: `${(parentMediaCount / MAX_MEDIA) * 100}%` }} />
+              </div>
+              <span className={s.slotRemaining}>
+                {availableSlots > 0
+                  ? `${availableSlots} slot${availableSlots !== 1 ? 's' : ''} remaining`
+                  : 'No slots available — delete existing media first'}
+              </span>
+            </div>
+          )}
+
           <div className={s.formGroup}>
-            <label className={s.label} htmlFor="m-file">File <span className={s.req}>*</span></label>
-            <div className={s.fileWrap}>
+            <label className={s.label}>
+              Files <span className={s.req}>*</span>
+              <span className={s.labelHint}> (max {MAX_MEDIA} per {tab === 'events' ? 'event' : 'site'})</span>
+            </label>
+            <div className={`${s.fileWrap} ${availableSlots <= 0 ? s.fileWrapDisabled : ''}`}>
               <input
-                id="m-file"
                 type="file"
                 accept="image/*,video/*"
+                multiple
                 className={s.fileInput}
-                onChange={e => setUploadFile(e.target.files[0] ?? null)}
+                disabled={availableSlots <= 0}
+                onChange={e => { handleFilesSelected(e.target.files); e.target.value = '' }}
               />
-              {uploadFile
-                ? <span className={s.fileName}>{uploadFile.name}</span>
-                : <><IconUpload /><span className={s.filePlaceholder}>Click to browse or drag &amp; drop</span></>}
+              <IconUpload />
+              <span className={s.filePlaceholder}>
+                {availableSlots <= 0 ? 'Max files reached' : 'Click to browse or drag & drop (select up to ' + availableSlots + ')'}
+              </span>
             </div>
           </div>
 
-          <div className={s.formGroup}>
-            <label className={s.label} htmlFor="m-type">Media Type</label>
-            <select id="m-type" className={s.input} value={uploadType} onChange={e => setUploadType(e.target.value)}>
-              <option value="image">Image</option>
-              <option value="video">Video</option>
-            </select>
-          </div>
+          {/* File preview grid */}
+          {uploadFiles.length > 0 && (
+            <div className={s.previewGrid}>
+              {uploadFiles.map((file, idx) => (
+                <div key={`${file.name}-${idx}`} className={s.previewItem}>
+                  {file.type.startsWith('video/')
+                    ? <div className={s.previewVideoThumb}><IconPlayCircle /></div>
+                    : <img src={URL.createObjectURL(file)} alt={file.name} className={s.previewImg} />
+                  }
+                  <span className={s.previewName}>{file.name}</span>
+                  <button
+                    type="button"
+                    className={s.previewRemove}
+                    onClick={() => removeFile(idx)}
+                    title="Remove file"
+                    aria-label={`Remove ${file.name}`}
+                  >
+                    <IconTrash />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
 
           <div className={s.formGroup}>
             <label className={s.label} htmlFor="m-capt">Caption</label>
-            <input id="m-capt" className={s.input} value={uploadCapt} onChange={e => setUploadCapt(e.target.value)} placeholder="Optional caption" />
+            <input id="m-capt" className={s.input} value={uploadCapt} onChange={e => setUploadCapt(e.target.value)} placeholder="Optional caption (shared across all files)" />
           </div>
         </div>
       </Modal>

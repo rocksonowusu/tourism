@@ -1,11 +1,11 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    Events Section — editorial magazine layout
-   Dark rich background contrasting the white Destinations section
+   Light warm background — first section on homepage
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .ev-section {
   padding: 88px 0 104px;
-  background: #111009;
+  background: linear-gradient(180deg, #FAFAF7 0%, #F5F2EB 100%);
   position: relative;
   overflow: hidden;
 }
@@ -16,8 +16,8 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 80% 60% at 10% 40%, rgba(197,160,40,.07) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 50% at 90% 80%, rgba(197,160,40,.05) 0%, transparent 55%);
+    radial-gradient(ellipse 80% 60% at 10% 40%, rgba(197,160,40,.06) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 90% 80%, rgba(197,160,40,.04) 0%, transparent 55%);
   pointer-events: none;
 }
 
@@ -36,14 +36,14 @@
   font-weight: 700;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: var(--gold-warm, #E5B83C);
+  color: var(--gold-rich, #C5A028);
   margin: 0 0 7px;
 }
 
 .ev__title {
   font-size: clamp(24px, 3.2vw, 34px);
   font-weight: 800;
-  color: #fff;
+  color: var(--ash-deep, #1A1508);
   letter-spacing: -.025em;
   margin: 0;
 }
@@ -54,9 +54,9 @@
   gap: 7px;
   font-size: 13px;
   font-weight: 600;
-  color: var(--gold-warm, #E5B83C);
+  color: var(--gold-rich, #C5A028);
   text-decoration: none;
-  border: 1px solid rgba(229,184,60,.35);
+  border: 1px solid rgba(197,160,40,.35);
   padding: 8px 18px;
   border-radius: 50px;
   white-space: nowrap;
@@ -64,9 +64,9 @@
   position: relative;
 }
 .ev__view-all:hover {
-  background: var(--gold-warm, #E5B83C);
-  color: #111;
-  border-color: var(--gold-warm, #E5B83C);
+  background: var(--gold-rich, #C5A028);
+  color: #fff;
+  border-color: var(--gold-rich, #C5A028);
 }
 .ev__view-all svg { flex-shrink: 0; }
 
@@ -91,10 +91,17 @@
   border-radius: 20px;
   overflow: hidden;
   position: relative;
-  background: #1c1a10;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.07);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
   display: flex;
   flex-direction: column;
   height: 100%;
+  transition: transform .3s cubic-bezier(.22,.68,0,1.2), box-shadow .3s ease;
+}
+.ev__featured:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(197,160,40,.14), 0 4px 12px rgba(0,0,0,0.08);
 }
 
 .ev__featured-img {
@@ -176,7 +183,7 @@
 .ev__featured-name {
   font-size: clamp(18px, 2.2vw, 22px);
   font-weight: 800;
-  color: #fff;
+  color: var(--ash-deep, #1A1508);
   line-height: 1.25;
   margin: 0;
 }
@@ -191,14 +198,14 @@
   align-items: center;
   gap: 5px;
   font-size: 12px;
-  color: rgba(255,255,255,.55);
+  color: var(--ash-medium, #6B6B6B);
 }
-.ev__meta-item svg { color: var(--gold-warm, #E5B83C); flex-shrink: 0; }
+.ev__meta-item svg { color: var(--gold-rich, #C5A028); flex-shrink: 0; }
 
 .ev__featured-desc {
   font-size: 13.5px;
   line-height: 1.65;
-  color: rgba(255, 255, 255, .60);
+  color: var(--ash-medium, #6B6B6B);
   margin: 0;
   display: -webkit-box;
   -webkit-line-clamp: 3;
@@ -212,8 +219,8 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: var(--gold-warm, #E5B83C);
-  color: #111;
+  background: var(--gold-rich, #C5A028);
+  color: #fff;
   border: none;
   border-radius: 50px;
   padding: 10px 22px;
@@ -224,7 +231,7 @@
   align-self: flex-start;
   margin-top: auto;
 }
-.ev__featured-cta:hover { background: #f5d060; transform: translateY(-1px); }
+.ev__featured-cta:hover { background: #d4ac2e; transform: translateY(-1px); }
 
 /* ── Side event list (right) ─────────────────────────────────────────────── */
 .ev__list {
@@ -244,17 +251,19 @@
   gap: 14px;
   align-items: center;
   padding: 14px 16px;
-  background: rgba(255, 255, 255, .04);
-  border: 1px solid rgba(255, 255, 255, .06);
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 14px;
   cursor: pointer;
   transition: background .2s, border-color .2s, transform .2s;
   text-decoration: none;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 }
 .ev__list-item:hover {
-  background: rgba(229, 184, 60, .08);
-  border-color: rgba(229, 184, 60, .22);
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(197, 160, 40, .25);
   transform: translateX(4px);
+  box-shadow: 0 4px 16px rgba(197,160,40,.10);
 }
 
 /* Thumbnail + date overlay */
@@ -306,13 +315,13 @@
   font-weight: 700;
   letter-spacing: .07em;
   text-transform: uppercase;
-  color: var(--gold-warm, #E5B83C);
+  color: var(--gold-rich, #C5A028);
 }
 
 .ev__list-name {
   font-size: 14px;
   font-weight: 700;
-  color: #fff;
+  color: var(--ash-deep, #1A1508);
   line-height: 1.3;
   margin: 0;
   white-space: nowrap;
@@ -322,7 +331,7 @@
 
 .ev__list-loc {
   font-size: 11.5px;
-  color: rgba(255, 255, 255, .42);
+  color: var(--ash-medium, #6B6B6B);
   display: flex;
   align-items: center;
   gap: 4px;
@@ -331,18 +340,18 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.ev__list-loc svg { color: var(--gold-warm, #E5B83C); flex-shrink: 0; }
+.ev__list-loc svg { color: var(--gold-rich, #C5A028); flex-shrink: 0; }
 
 /* Arrow icon on right */
 .ev__list-arrow {
-  color: rgba(255,255,255,.20);
+  color: rgba(0,0,0,.18);
   display: flex;
   align-items: center;
   flex-shrink: 0;
   transition: color .2s, transform .2s;
 }
 .ev__list-item:hover .ev__list-arrow {
-  color: var(--gold-warm, #E5B83C);
+  color: var(--gold-rich, #C5A028);
   transform: translateX(3px);
 }
 
@@ -357,9 +366,9 @@
 .ev__skeleton {
   background: linear-gradient(
     90deg,
-    rgba(255,255,255,.04) 25%,
-    rgba(255,255,255,.09) 50%,
-    rgba(255,255,255,.04) 75%
+    var(--ash-soft, #F0ECE0) 25%,
+    var(--ash-pale, #E9E4D4) 50%,
+    var(--ash-soft, #F0ECE0) 75%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
@@ -372,6 +381,59 @@
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+
+/* ── Season badges (featured card) ────────────────────────────────────── */
+.ev__season {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  padding: 5px 13px;
+  border-radius: 20px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  backdrop-filter: blur(6px);
+}
+
+/* Tones */
+.ev__season--live    { background: #e63946; color: #fff; animation: pulse-badge 1.2s ease infinite; }
+.ev__season--hot     { background: #ff6b35; color: #fff; }
+.ev__season--warm    { background: #f4a226; color: #111; }
+.ev__season--plan    { background: rgba(229,184,60,.85); color: #111; }
+.ev__season--far     { background: rgba(100,149,237,.85); color: #fff; }
+.ev__season--missed  { background: rgba(220,60,60,.80); color: #fff; }
+.ev__season--past    { background: rgba(107,107,107,.14); color: #6B6B6B; }
+.ev__season--memory  { background: rgba(107,107,107,.10); color: #999; }
+.ev__season--tba     { background: rgba(107,107,107,.12); color: #6B6B6B; }
+
+@keyframes pulse-badge {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(230,57,70,.5); }
+  50%      { box-shadow: 0 0 0 6px rgba(230,57,70,0); }
+}
+
+/* Season labels in side list */
+.ev__list-season {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.ev__list-season--live    { color: #e63946; }
+.ev__list-season--hot     { color: #ff6b35; }
+.ev__list-season--warm    { color: #f4a226; }
+.ev__list-season--plan    { color: var(--gold-warm, #E5B83C); }
+.ev__list-season--far     { color: #6495ed; }
+.ev__list-season--missed  { color: #ff6b6b; }
+.ev__list-season--past    { color: #999; }
+.ev__list-season--memory  { color: #aaa; }
+.ev__list-season--tba     { color: #999; }
 
 /* ── Entry animation ─────────────────────────────────────────────────────── */
 @keyframes fadeInUp {

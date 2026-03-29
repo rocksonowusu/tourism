@@ -93,6 +93,7 @@ class EventSerializer(serializers.ModelSerializer):
     is_past       = serializers.BooleanField(read_only=True)
     is_upcoming   = serializers.BooleanField(read_only=True)
     media_count   = serializers.IntegerField(read_only=True)
+    season_label  = serializers.CharField(read_only=True)
 
     class Meta:
         model  = Event
@@ -102,11 +103,15 @@ class EventSerializer(serializers.ModelSerializer):
             'slug',
             'description',
             'location',
+            'latitude',
+            'longitude',
             'date',
             'price',
             'is_featured',
+            'highlights',
             'is_past',
             'is_upcoming',
+            'season_label',
             'tourist_site',
             'tourist_site_id',
             'media_count',
@@ -114,7 +119,7 @@ class EventSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at',
         )
-        read_only_fields = ('id', 'slug', 'is_past', 'is_upcoming',
+        read_only_fields = ('id', 'slug', 'is_past', 'is_upcoming', 'season_label',
                             'media_count', 'created_at', 'updated_at')
 
 
@@ -127,6 +132,7 @@ class EventListSerializer(serializers.ModelSerializer):
     is_past      = serializers.BooleanField(read_only=True)
     is_upcoming  = serializers.BooleanField(read_only=True)
     media_count  = serializers.IntegerField(read_only=True)
+    season_label = serializers.CharField(read_only=True)
 
     class Meta:
         model  = Event
@@ -135,11 +141,15 @@ class EventListSerializer(serializers.ModelSerializer):
             'title',
             'slug',
             'location',
+            'latitude',
+            'longitude',
             'date',
             'price',
             'is_featured',
+            'highlights',
             'is_past',
             'is_upcoming',
+            'season_label',
             'tourist_site',
             'media_count',
             'created_at',

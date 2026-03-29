@@ -58,9 +58,110 @@ const IconChevRight = () => (
     <polyline points="9 18 15 12 9 6"/>
   </svg>
 )
+const IconCheck = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="20 6 9 17 4 12"/>
+  </svg>
+)
+const IconStar = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--gold-rich, #C5A028)" stroke="var(--gold-rich, #C5A028)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+  </svg>
+)
+const IconNavigation = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+  </svg>
+)
+// ── Season badge icons ────────────────────────────────────────────────
+const IconZap = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+  </svg>
+)
+const IconFlame = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 22c-4.97 0-9-2.69-9-6 0-4 5-11 9-14 4 3 9 10 9 14 0 3.31-4.03 6-9 6z"/>
+    <path d="M12 22c-1.66 0-3-1.12-3-2.5S10.34 14 12 14s3 4 3 5.5S13.66 22 12 22z"/>
+  </svg>
+)
+const IconHourglass = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/>
+    <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/>
+  </svg>
+)
+const IconCalendarPlus = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+    <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+    <line x1="12" y1="14" x2="12" y2="18"/><line x1="10" y1="16" x2="14" y2="16"/>
+  </svg>
+)
+const IconSunrise = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17 18a5 5 0 0 0-10 0"/><line x1="12" y1="2" x2="12" y2="9"/>
+    <line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/><line x1="1" y1="18" x2="3" y2="18"/>
+    <line x1="21" y1="18" x2="23" y2="18"/><line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/>
+    <line x1="23" y1="22" x2="1" y2="22"/><polyline points="8 6 12 2 16 6"/>
+  </svg>
+)
+const IconWind = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/>
+  </svg>
+)
+const IconCamera = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+    <circle cx="12" cy="13" r="4"/>
+  </svg>
+)
+const IconRewind = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="11 19 2 12 11 5 11 19"/><polygon points="22 19 13 12 22 5 22 19"/>
+  </svg>
+)
+const IconPinTack = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V17z"/>
+  </svg>
+)
+// ── Extra section icons ───────────────────────────────────────────────
+const IconGift = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/>
+    <line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
+    <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
+  </svg>
+)
+const IconSparkles = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 3l1.912 5.813L20 12l-6.088 3.187L12 21l-1.912-5.813L4 12l6.088-3.187L12 3z"/>
+    <path d="M20 3l.75 2.25L23 6l-2.25.75L20 9l-.75-2.25L17 6l2.25-.75L20 3z"/>
+  </svg>
+)
+const IconMessageCircle = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+  </svg>
+)
 
 // Fallback hero images
 const FALLBACK_HERO = 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=1400&q=85'
+
+// ── Season label map ──────────────────────────────────────────────────
+const SEASON_MAP = {
+  'happening-now':   { icon: <IconZap />,          text: 'Happening Now!',     tone: 'live'    },
+  'almost-here':     { icon: <IconFlame />,        text: 'Almost Here!',       tone: 'hot'     },
+  'coming-soon':     { icon: <IconHourglass />,    text: 'Coming Soon',        tone: 'warm'    },
+  'mark-calendar':   { icon: <IconCalendarPlus />, text: 'Mark Your Calendar', tone: 'plan'    },
+  'on-the-horizon':  { icon: <IconSunrise />,      text: 'On the Horizon',     tone: 'far'     },
+  'just-missed':     { icon: <IconWind />,         text: 'You Just Missed It!',tone: 'missed'  },
+  'recently-ended':  { icon: <IconCamera />,       text: 'Recently Ended',     tone: 'past'    },
+  'throwback':       { icon: <IconRewind />,       text: 'Throwback',          tone: 'memory'  },
+  'date-tba':        { icon: <IconPinTack />,      text: 'Date TBA',           tone: 'tba'     },
+}
 
 // ── helpers ───────────────────────────────────────────────────────────────
 function fmtDate(d) {
@@ -97,6 +198,18 @@ export default function EventDetail() {
   const [loading, setLoading]         = useState(true)
   const [error, setError]             = useState(null)
   const [lightboxIdx, setLightboxIdx] = useState(null)
+  const [userLoc, setUserLoc]         = useState(null)  // { lat, lng }
+
+  // Request user's geolocation on mount
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        pos => setUserLoc({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+        () => setUserLoc(null),
+        { enableHighAccuracy: false, timeout: 8000 }
+      )
+    }
+  }, [])
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -152,6 +265,17 @@ export default function EventDetail() {
   const countdown = timeUntil(event.date)
   const isUpcoming = event.is_upcoming
   const site = event.tourist_site
+  const highlights = event.highlights ?? []
+  const hasCoords = event.latitude && event.longitude
+
+  // Build Google Maps directions URL
+  const mapsDirectionsUrl = hasCoords
+    ? `https://www.google.com/maps/dir/?api=1&destination=${event.latitude},${event.longitude}${userLoc ? `&origin=${userLoc.lat},${userLoc.lng}` : ''}&travelmode=driving`
+    : null
+  // Embeddable map URL (no API key required for basic embed)
+  const mapsEmbedUrl = hasCoords
+    ? `https://www.google.com/maps?q=${event.latitude},${event.longitude}&z=14&output=embed`
+    : null
 
   return (
     <div className="app">
@@ -173,7 +297,12 @@ export default function EventDetail() {
                 <IconClock /> {countdown}
               </span>
             )}
-            {event.is_featured && <span className="evd__featured-badge">★ Featured</span>}
+            {!isUpcoming && event.season_label && SEASON_MAP[event.season_label] && (
+              <span className={`evd__countdown evd__countdown--${SEASON_MAP[event.season_label].tone}`}>
+                {SEASON_MAP[event.season_label].icon} {SEASON_MAP[event.season_label].text}
+              </span>
+            )}
+            {event.is_featured && <span className="evd__featured-badge"><IconStar /> Featured</span>}
             <h1 className="evd__hero-title">{event.title}</h1>
             <div className="evd__hero-meta">
               {event.date && (
@@ -214,16 +343,12 @@ export default function EventDetail() {
                 <span className="evd__info-label">Price</span>
                 <span className="evd__info-value evd__price">{fmtPrice(event.price)}</span>
               </div>
-              {isUpcoming && (
+              {event.season_label && SEASON_MAP[event.season_label] && (
                 <div className="evd__info-item">
                   <span className="evd__info-label">Status</span>
-                  <span className="evd__status evd__status--upcoming">Upcoming</span>
-                </div>
-              )}
-              {event.is_past && (
-                <div className="evd__info-item">
-                  <span className="evd__info-label">Status</span>
-                  <span className="evd__status evd__status--past">Past Event</span>
+                  <span className={`evd__status evd__status--${SEASON_MAP[event.season_label].tone}`}>
+                    {SEASON_MAP[event.season_label].icon} {SEASON_MAP[event.season_label].text}
+                  </span>
                 </div>
               )}
             </div>
@@ -270,6 +395,102 @@ export default function EventDetail() {
                       {m.caption && <span className="evd__gallery-caption">{m.caption}</span>}
                     </div>
                   ))}
+                </div>
+              </div>
+            )}
+
+            {/* ── What's Included ──────────────────────────────────── */}
+            {highlights.length > 0 && (
+              <div className="evd__inclusions">
+                <h2 className="evd__section-title"><IconGift /> What's Included When You Book</h2>
+                <div className="evd__inclusions-grid">
+                  {highlights.map((item, i) => (
+                    <div key={i} className="evd__inclusion-item">
+                      <span className="evd__inclusion-icon"><IconCheck /></span>
+                      <span className="evd__inclusion-text">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ── Getting There – Google Maps ──────────────────────── */}
+            {hasCoords && (
+              <div className="evd__map-section">
+                <h2 className="evd__section-title"><IconMapPin /> Getting There</h2>
+                <p className="evd__map-subtitle">
+                  {userLoc
+                    ? 'We detected your location — see the directions below!'
+                    : 'Allow location access for personalised directions from where you are.'}
+                </p>
+                <div className="evd__map-container">
+                  <iframe
+                    title={`Map to ${event.title}`}
+                    src={mapsEmbedUrl}
+                    width="100%"
+                    height="350"
+                    style={{ border: 0, borderRadius: '16px' }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </div>
+                <div className="evd__map-actions">
+                  <a
+                    href={mapsDirectionsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="evd__directions-btn"
+                  >
+                    <IconNavigation /> {userLoc ? 'Get Directions from My Location' : 'Get Directions'}
+                  </a>
+                  {userLoc && (
+                    <span className="evd__location-note">
+                      <IconMapPin /> Your location detected
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* ── Why Book With Us ─────────────────────────────────── */}
+            {isUpcoming && (
+              <div className="evd__why-book">
+                <div className="evd__why-book-inner">
+                  <div className="evd__why-book-content">
+                    <h2 className="evd__why-book-title">
+                      <IconSparkles /> Why Experience This With Us?
+                    </h2>
+                    <p className="evd__why-book-desc">
+                      Don't just attend — immerse yourself. When you book with us, we handle
+                      the logistics so you can focus on making memories.
+                    </p>
+                    <ul className="evd__why-book-perks">
+                      <li><IconCheck /> <span>Hassle-free transport to & from the venue</span></li>
+                      <li><IconCheck /> <span>Local expert guide who knows every hidden gem</span></li>
+                      <li><IconCheck /> <span>Guaranteed best-value pricing — no hidden fees</span></li>
+                      <li><IconCheck /> <span>Small groups for a personal, authentic experience</span></li>
+                      <li><IconStar /> <span>4.9 average rating from 200+ happy travellers</span></li>
+                    </ul>
+                  </div>
+                  <div className="evd__why-book-cta-wrap">
+                    <div className="evd__why-book-price-card">
+                      <span className="evd__why-book-price-label">Starting from</span>
+                      <span className="evd__why-book-price">{fmtPrice(event.price)}</span>
+                      <span className="evd__why-book-price-note">per person</span>
+                    </div>
+                    <a
+                      href={`https://wa.me/233XXXXXXXXX?text=${encodeURIComponent(`Hi! I'd like to book the "${event.title}" event (${fmtDate(event.date)}). Please send me more details.`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="evd__book-btn"
+                    >
+                      Book This Experience
+                    </a>
+                    <p className="evd__book-note">
+                      <IconMessageCircle /> Or message us on WhatsApp for group discounts
+                    </p>
+                  </div>
                 </div>
               </div>
             )}

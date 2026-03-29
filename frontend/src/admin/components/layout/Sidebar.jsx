@@ -43,7 +43,7 @@ const IconBrand = () => (
 const NAV = [
   { to: '/admin',        label: 'Dashboard', Icon: IconGrid,     exact: true },
   { to: '/admin/events', label: 'Events',    Icon: IconCalendar              },
-  { to: '/admin/sites',  label: 'Sites',     Icon: IconMapPin                },
+  { to: '/admin/sites',  label: 'Tourist Sites',     Icon: IconMapPin                },
   { to: '/admin/media',  label: 'Media',     Icon: IconImage                 },
 ]
 

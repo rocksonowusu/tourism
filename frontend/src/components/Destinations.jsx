@@ -297,9 +297,9 @@ export default function Destinations({ destinations = [], loading }) {
             <p className="dest__eyebrow">Explore Ghana</p>
             <h2 className="dest__title">Top Tourist Sites</h2>
           </div>
-          <a href="#destinations" className="dest__view-all btn-outline-gold">
+          <Link to="/sites" className="dest__view-all">
             View all sites <IconArrowRight />
-          </a>
+          </Link>
         </div>
 
         {/* Filter tabs — built from live data */}

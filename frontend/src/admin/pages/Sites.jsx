@@ -55,6 +55,25 @@ const IconMapPin = () => (
     <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
   </svg>
 )
+const IconUpload = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/>
+    <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
+  </svg>
+)
+const IconPlay = () => (
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/>
+  </svg>
+)
+const IconX = () => (
+  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+  </svg>
+)
+
+const MAX_MEDIA = 5
 
 const EMPTY_FORM = {
   name: '', description: '', location: '', is_featured: false,
@@ -78,6 +97,11 @@ export default function Sites() {
   const [saving,  setSaving]  = useState(false)
   const [formErr, setFormErr] = useState('')
 
+  // Media upload state
+  const [mediaFiles,      setMediaFiles]      = useState([])   // File objects to upload
+  const [existingMedia,   setExistingMedia]    = useState([])   // already uploaded media
+  const [mediaUploading,  setMediaUploading]   = useState(false)
+
   // ── Data ──────────────────────────────────────────────────────────────
   const load = useCallback(async () => {
     setLoading(true)
@@ -96,27 +120,88 @@ export default function Sites() {
   useEffect(() => { setPage(1) }, [search, filterFeat])
 
   // ── Form helpers ──────────────────────────────────────────────────────
-  const openCreate = () => { setEditing(null); setForm(EMPTY_FORM); setFormErr(''); setModal('create') }
-  const openEdit   = (st) => {
+  const openCreate = () => { setEditing(null); setForm(EMPTY_FORM); setFormErr(''); setMediaFiles([]); setExistingMedia([]); setModal('create') }
+  const openEdit   = async (st) => {
     setEditing(st)
     setForm({ name: st.name ?? '', description: st.description ?? '', location: st.location ?? '', is_featured: st.is_featured ?? false })
-    setFormErr('')
+    setFormErr(''); setMediaFiles([])
+    // Fetch existing media for this site
+    try {
+      const detail = await api.sites.detail(st.id)
+      setExistingMedia(detail?.media ?? [])
+    } catch { setExistingMedia([]) }
     setModal('edit')
   }
   const openDelete = (st) => { setEditing(st); setFormErr(''); setModal('delete') }
-  const closeModal = () => { setModal(null); setEditing(null) }
+  const closeModal = () => { setModal(null); setEditing(null); setMediaFiles([]); setExistingMedia([]) }
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
     setForm(f => ({ ...f, [name]: type === 'checkbox' ? checked : value }))
   }
 
+  // Media helpers
+  const totalMediaCount = existingMedia.length + mediaFiles.length
+  const availableSlots  = MAX_MEDIA - existingMedia.length
+
+  const handleMediaFiles = (fileList) => {
+    const newFiles = Array.from(fileList)
+    setMediaFiles(prev => {
+      const combined = [...prev, ...newFiles]
+      const maxNew = Math.max(availableSlots - prev.length, 0)
+      if (combined.length > availableSlots) {
+        setFormErr(`Only ${availableSlots} slot(s) remaining for media.`)
+        return combined.slice(0, Math.max(availableSlots, 0))
+      }
+      setFormErr('')
+      return combined
+    })
+  }
+
+  const removeNewFile = (idx) => {
+    setMediaFiles(prev => prev.filter((_, i) => i !== idx))
+    setFormErr('')
+  }
+
+  const deleteExistingMedia = async (mediaId) => {
+    try {
+      await api.siteMedia.delete(mediaId)
+      setExistingMedia(prev => prev.filter(m => m.id !== mediaId))
+      addToast({ message: 'Media deleted.', type: 'success' })
+    } catch (e) {
+      addToast({ message: e?.message ?? 'Failed to delete media.', type: 'error' })
+    }
+  }
+
   const handleSave = async () => {
     if (!form.name.trim()) { setFormErr('Name is required.'); return }
     setSaving(true); setFormErr('')
     try {
-      if (modal === 'create') await api.sites.create(form)
-      else                    await api.sites.update(editing.id, form)
+      let siteId
+      if (modal === 'create') {
+        const created = await api.sites.create(form)
+        siteId = created.id
+      } else {
+        await api.sites.update(editing.id, form)
+        siteId = editing.id
+      }
+
+      // Upload new media files if any
+      if (mediaFiles.length > 0 && siteId) {
+        setMediaUploading(true)
+        const fd = new FormData()
+        mediaFiles.forEach(f => fd.append('file', f))
+        try {
+          await api.sites.upload(siteId, fd)
+        } catch (uploadErr) {
+          addToast({
+            message: uploadErr?.data?.detail ?? `Site saved but media upload failed: ${uploadErr?.message}`,
+            type: 'warning'
+          })
+        }
+        setMediaUploading(false)
+      }
+
       addToast({ message: modal === 'create' ? 'Site created.' : 'Site updated.', type: 'success' })
       closeModal(); load()
     } catch (e) {
@@ -250,12 +335,12 @@ export default function Sites() {
         open={modal === 'create' || modal === 'edit'}
         title={modal === 'create' ? 'New Tourist Site' : 'Edit Site'}
         onClose={closeModal}
-        width={500}
+        width={560}
         footer={
           <div className={s.modalFooter}>
             {formErr && <span className={s.err}>{formErr}</span>}
-            <Button variant="ghost"   size="sm" onClick={closeModal}  disabled={saving}>Cancel</Button>
-            <Button variant="primary" size="sm" onClick={handleSave}  loading={saving}>
+            <Button variant="ghost"   size="sm" onClick={closeModal}  disabled={saving || mediaUploading}>Cancel</Button>
+            <Button variant="primary" size="sm" onClick={handleSave}  loading={saving || mediaUploading}>
               {modal === 'create' ? 'Create Site' : 'Save Changes'}
             </Button>
           </div>
@@ -278,6 +363,75 @@ export default function Sites() {
             <input type="checkbox" name="is_featured" checked={form.is_featured} onChange={handleChange} />
             <span>Mark as featured</span>
           </label>
+
+          {/* ── Media section ──────────────────────────────────────── */}
+          <div className={s.mediaDivider}>
+            <span className={s.mediaDividerText}>Media ({existingMedia.length + mediaFiles.length} / {MAX_MEDIA})</span>
+          </div>
+
+          {/* Existing media thumbnails (edit mode) */}
+          {existingMedia.length > 0 && (
+            <div className={s.previewGrid}>
+              {existingMedia.map(m => (
+                <div key={m.id} className={s.previewItem}>
+                  {m.media_type === 'video'
+                    ? <div className={s.previewVideoThumb}><IconPlay /></div>
+                    : <img src={m.file_url} alt={m.caption ?? ''} className={s.previewImg} />
+                  }
+                  <button
+                    type="button"
+                    className={s.previewRemove}
+                    onClick={() => deleteExistingMedia(m.id)}
+                    title="Delete media"
+                    aria-label="Delete media"
+                  >
+                    <IconX />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* New file previews */}
+          {mediaFiles.length > 0 && (
+            <div className={s.previewGrid}>
+              {mediaFiles.map((file, idx) => (
+                <div key={`new-${idx}`} className={`${s.previewItem} ${s.previewItemNew}`}>
+                  {file.type.startsWith('video/')
+                    ? <div className={s.previewVideoThumb}><IconPlay /></div>
+                    : <img src={URL.createObjectURL(file)} alt={file.name} className={s.previewImg} />
+                  }
+                  <span className={s.previewName}>{file.name}</span>
+                  <button
+                    type="button"
+                    className={s.previewRemove}
+                    onClick={() => removeNewFile(idx)}
+                    title="Remove file"
+                    aria-label={`Remove ${file.name}`}
+                  >
+                    <IconX />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Drop zone */}
+          {availableSlots - mediaFiles.length > 0 && (
+            <div className={s.fileWrap}>
+              <input
+                type="file"
+                accept="image/*,video/*"
+                multiple
+                className={s.fileInput}
+                onChange={e => { handleMediaFiles(e.target.files); e.target.value = '' }}
+              />
+              <IconUpload />
+              <span className={s.filePlaceholder}>
+                Add up to {availableSlots - mediaFiles.length} more file{availableSlots - mediaFiles.length !== 1 ? 's' : ''}
+              </span>
+            </div>
+          )}
         </div>
       </Modal>
 

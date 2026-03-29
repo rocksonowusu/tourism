@@ -15,6 +15,8 @@ import Footer         from './components/Footer'
 // Detail pages
 import EventDetail from './pages/EventDetail'
 import SiteDetail  from './pages/SiteDetail'
+import AllEvents   from './pages/AllEvents'
+import AllSites    from './pages/AllSites'
 
 // Admin
 import { AuthProvider } from './admin/context/AuthContext'
@@ -46,7 +48,7 @@ function PublicSite() {
   const fetchDestinations = async () => {
     try {
       setLoading(true)
-      const data = await apiClient.sites.list({ page_size: 100 })
+      const data = await apiClient.sites.list({ page_size: 8 })
       setDestinations(data?.results ?? data ?? [])
     } catch {
       setDestinations([])
@@ -58,7 +60,7 @@ function PublicSite() {
   const fetchEvents = async () => {
     try {
       setEventsLoading(true)
-      const data = await apiClient.events.upcoming()
+      const data = await apiClient.events.list({ page_size: 8 })
       setEvents(data?.results ?? data ?? [])
     } catch {
       setEvents([])
@@ -89,8 +91,8 @@ function PublicSite() {
     <div className="app">
       <Header />
       <Hero media={heroMedia} />
-      <Destinations destinations={destinations} loading={loading} />
       <EventsSection events={events} loading={eventsLoading} />
+      <Destinations destinations={destinations} loading={loading} />
       <Stories />
       <Newsletter />
       <Footer />
@@ -112,6 +114,10 @@ export default function App() {
           {/* Detail pages */}
           <Route path="/events/:slug" element={<EventDetail />} />
           <Route path="/sites/:slug"  element={<SiteDetail />} />
+
+          {/* Listing pages */}
+          <Route path="/events" element={<AllEvents />} />
+          <Route path="/sites"  element={<AllSites />} />
 
           {/* Admin — standalone login */}
           <Route path="/admin/login" element={<Login />} />
