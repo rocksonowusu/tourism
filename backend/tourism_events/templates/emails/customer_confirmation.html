@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Trip Request Confirmed</title>
+  <!--[if mso]>
+  <style type="text/css">
+    table, td, th { font-family: Arial, sans-serif !important; }
+  </style>
+  <![endif]-->
+</head>
+<body style="margin:0;padding:0;background-color:#FAF8F2;font-family:'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;-webkit-font-smoothing:antialiased;">
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#FAF8F2;">
+    <tr>
+      <td align="center" style="padding:40px 16px;">
+
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background-color:#FFFFFF;border-radius:12px;overflow:hidden;border:1px solid #F0EADB;">
+
+          <!-- Gold bar top -->
+          <tr><td style="height:4px;background:linear-gradient(90deg,#C5A028,#E5B83C,#D4AF37,#C5A028);"></td></tr>
+
+          <!-- Header -->
+          <tr>
+            <td style="padding:32px 36px 22px;text-align:center;border-bottom:1px solid #F0EADB;">
+              <img src="{{ logo_url }}" alt="1957 The Ghana Experience" width="72" height="72" style="display:block;margin:0 auto 16px;border-radius:10px;" />
+              <h1 style="margin:0 0 6px;font-size:22px;font-weight:700;color:#1A1A1A;line-height:1.3;">Thank You, {{ customer_name }}!</h1>
+              <p style="margin:0;font-size:14px;color:#5A5040;line-height:1.5;">Your trip request has been received successfully.</p>
+            </td>
+          </tr>
+
+          <!-- Welcome message -->
+          <tr>
+            <td style="padding:24px 36px 0;">
+              <p style="margin:0;font-size:14px;color:#5A5040;line-height:1.7;">
+                We are excited that you want to explore Ghana with us! Here is a summary of your request. A member of our team will review it and reach out to finalise the details.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Tour card -->
+          <tr>
+            <td style="padding:20px 36px 0;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #F0EADB;border-radius:10px;overflow:hidden;">
+                <tr>
+                  <td style="background:#FEF9E6;padding:14px 18px;border-bottom:1px solid #F0EADB;">
+                    <p style="margin:0 0 3px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#C5A028;">Your Selected Tour</p>
+                    <h2 style="margin:0;font-size:17px;font-weight:700;color:#1A1A1A;">{{ tour_title }}</h2>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:14px 18px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td width="28" valign="top" style="padding:3px 0;">
+                          <span style="display:inline-block;width:22px;height:22px;background:#FEF9E6;border:1px solid #F0EADB;border-radius:6px;text-align:center;line-height:22px;font-size:11px;color:#C5A028;font-weight:700;">&#9906;</span>
+                        </td>
+                        <td style="padding:3px 0 3px 8px;">
+                          <span style="font-size:11px;color:#8A7E6B;display:block;">Location</span>
+                          <span style="font-size:13px;font-weight:600;color:#1A1A1A;">{{ tour_location }}</span>
+                        </td>
+                      </tr>
+                      <tr><td colspan="2" style="height:8px;"></td></tr>
+                      <tr>
+                        <td width="28" valign="top" style="padding:3px 0;">
+                          <span style="display:inline-block;width:22px;height:22px;background:#FEF9E6;border:1px solid #F0EADB;border-radius:6px;text-align:center;line-height:22px;font-size:11px;color:#C5A028;font-weight:700;">&#9201;</span>
+                        </td>
+                        <td style="padding:3px 0 3px 8px;">
+                          <span style="font-size:11px;color:#8A7E6B;display:block;">Duration</span>
+                          <span style="font-size:13px;font-weight:600;color:#1A1A1A;">{{ tour_duration }}</span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Booking summary -->
+          <tr>
+            <td style="padding:18px 36px 0;">
+              <p style="margin:0 0 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#C5A028;">Booking Summary</p>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #F0EADB;border-radius:10px;overflow:hidden;">
+                <tr>
+                  <td style="padding:11px 16px;font-size:12px;color:#8A7E6B;border-bottom:1px solid #F0EADB;width:130px;background:#FDFCF8;">Preferred Date</td>
+                  <td style="padding:11px 16px;font-size:13px;font-weight:600;color:#1A1A1A;border-bottom:1px solid #F0EADB;">{{ preferred_date }}</td>
+                </tr>
+                <tr>
+                  <td style="padding:11px 16px;font-size:12px;color:#8A7E6B;border-bottom:1px solid #F0EADB;background:#FDFCF8;">Adults</td>
+                  <td style="padding:11px 16px;font-size:13px;font-weight:600;color:#1A1A1A;border-bottom:1px solid #F0EADB;">{{ adults }}</td>
+                </tr>
+                <tr>
+                  <td style="padding:11px 16px;font-size:12px;color:#8A7E6B;border-bottom:1px solid #F0EADB;background:#FDFCF8;">Children (3&#8211;12)</td>
+                  <td style="padding:11px 16px;font-size:13px;font-weight:600;color:#1A1A1A;border-bottom:1px solid #F0EADB;">{{ children }}</td>
+                </tr>
+                <tr>
+                  <td style="padding:11px 16px;font-size:12px;color:#8A7E6B;border-bottom:1px solid #F0EADB;background:#FDFCF8;">Infants (under 3)</td>
+                  <td style="padding:11px 16px;font-size:13px;font-weight:600;color:#1A1A1A;border-bottom:1px solid #F0EADB;">{{ infants }}</td>
+                </tr>
+                <tr>
+                  <td style="padding:11px 16px;font-size:12px;color:#8A7E6B;background:#FDFCF8;">Total Travellers</td>
+                  <td style="padding:11px 16px;font-size:14px;font-weight:700;color:#1A1A1A;">{{ total_travellers }}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Discounts available -->
+          <tr>
+            <td style="padding:18px 36px 0;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FEF9E6;border:1px solid #F0EADB;border-radius:10px;">
+                <tr>
+                  <td style="padding:16px 20px;">
+                    <p style="margin:0 0 6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#C5A028;">Discounts Available</p>
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="padding:3px 0;font-size:12px;color:#5A5040;line-height:1.6;">
+                          <span style="color:#C5A028;font-weight:700;">&#10003;</span>&nbsp; Children (ages 3&#8211;12) enjoy reduced rates
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding:3px 0;font-size:12px;color:#5A5040;line-height:1.6;">
+                          <span style="color:#C5A028;font-weight:700;">&#10003;</span>&nbsp; Infants (under 3) travel at special pricing
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding:3px 0;font-size:12px;color:#5A5040;line-height:1.6;">
+                          <span style="color:#C5A028;font-weight:700;">&#10003;</span>&nbsp; Special discounts for persons with disabilities
+                        </td>
+                      </tr>
+                    </table>
+                    <p style="margin:8px 0 0;font-size:11px;color:#8A7E6B;font-style:italic;">Our team will discuss pricing and applicable discounts with you directly.</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Special requests -->
+          {% if special_requests %}
+          <tr>
+            <td style="padding:18px 36px 0;">
+              <p style="margin:0 0 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#C5A028;">Your Special Requests</p>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FDFCF8;border:1px solid #F0EADB;border-radius:10px;border-left:3px solid #D4AF37;">
+                <tr>
+                  <td style="padding:14px 18px;font-size:13px;color:#5A5040;line-height:1.7;font-style:italic;">
+                    &ldquo;{{ special_requests }}&rdquo;
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          {% endif %}
+
+          <!-- What happens next -->
+          <tr>
+            <td style="padding:24px 36px 0;">
+              <p style="margin:0 0 16px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#C5A028;">What Happens Next</p>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <!-- Step 1 -->
+                <tr>
+                  <td width="36" valign="top" style="padding:0 0 14px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="background:#C5A028;color:#FFFFFF;width:26px;height:26px;border-radius:50%;text-align:center;font-size:12px;font-weight:700;line-height:26px;">1</td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td style="padding:0 0 14px 10px;">
+                    <p style="margin:0;font-size:13px;color:#1A1A1A;font-weight:600;line-height:26px;">Review</p>
+                    <p style="margin:2px 0 0;font-size:12px;color:#8A7E6B;line-height:1.5;">Our team reviews your request and checks availability for your preferred date.</p>
+                  </td>
+                </tr>
+                <!-- Step 2 -->
+                <tr>
+                  <td width="36" valign="top" style="padding:0 0 14px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="background:#C5A028;color:#FFFFFF;width:26px;height:26px;border-radius:50%;text-align:center;font-size:12px;font-weight:700;line-height:26px;">2</td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td style="padding:0 0 14px 10px;">
+                    <p style="margin:0;font-size:13px;color:#1A1A1A;font-weight:600;line-height:26px;">Contact</p>
+                    <p style="margin:2px 0 0;font-size:12px;color:#8A7E6B;line-height:1.5;">We reach out via email or WhatsApp to confirm details and answer any questions.</p>
+                  </td>
+                </tr>
+                <!-- Step 3 -->
+                <tr>
+                  <td width="36" valign="top" style="padding:0 0 0;">
+                    <table role="presentation" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="background:#C5A028;color:#FFFFFF;width:26px;height:26px;border-radius:50%;text-align:center;font-size:12px;font-weight:700;line-height:26px;">3</td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td style="padding:0 0 0 10px;">
+                    <p style="margin:0;font-size:13px;color:#1A1A1A;font-weight:600;line-height:26px;">Confirm</p>
+                    <p style="margin:2px 0 0;font-size:12px;color:#8A7E6B;line-height:1.5;">Once everything looks good, we finalise your booking and you are all set!</p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Contact buttons -->
+          <tr>
+            <td style="padding:26px 36px 0;text-align:center;">
+              <p style="margin:0 0 14px;font-size:13px;color:#5A5040;">Have questions? We would love to hear from you.</p>
+              <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
+                <tr>
+                  <td style="padding:0 6px;">
+                    <a href="mailto:{{ company_email }}" style="display:inline-block;padding:10px 22px;font-size:13px;font-weight:600;color:#C5A028;text-decoration:none;border:2px solid #C5A028;border-radius:8px;">
+                      Email Us
+                    </a>
+                  </td>
+                  <td style="padding:0 6px;">
+                    <a href="https://wa.me/{{ whatsapp_number }}?text=Hi! I just submitted a trip request for {{ tour_title }}. I have a quick question." target="_blank" style="display:inline-block;padding:10px 22px;font-size:13px;font-weight:600;color:#FFFFFF;text-decoration:none;background:#25D366;border:2px solid #25D366;border-radius:8px;">
+                      WhatsApp
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:28px 36px 32px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="border-top:1px solid #F0EADB;padding-top:22px;text-align:center;">
+                    <img src="{{ logo_url }}" alt="1957 The Ghana Experience" width="44" height="44" style="display:block;margin:0 auto 10px;border-radius:8px;opacity:0.85;" />
+                    <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#1A1A1A;">1957 The Ghana Experience LBG</p>
+                    <p style="margin:0 0 14px;font-size:11px;color:#8A7E6B;line-height:1.6;">
+                      Curating authentic Ghanaian experiences since day one.
+                    </p>
+                    <p style="margin:0;font-size:10px;color:#B8B0A0;line-height:1.5;">
+                      You received this email because you submitted a trip request on our website.<br>
+                      If you did not make this request, please ignore this email.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Gold bar bottom -->
+          <tr><td style="height:4px;background:linear-gradient(90deg,#C5A028,#E5B83C,#D4AF37,#C5A028);"></td></tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

@@ -42,7 +42,7 @@ export default function Header() {
 
         {/* Nav — center */}
         <nav className={`header__nav ${menuOpen ? 'header__nav--open' : ''}`}>
-          <Link to="/sites"  className="header__link" onClick={() => setMenuOpen(false)}>Destinations</Link>
+          <Link to="/tours"  className="header__link" onClick={() => setMenuOpen(false)}>Tours</Link>
           <Link to="/events" className="header__link" onClick={() => setMenuOpen(false)}>Events</Link>
           <a href="/#culture"      className="header__link" onClick={() => setMenuOpen(false)}>Culture</a>
           <a href="/#features"     className="header__link" onClick={() => setMenuOpen(false)}>Our Experiences</a>

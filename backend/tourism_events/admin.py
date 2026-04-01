@@ -2,7 +2,11 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
-from .models import Event, TouristSite, EventMedia, TouristSiteMedia, MediaType
+from .models import (
+    Event, TouristSite, EventMedia, TouristSiteMedia, MediaType,
+    Tour, TourMedia, TripRequest, TripRequestStatus,
+    CustomTourRequest, CustomTourRequestStatus,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -79,7 +83,6 @@ class EventAdmin(admin.ModelAdmin):
         'title',
         'location',
         'date',
-        'price',
         'is_featured',
         'tourist_site',
         'media_count',
@@ -105,7 +108,7 @@ class EventAdmin(admin.ModelAdmin):
             'fields': ('title', 'description', 'tourist_site'),
         }),
         ('Logistics', {
-            'fields': ('location', 'date', 'price'),
+            'fields': ('location', 'date'),
         }),
         ('Visibility', {
             'fields': ('is_featured',),
@@ -259,3 +262,222 @@ class TouristSiteMediaAdmin(admin.ModelAdmin):
     def thumbnail_large(self, obj):
         return _thumbnail(obj, width=300)
     thumbnail_large.short_description = 'Preview'
+
+
+# ---------------------------------------------------------------------------
+# Inline: TourMedia inside TourAdmin
+# ---------------------------------------------------------------------------
+
+class TourMediaInline(admin.TabularInline):
+    model = TourMedia
+    extra = 1
+    fields = ('preview', 'file', 'media_type', 'caption', 'created_at')
+    readonly_fields = ('preview', 'media_type', 'created_at')
+    show_change_link = True
+
+    def preview(self, obj):
+        return _thumbnail(obj)
+    preview.short_description = 'Preview'
+
+
+# ---------------------------------------------------------------------------
+# TourAdmin
+# ---------------------------------------------------------------------------
+
+@admin.register(Tour)
+class TourAdmin(admin.ModelAdmin):
+    list_display = (
+        'title',
+        'location',
+        'duration',
+        'is_active',
+        'is_featured',
+        'media_count',
+        'created_at',
+    )
+    list_display_links = ('title',)
+    list_editable = ('is_active', 'is_featured',)
+    list_filter = ('is_active', 'is_featured',)
+    list_per_page = 25
+    search_fields = ('title', 'description', 'location')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at', 'updated_at')
+    inlines = [TourMediaInline]
+    fieldsets = (
+        ('Tour Details', {
+            'fields': ('title', 'description', 'location', 'duration'),
+        }),
+        ('Settings', {
+            'fields': ('max_group_size',),
+        }),
+        ('Content (JSON)', {
+            'classes': ('collapse',),
+            'fields': ('highlights', 'inclusions', 'exclusions', 'itinerary'),
+        }),
+        ('Visibility', {
+            'fields': ('is_active', 'is_featured'),
+        }),
+        ('Timestamps', {
+            'classes': ('collapse',),
+            'fields': ('created_at', 'updated_at'),
+        }),
+    )
+
+    def media_count(self, obj):
+        count = obj.media.count()
+        colour = '#2e7d32' if count > 0 else '#aaa'
+        return format_html(
+            '<span style="color:{};font-weight:bold;">{}</span>',
+            colour,
+            count,
+        )
+    media_count.short_description = 'Media'
+
+
+# ---------------------------------------------------------------------------
+# TourMediaAdmin (standalone)
+# ---------------------------------------------------------------------------
+
+@admin.register(TourMedia)
+class TourMediaAdmin(admin.ModelAdmin):
+    list_display = ('thumbnail', 'tour', 'media_type', 'caption', 'created_at')
+    list_display_links = ('thumbnail', 'tour')
+    list_filter = ('media_type', 'tour__is_featured')
+    search_fields = ('tour__title', 'caption')
+    ordering = ('-created_at',)
+    readonly_fields = ('thumbnail_large', 'media_type', 'created_at')
+    fieldsets = (
+        ('File', {
+            'fields': ('file', 'thumbnail_large', 'media_type', 'caption'),
+        }),
+        ('Relation', {
+            'fields': ('tour',),
+        }),
+        ('Timestamps', {
+            'classes': ('collapse',),
+            'fields': ('created_at',),
+        }),
+    )
+
+    def thumbnail(self, obj):
+        return _thumbnail(obj, width=60)
+    thumbnail.short_description = 'Preview'
+
+    def thumbnail_large(self, obj):
+        return _thumbnail(obj, width=300)
+    thumbnail_large.short_description = 'Preview'
+
+
+# ---------------------------------------------------------------------------
+# TripRequestAdmin
+# ---------------------------------------------------------------------------
+
+@admin.register(TripRequest)
+class TripRequestAdmin(admin.ModelAdmin):
+    list_display = (
+        'customer_name',
+        'tour',
+        'preferred_date',
+        'total_travellers_display',
+        'status',
+        'created_at',
+    )
+    list_display_links = ('customer_name',)
+    list_editable = ('status',)
+    list_filter = ('status', 'tour', 'preferred_date')
+    list_per_page = 25
+    search_fields = ('customer_name', 'customer_email', 'customer_phone', 'tour__title')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at', 'total_travellers_display')
+    fieldsets = (
+        ('Customer', {
+            'fields': ('customer_name', 'customer_email', 'customer_phone'),
+        }),
+        ('Trip Details', {
+            'fields': ('tour', 'preferred_date', 'number_of_adults',
+                       'number_of_children', 'number_of_infants',
+                       'total_travellers_display'),
+        }),
+        ('Notes', {
+            'fields': ('special_requests',),
+        }),
+        ('Status', {
+            'fields': ('status',),
+        }),
+        ('Timestamps', {
+            'classes': ('collapse',),
+            'fields': ('created_at',),
+        }),
+    )
+
+    def total_travellers_display(self, obj):
+        return obj.total_travellers
+    total_travellers_display.short_description = 'Total Travellers'
+
+
+# ---------------------------------------------------------------------------
+# CustomTourRequestAdmin
+# ---------------------------------------------------------------------------
+
+@admin.register(CustomTourRequest)
+class CustomTourRequestAdmin(admin.ModelAdmin):
+    list_display = (
+        'customer_name',
+        'site_list_display',
+        'preferred_start_date',
+        'total_travellers_display',
+        'status',
+        'created_at',
+    )
+    list_display_links = ('customer_name',)
+    list_editable = ('status',)
+    list_filter = ('status', 'preferred_start_date')
+    list_per_page = 25
+    search_fields = ('customer_name', 'customer_email', 'customer_phone')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at', 'total_travellers_display', 'site_list_display', 'package_list_display')
+    filter_horizontal = ('sites',)
+    fieldsets = (
+        ('Customer', {
+            'fields': ('customer_name', 'customer_email', 'customer_phone', 'country'),
+        }),
+        ('Selected Sites', {
+            'fields': ('sites', 'site_list_display'),
+        }),
+        ('Packages', {
+            'fields': ('packages', 'package_list_display'),
+        }),
+        ('Trip Details', {
+            'fields': ('preferred_start_date', 'preferred_end_date', 'flexibility',
+                       'number_of_adults', 'number_of_children', 'number_of_infants',
+                       'total_travellers_display'),
+        }),
+        ('Notes', {
+            'fields': ('special_requests',),
+        }),
+        ('Status', {
+            'fields': ('status',),
+        }),
+        ('Timestamps', {
+            'classes': ('collapse',),
+            'fields': ('created_at',),
+        }),
+    )
+
+    def total_travellers_display(self, obj):
+        return obj.total_travellers
+    total_travellers_display.short_description = 'Total Travellers'
+
+    def site_list_display(self, obj):
+        names = obj.site_names
+        if not names:
+            return mark_safe('<span style="color:#aaa;">—</span>')
+        return ', '.join(names)
+    site_list_display.short_description = 'Selected Sites'
+
+    def package_list_display(self, obj):
+        labels = obj.package_labels
+        if not labels:
+            return mark_safe('<span style="color:#aaa;">—</span>')
+        return ', '.join(labels)
+    package_list_display.short_description = 'Selected Packages'

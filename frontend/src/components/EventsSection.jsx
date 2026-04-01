@@ -161,7 +161,7 @@ function formatDate(dateStr) {
 
 export default function EventsSection({ events = [], loading }) {
   const headerRef = useScrollReveal({ threshold: 0.1 })
-  const listRef = useScrollReveal({ threshold: 0.06, stagger: true })
+  const listRef = useScrollReveal({ threshold: 0.06, stagger: true, enabled: !loading })
   const displayEvents = events.length
     ? events.map(e => ({
         id:           e.id,

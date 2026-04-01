@@ -103,7 +103,6 @@ class Event(models.Model):
                       max_digits=9, decimal_places=6, null=True, blank=True,
                       help_text='GPS longitude of the event venue.')
     date        = models.DateTimeField(null=True, blank=True)
-    price       = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     is_featured = models.BooleanField(default=False)
     highlights  = models.JSONField(
                       default=list, blank=True,
@@ -295,3 +294,232 @@ class TouristSiteMedia(BaseMedia):
 
     def __str__(self):
         return f"{self.get_media_type_display()} – {self.tourist_site.name}"
+
+
+# ---------------------------------------------------------------------------
+# Tour / Package model
+# ---------------------------------------------------------------------------
+
+class Tour(models.Model):
+    """A bookable tour package offered by the company."""
+
+    title           = models.CharField(max_length=255)
+    slug            = models.SlugField(
+                          max_length=255, unique=True, blank=True,
+                          help_text='SEO-friendly URL identifier. Auto-generated from title.')
+    description     = models.TextField()
+    location        = models.CharField(max_length=255)
+    duration        = models.CharField(
+                          max_length=100, blank=True,
+                          help_text='E.g. "3 days / 2 nights", "Full day", "4 hours"')
+    highlights      = models.JSONField(
+                          default=list, blank=True,
+                          help_text='List of tour highlights shown on detail page.')
+    inclusions      = models.JSONField(
+                          default=list, blank=True,
+                          help_text='What is included (e.g. meals, transport, guide).')
+    exclusions      = models.JSONField(
+                          default=list, blank=True,
+                          help_text='What is NOT included.')
+    itinerary       = models.JSONField(
+                          default=list, blank=True,
+                          help_text='Day-by-day itinerary. Each item: {day, title, description}.')
+    max_group_size  = models.PositiveIntegerField(
+                          default=20,
+                          help_text='Maximum number of travellers per group.')
+    is_active       = models.BooleanField(default=True)
+    is_featured     = models.BooleanField(default=False)
+    created_at      = models.DateTimeField(auto_now_add=True)
+    updated_at      = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Tour'
+        verbose_name_plural = 'Tours'
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = self._unique_slug()
+        super().save(*args, **kwargs)
+
+    def _unique_slug(self) -> str:
+        base = slugify(self.title)
+        slug, n = base, 1
+        while Tour.objects.filter(slug=slug).exclude(pk=self.pk or 0).exists():
+            slug = f'{base}-{n}'
+            n += 1
+        return slug
+
+    @property
+    def media_count(self) -> int:
+        """Total number of media files attached to this tour."""
+        return self.media.count()
+
+
+class TourMedia(BaseMedia):
+    """Images or videos attached to a Tour (Cloudinary: tourism/tours/)."""
+
+    tour = models.ForeignKey(Tour, on_delete=models.CASCADE, related_name='media')
+    file = CloudinaryField(
+        resource_type='auto',
+        folder='tourism/tours',
+        validators=[validate_media_file_type, validate_media_file_size],
+    )
+
+    class Meta(BaseMedia.Meta):
+        verbose_name        = 'Tour Media'
+        verbose_name_plural = 'Tour Media'
+
+    def __str__(self):
+        return f"{self.get_media_type_display()} – {self.tour.title}"
+
+
+# ---------------------------------------------------------------------------
+# Trip Request model
+# ---------------------------------------------------------------------------
+
+class TripRequestStatus(models.TextChoices):
+    NEW       = 'new',       'New'
+    CONTACTED = 'contacted', 'Contacted'
+    CONFIRMED = 'confirmed', 'Confirmed'
+    CANCELLED = 'cancelled', 'Cancelled'
+
+
+class TripRequest(models.Model):
+    """
+    A customer's request to book a specific tour package.
+    Created publicly (no auth) and managed by admin.
+    """
+
+    tour              = models.ForeignKey(
+                            Tour, on_delete=models.CASCADE, related_name='trip_requests')
+    customer_name     = models.CharField(max_length=255)
+    customer_email    = models.EmailField()
+    customer_phone    = models.CharField(max_length=30)
+    number_of_adults  = models.PositiveIntegerField(default=1)
+    number_of_children = models.PositiveIntegerField(
+                             default=0, help_text='Ages 3–12')
+    number_of_infants = models.PositiveIntegerField(
+                            default=0, help_text='Under 3')
+    preferred_date    = models.DateField()
+    special_requests  = models.TextField(blank=True)
+    status            = models.CharField(
+                            max_length=20,
+                            choices=TripRequestStatus.choices,
+                            default=TripRequestStatus.NEW,
+                        )
+    created_at        = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Trip Request'
+        verbose_name_plural = 'Trip Requests'
+
+    def __str__(self):
+        return f"{self.customer_name} – {self.tour.title} ({self.get_status_display()})"
+
+    @property
+    def total_travellers(self) -> int:
+        return self.number_of_adults + self.number_of_children + self.number_of_infants
+
+
+# ---------------------------------------------------------------------------
+# Package choices for custom tours
+# ---------------------------------------------------------------------------
+
+class PackageChoice(models.TextChoices):
+    TRANSPORT       = 'transport',       'Transport / Transfers'
+    ACCOMMODATION   = 'accommodation',   'Accommodation'
+    MEALS           = 'meals',           'Meals & Dining'
+    GUIDED_TOUR     = 'guided_tour',     'Professional Guide'
+    PHOTOGRAPHY     = 'photography',     'Photography / Videography'
+    CULTURAL        = 'cultural',        'Cultural Experience'
+    ADVENTURE       = 'adventure',       'Adventure Activities'
+    AIRPORT_PICKUP  = 'airport_pickup',  'Airport Pickup & Drop-off'
+    TRAVEL_INSURANCE = 'travel_insurance', 'Travel Insurance'
+
+
+class CustomTourRequestStatus(models.TextChoices):
+    NEW       = 'new',       'New'
+    CONTACTED = 'contacted', 'Contacted'
+    CONFIRMED = 'confirmed', 'Confirmed'
+    CANCELLED = 'cancelled', 'Cancelled'
+
+
+class CustomTourRequest(models.Model):
+    """
+    A customer-planned tour request where they pick their own sites
+    and desired packages. Created publicly (no auth) and managed by admin.
+    """
+
+    # Sites the customer wants to visit
+    sites = models.ManyToManyField(
+        TouristSite,
+        related_name='custom_tour_requests',
+        help_text='Tourist sites the customer wants to visit.',
+    )
+
+    # Packages / add-ons
+    packages = models.JSONField(
+        default=list,
+        help_text='List of package keys chosen by the customer.',
+    )
+
+    # Traveller info
+    number_of_adults   = models.PositiveIntegerField(default=1)
+    number_of_children = models.PositiveIntegerField(
+                             default=0, help_text='Ages 3-12')
+    number_of_infants  = models.PositiveIntegerField(
+                             default=0, help_text='Under 3')
+
+    # Schedule
+    preferred_start_date = models.DateField(
+        help_text='When the customer wants to start the tour.')
+    preferred_end_date   = models.DateField(
+        null=True, blank=True,
+        help_text='Optional end date for multi-day tours.')
+    flexibility          = models.CharField(
+        max_length=20, blank=True, default='exact',
+        help_text='Date flexibility: exact, flexible_1_2_days, flexible_week, anytime')
+
+    # Contact
+    customer_name  = models.CharField(max_length=255)
+    customer_email = models.EmailField()
+    customer_phone = models.CharField(max_length=30)
+    country        = models.CharField(max_length=100, blank=True)
+
+    # Notes
+    special_requests = models.TextField(blank=True)
+
+    # Status
+    status = models.CharField(
+        max_length=20,
+        choices=CustomTourRequestStatus.choices,
+        default=CustomTourRequestStatus.NEW,
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Custom Tour Request'
+        verbose_name_plural = 'Custom Tour Requests'
+
+    def __str__(self):
+        return f"{self.customer_name} — Custom Tour ({self.get_status_display()})"
+
+    @property
+    def total_travellers(self) -> int:
+        return self.number_of_adults + self.number_of_children + self.number_of_infants
+
+    @property
+    def site_names(self) -> list:
+        return list(self.sites.values_list('name', flat=True))
+
+    @property
+    def package_labels(self) -> list:
+        label_map = dict(PackageChoice.choices)
+        return [label_map.get(p, p) for p in (self.packages or [])]

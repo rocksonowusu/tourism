@@ -218,6 +218,49 @@ class TourismAPIClient {
     update: (id, data) => this.patch(`/api/site-media/${id}/`, data),
   }
 
+  // ── Tours endpoints ──────────────────────────────────────────────────
+
+  tours = {
+    list:     (params)     => this.get('/api/tours/', params),
+    detail:   (id)         => this.get(`/api/tours/${id}/`),
+    create:   (data)       => this.post('/api/tours/', data),
+    update:   (id, data)   => this.patch(`/api/tours/${id}/`, data),
+    delete:   (id)         => this.delete(`/api/tours/${id}/`),
+    bySlug:   (slug)       => this.get(`/api/tours/by-slug/${slug}/`),
+    featured: (params)     => this.get('/api/tours/featured/', params),
+    media:    (id)         => this.get(`/api/tours/${id}/media/`),
+    upload:   (id, form)   => this.post(`/api/tours/${id}/upload/`, form),
+  }
+
+  tourMedia = {
+    list:   (params)   => this.get('/api/tour-media/', params),
+    delete: (id)       => this.delete(`/api/tour-media/${id}/`),
+    update: (id, data) => this.patch(`/api/tour-media/${id}/`, data),
+  }
+
+  // ── Trip Requests endpoints ──────────────────────────────────────────
+
+  tripRequests = {
+    submit:   (data)       => this.post('/api/trip-requests/', data),
+    list:     (params)     => this.get('/api/trip-requests/', params),
+    detail:   (id)         => this.get(`/api/trip-requests/${id}/`),
+    update:   (id, data)   => this.patch(`/api/trip-requests/${id}/`, data),
+    delete:   (id)         => this.delete(`/api/trip-requests/${id}/`),
+    newCount: ()           => this.get('/api/trip-requests/new-count/'),
+  }
+
+  // ── Custom Tour Requests endpoints ───────────────────────────────────
+
+  customTourRequests = {
+    submit:         (data)   => this.post('/api/custom-tour-requests/', data),
+    list:           (params) => this.get('/api/custom-tour-requests/', params),
+    detail:         (id)     => this.get(`/api/custom-tour-requests/${id}/`),
+    update:         (id, data) => this.patch(`/api/custom-tour-requests/${id}/`, data),
+    delete:         (id)     => this.delete(`/api/custom-tour-requests/${id}/`),
+    newCount:       ()       => this.get('/api/custom-tour-requests/new-count/'),
+    packageOptions: ()       => this.get('/api/custom-tour-requests/package-options/'),
+  }
+
   // ── Health ───────────────────────────────────────────────────────────
 
   health = () => this.get('/health/')

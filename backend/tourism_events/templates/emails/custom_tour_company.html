@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>New Custom Tour Request</title>
+  <!--[if mso]>
+  <style type="text/css">
+    table, td, th { font-family: Arial, sans-serif !important; }
+  </style>
+  <![endif]-->
+</head>
+<body style="margin:0;padding:0;background-color:#FAF8F2;font-family:'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;-webkit-font-smoothing:antialiased;">
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#FAF8F2;">
+    <tr>
+      <td align="center" style="padding:40px 16px;">
+
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background-color:#FFFFFF;border-radius:12px;overflow:hidden;border:1px solid #F0EADB;">
+
+          <!-- Gold bar top -->
+          <tr><td style="height:4px;background:linear-gradient(90deg,#C5A028,#E5B83C,#D4AF37,#C5A028);"></td></tr>
+
+          <!-- Header -->
+          <tr>
+            <td style="padding:28px 36px 20px;text-align:center;border-bottom:1px solid #F0EADB;">
+              <img src="{{ logo_url }}" alt="1957 The Ghana Experience" width="72" height="72" style="display:block;margin:0 auto 14px;border-radius:10px;" />
+              <p style="margin:0 0 4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#C5A028;">Admin Notification</p>
+              <h1 style="margin:0;font-size:22px;font-weight:700;color:#1A1A1A;line-height:1.3;">New Custom Tour Request</h1>
+            </td>
+          </tr>
+
+          <!-- Request ID badge -->
+          <tr>
+            <td style="padding:20px 36px 0;text-align:center;">
+              <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
+                <tr>
+                  <td style="background:#FEF9E6;border:1px solid #F0EADB;border-radius:20px;padding:5px 16px;">
+                    <span style="font-size:11px;font-weight:700;color:#C5A028;letter-spacing:0.8px;">CUSTOM REQUEST #{{ request_id }}</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Selected Sites -->
+          <tr>
+            <td style="padding:20px 36px 0;">
+              <p style="margin:0 0 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#C5A028;">Selected Sites</p>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #F0EADB;border-radius:10px;overflow:hidden;">
+                {% for site in site_names %}
+                <tr>
+                  <td style="padding:10px 16px;font-size:13px;font-weight:600;color:#1A1A1A;{% if not forloop.last %}border-bottom:1px solid #F0EADB;{% endif %}background:{% if forloop.counter|divisibleby:2 %}#FDFCF8{% else %}#FFFFFF{% endif %};">
+                    &#9679; {{ site }}
+                  </td>
+                </tr>
+                {% endfor %}
+              </table>
+            </td>
+          </tr>
+
+          <!-- Selected Packages -->
+          {% if package_labels %}
+          <tr>
+            <td style="padding:18px 36px 0;">
+              <p style="margin:0 0 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#C5A028;">Selected Packages</p>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #F0EADB;border-radius:10px;overflow:hidden;">
+                {% for pkg in package_labels %}
+                <tr>
+                  <td style="padding:10px 16px;font-size:13px;font-weight:600;color:#1A1A1A;{% if not forloop.last %}border-bottom:1px solid #F0EADB;{% endif %}background:{% if forloop.counter|divisibleby:2 %}#FDFCF8{% else %}#FFFFFF{% endif %};">
+                    &#10003; {{ pkg }}
+                  </td>
+                </tr>
+                {% endfor %}
+              </table>
+            </td>
+          </tr>
+          {% endif %}
+
+          <!-- Customer details -->
+          <tr>
+            <td style="padding:18px 36px 0;">
+              <p style="margin:0 0 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#C5A028;">Customer Details</p>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #F0EADB;border-radius:10px;overflow:hidden;">
+                <tr>
+                  <td style="padding:11px 16px;font-size:12px;color:#8A7E6B;border-bottom:1px solid #F0EADB;width:110px;background:#FDFCF8;">Name</td>
+                  <td style="padding:11px 16px;font-size:13px;font-weight:600;color:#1A1A1A;border-bottom:1px solid #F0EADB;">{{ customer_name }}</td>
+                </tr>
+                <tr>
+                  <td style="padding:11px 16px;font-size:12px;color:#8A7E6B;border-bottom:1px solid #F0EADB;background:#FDFCF8;">Email</td>
+                  <td style="padding:11px 16px;font-size:13px;border-bottom:1px solid #F0EADB;">
+                    <a href="mailto:{{ customer_email }}" style="color:#C5A028;font-weight:600;text-decoration:none;">{{ customer_email }}</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:11px 16px;font-size:12px;color:#8A7E6B;border-bottom:1px solid #F0EADB;background:#FDFCF8;">Phone</td>
+                  <td style="padding:11px 16px;font-size:13px;border-bottom:1px solid #F0EADB;">
+                    <a href="tel:{{ customer_phone }}" style="color:#C5A028;font-weight:600;text-decoration:none;">{{ customer_phone }}</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:11px 16px;font-size:12px;color:#8A7E6B;background:#FDFCF8;">Country</td>
+                  <td style="padding:11px 16px;font-size:13px;font-weight:600;color:#1A1A1A;">{{ country }}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Trip details -->
+          <tr>
+            <td style="padding:18px 36px 0;">
+              <p style="margin:0 0 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#C5A028;">Trip Details</p>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #F0EADB;border-radius:10px;overflow:hidden;">
+                <tr>
+                  <td style="padding:11px 16px;font-size:12px;color:#8A7E6B;border-bottom:1px solid #F0EADB;width:130px;background:#FDFCF8;">Start Date</td>
+                  <td style="padding:11px 16px;font-size:13px;font-weight:600;color:#1A1A1A;border-bottom:1px solid #F0EADB;">{{ preferred_start_date }}</td>
+                </tr>
+                {% if preferred_end_date %}
+                <tr>
+                  <td style="padding:11px 16px;font-size:12px;color:#8A7E6B;border-bottom:1px solid #F0EADB;background:#FDFCF8;">End Date</td>
+                  <td style="padding:11px 16px;font-size:13px;font-weight:600;color:#1A1A1A;border-bottom:1px solid #F0EADB;">{{ preferred_end_date }}</td>
+                </tr>
+                {% endif %}
+                <tr>
+                  <td style="padding:11px 16px;font-size:12px;color:#8A7E6B;border-bottom:1px solid #F0EADB;background:#FDFCF8;">Flexibility</td>
+                  <td style="padding:11px 16px;font-size:13px;font-weight:600;color:#1A1A1A;border-bottom:1px solid #F0EADB;">{{ flexibility }}</td>
+                </tr>
+                <tr>
+                  <td style="padding:11px 16px;font-size:12px;color:#8A7E6B;border-bottom:1px solid #F0EADB;background:#FDFCF8;">Adults</td>
+                  <td style="padding:11px 16px;font-size:13px;font-weight:600;color:#1A1A1A;border-bottom:1px solid #F0EADB;">{{ adults }}</td>
+                </tr>
+                <tr>
+                  <td style="padding:11px 16px;font-size:12px;color:#8A7E6B;border-bottom:1px solid #F0EADB;background:#FDFCF8;">Children (3&#8211;12)</td>
+                  <td style="padding:11px 16px;font-size:13px;font-weight:600;color:#1A1A1A;border-bottom:1px solid #F0EADB;">{{ children }}</td>
+                </tr>
+                <tr>
+                  <td style="padding:11px 16px;font-size:12px;color:#8A7E6B;border-bottom:1px solid #F0EADB;background:#FDFCF8;">Infants (under 3)</td>
+                  <td style="padding:11px 16px;font-size:13px;font-weight:600;color:#1A1A1A;border-bottom:1px solid #F0EADB;">{{ infants }}</td>
+                </tr>
+                <tr>
+                  <td style="padding:11px 16px;font-size:12px;color:#8A7E6B;background:#FDFCF8;">Total Travellers</td>
+                  <td style="padding:11px 16px;font-size:14px;font-weight:700;color:#1A1A1A;">{{ total_travellers }}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Discount note -->
+          <tr>
+            <td style="padding:18px 36px 0;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FEF9E6;border:1px solid #F0EADB;border-radius:10px;">
+                <tr>
+                  <td style="padding:14px 20px;">
+                    <p style="margin:0 0 4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#C5A028;">Discount Eligibility</p>
+                    <p style="margin:0;font-size:12px;color:#5A5040;line-height:1.6;">
+                      &#10003; Children (3&#8211;12) &amp; Infants (under 3) qualify for discounted rates.<br>
+                      &#10003; Persons with disabilities are eligible for special pricing.<br>
+                      Please discuss pricing privately with the customer.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Special requests -->
+          {% if special_requests %}
+          <tr>
+            <td style="padding:18px 36px 0;">
+              <p style="margin:0 0 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#C5A028;">Special Requests</p>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#FDFCF8;border:1px solid #F0EADB;border-radius:10px;border-left:3px solid #D4AF37;">
+                <tr>
+                  <td style="padding:14px 18px;font-size:13px;color:#5A5040;line-height:1.7;font-style:italic;">
+                    &ldquo;{{ special_requests }}&rdquo;
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          {% endif %}
+
+          <!-- CTA button -->
+          <tr>
+            <td style="padding:26px 36px 0;text-align:center;">
+              <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
+                <tr>
+                  <td style="background:#C5A028;border-radius:8px;">
+                    <a href="{{ admin_url }}" target="_blank" style="display:inline-block;padding:13px 36px;font-size:14px;font-weight:700;color:#FFFFFF;text-decoration:none;">
+                      View in Admin Portal &#8594;
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Quick actions -->
+          <tr>
+            <td style="padding:16px 36px 0;text-align:center;">
+              <p style="margin:0;font-size:12px;color:#8A7E6B;">
+                Quick reply:&nbsp;
+                <a href="mailto:{{ customer_email }}?subject=Re: Your Custom Tour Request" style="color:#C5A028;text-decoration:none;font-weight:600;">Email Customer</a>
+                &nbsp;&middot;&nbsp;
+                <a href="https://wa.me/{{ customer_phone_clean }}?text=Hi {{ customer_name }}! Thanks for your custom tour request. Let's plan your perfect Ghana experience!" target="_blank" style="color:#25D366;text-decoration:none;font-weight:600;">WhatsApp</a>
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:26px 36px 30px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="border-top:1px solid #F0EADB;padding-top:20px;text-align:center;">
+                    <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#1A1A1A;">1957 The Ghana Experience LBG</p>
+                    <p style="margin:0;font-size:11px;color:#8A7E6B;line-height:1.6;">
+                      Curating authentic Ghanaian experiences since day one.<br>
+                      This is an automated notification from your booking system.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Gold bar bottom -->
+          <tr><td style="height:4px;background:linear-gradient(90deg,#C5A028,#E5B83C,#D4AF37,#C5A028);"></td></tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

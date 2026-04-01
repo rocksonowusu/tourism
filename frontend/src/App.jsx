@@ -7,7 +7,7 @@ import './admin/styles/admin.css'
 import Header         from './components/Header'
 import Hero           from './components/Hero'
 import Features       from './components/Features'
-import Destinations   from './components/Destinations'
+import ToursSection   from './components/ToursSection'
 import EventsSection  from './components/EventsSection'
 import Stories        from './components/Stories'
 import Newsletter     from './components/Newsletter'
@@ -18,6 +18,8 @@ import EventDetail from './pages/EventDetail'
 import SiteDetail  from './pages/SiteDetail'
 import AllEvents   from './pages/AllEvents'
 import AllSites    from './pages/AllSites'
+import AllTours    from './pages/AllTours'
+import TourDetail  from './pages/TourDetail'
 
 // Admin
 import { AuthProvider } from './admin/context/AuthContext'
@@ -28,33 +30,44 @@ import Dashboard  from './admin/pages/Dashboard'
 import Events     from './admin/pages/Events'
 import Sites      from './admin/pages/Sites'
 import Media      from './admin/pages/Media'
+import Tours      from './admin/pages/Tours'
+import TripRequests from './admin/pages/TripRequests'
+
+import PlanTour from './pages/PlanTour'
 
 import apiClient from './api/client'
 
 // ── Public site page ─────────────────────────────────────────────────────
 
 function PublicSite() {
-  const [destinations, setDestinations] = useState([])
+  const [tours, setTours] = useState([])
   const [events, setEvents] = useState([])
   const [heroMedia, setHeroMedia] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [toursLoading, setToursLoading] = useState(false)
   const [eventsLoading, setEventsLoading] = useState(false)
 
   useEffect(() => {
-    fetchDestinations()
+    fetchTours()
     fetchEvents()
     fetchHeroMedia()
   }, [])
 
-  const fetchDestinations = async () => {
+  const fetchTours = async () => {
     try {
-      setLoading(true)
-      const data = await apiClient.sites.list({ page_size: 8 })
-      setDestinations(data?.results ?? data ?? [])
+      setToursLoading(true)
+      const data = await apiClient.tours.featured({ page_size: 6 })
+      const results = data?.results ?? data ?? []
+      // If no featured tours, fallback to all active tours
+      if (results.length === 0) {
+        const allData = await apiClient.tours.list({ page_size: 6 })
+        setTours(allData?.results ?? allData ?? [])
+      } else {
+        setTours(results)
+      }
     } catch {
-      setDestinations([])
+      setTours([])
     } finally {
-      setLoading(false)
+      setToursLoading(false)
     }
   }
 
@@ -72,14 +85,16 @@ function PublicSite() {
 
   const fetchHeroMedia = async () => {
     try {
-      // Gather all site media + event media for the hero background
-      const [siteRes, evRes] = await Promise.allSettled([
+      // Gather all media for the hero background
+      const [siteRes, evRes, tourRes] = await Promise.allSettled([
         apiClient.siteMedia.list({ page_size: 50 }),
         apiClient.eventMedia.list({ page_size: 50 }),
+        apiClient.tourMedia.list({ page_size: 50 }),
       ])
       const siteItems  = (siteRes.value?.results  ?? siteRes.value  ?? [])
       const eventItems = (evRes.value?.results    ?? evRes.value    ?? [])
-      const combined   = [...siteItems, ...eventItems]
+      const tourItems  = (tourRes.value?.results  ?? tourRes.value  ?? [])
+      const combined   = [...tourItems, ...siteItems, ...eventItems]
         .filter(m => m.file_url)
         .map(m => ({ url: m.file_url, type: m.media_type ?? 'image' }))
       setHeroMedia(combined)
@@ -93,8 +108,8 @@ function PublicSite() {
       <Header />
       <Hero media={heroMedia} />
       <Features />
+      <ToursSection tours={tours} loading={toursLoading} />
       <EventsSection events={events} loading={eventsLoading} />
-      <Destinations destinations={destinations} loading={loading} />
       <Stories />
       <Newsletter />
       <Footer />
@@ -113,13 +128,16 @@ export default function App() {
           {/* Public site */}
           <Route path="/" element={<PublicSite />} />
 
-          {/* Detail pages */}
-          <Route path="/events/:slug" element={<EventDetail />} />
-          <Route path="/sites/:slug"  element={<SiteDetail />} />
-
           {/* Listing pages */}
           <Route path="/events" element={<AllEvents />} />
           <Route path="/sites"  element={<AllSites />} />
+          <Route path="/tours"  element={<AllTours />} />
+
+          {/* Detail pages */}
+          <Route path="/events/:slug" element={<EventDetail />} />
+          <Route path="/sites/:slug"  element={<SiteDetail />} />
+          <Route path="/tours/:slug"  element={<TourDetail />} />
+          <Route path="/plan-tour"    element={<PlanTour />} />
 
           {/* Admin — standalone login */}
           <Route path="/admin/login" element={<Login />} />
@@ -129,6 +147,8 @@ export default function App() {
             <Route index element={<Dashboard />} />
             <Route path="events" element={<Events />} />
             <Route path="sites"  element={<Sites />} />
+            <Route path="tours"  element={<Tours />} />
+            <Route path="trip-requests" element={<TripRequests />} />
             <Route path="media"  element={<Media />} />
           </Route>
 

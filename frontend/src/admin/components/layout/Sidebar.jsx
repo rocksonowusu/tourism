@@ -27,6 +27,18 @@ const IconImage = () => (
     <polyline points="21 15 16 10 5 21"/>
   </svg>
 )
+const IconCompass = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+  </svg>
+)
+const IconInbox = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/>
+    <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>
+  </svg>
+)
 const IconLogout = () => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -36,10 +48,12 @@ const IconLogout = () => (
 )
 
 const NAV = [
-  { to: '/admin',        label: 'Dashboard', Icon: IconGrid,     exact: true },
-  { to: '/admin/events', label: 'Events',    Icon: IconCalendar              },
-  { to: '/admin/sites',  label: 'Tourist Sites',     Icon: IconMapPin                },
-  { to: '/admin/media',  label: 'Media',     Icon: IconImage                 },
+  { to: '/admin',              label: 'Dashboard',     Icon: IconGrid,     exact: true },
+  { to: '/admin/events',       label: 'Events',        Icon: IconCalendar              },
+  { to: '/admin/sites',        label: 'Tourist Sites', Icon: IconMapPin                },
+  { to: '/admin/tours',        label: 'Tours',         Icon: IconCompass               },
+  { to: '/admin/trip-requests', label: 'Trip Requests', Icon: IconInbox                },
+  { to: '/admin/media',        label: 'Media',         Icon: IconImage                 },
 ]
 
 export default function Sidebar({ open, onClose }) {

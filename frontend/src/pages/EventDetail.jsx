@@ -23,11 +23,6 @@ const IconClock = () => (
     <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
   </svg>
 )
-const IconTag = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>
-  </svg>
-)
 const IconArrowLeft = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
@@ -173,11 +168,6 @@ function fmtDate(d) {
 function fmtTime(d) {
   if (!d) return null
   return new Date(d).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
-}
-
-function fmtPrice(p) {
-  if (!p || Number(p) === 0) return 'Free'
-  return `GH₵ ${Number(p).toFixed(2)}`
 }
 
 function timeUntil(d) {
@@ -344,10 +334,6 @@ export default function EventDetail() {
                 <span className="evd__info-label">Location</span>
                 <span className="evd__info-value">{event.location || 'TBA'}</span>
               </div>
-              <div className="evd__info-item">
-                <span className="evd__info-label">Price</span>
-                <span className="evd__info-value evd__price">{fmtPrice(event.price)}</span>
-              </div>
               {event.season_label && SEASON_MAP[event.season_label] && (
                 <div className="evd__info-item">
                   <span className="evd__info-label">Status</span>
@@ -475,17 +461,13 @@ export default function EventDetail() {
                       <li><IconCheck /> <span>Local expert guide who knows every hidden gem</span></li>
                       <li><IconCheck /> <span>Guaranteed best-value pricing — no hidden fees</span></li>
                       <li><IconCheck /> <span>Small groups for a personal, authentic experience</span></li>
+                      <li><IconCheck /> <span>Discounts for children, infants &amp; persons with disabilities</span></li>
                       <li><IconStar /> <span>4.9 average rating from 200+ happy travellers</span></li>
                     </ul>
                   </div>
                   <div className="evd__why-book-cta-wrap">
-                    <div className="evd__why-book-price-card">
-                      <span className="evd__why-book-price-label">Starting from</span>
-                      <span className="evd__why-book-price">{fmtPrice(event.price)}</span>
-                      <span className="evd__why-book-price-note">per person</span>
-                    </div>
                     <a
-                      href={`https://wa.me/233XXXXXXXXX?text=${encodeURIComponent(`Hi! I'd like to book the "${event.title}" event (${fmtDate(event.date)}). Please send me more details.`)}`}
+                      href={`https://wa.me/233557533568?text=${encodeURIComponent(`Hi! I'd like to book the "${event.title}" event (${fmtDate(event.date)}). Please send me more details.`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="evd__book-btn"
@@ -523,7 +505,6 @@ export default function EventDetail() {
               <ul className="evd__facts">
                 <li><IconCalendar /><span>{fmtDate(event.date) ?? 'TBA'}</span></li>
                 <li><IconMapPin /><span>{event.location}</span></li>
-                <li><IconTag /><span>{fmtPrice(event.price)}</span></li>
                 {event.media_count > 0 && (
                   <li><IconClock /><span>{event.media_count} media file{event.media_count > 1 ? 's' : ''}</span></li>
                 )}

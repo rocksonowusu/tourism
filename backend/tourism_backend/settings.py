@@ -295,3 +295,31 @@ CORS_ALLOW_HEADERS = [
 # ---------------------------------------------------------------------------
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# ---------------------------------------------------------------------------
+# Email (SMTP via environment variables)
+# ---------------------------------------------------------------------------
+
+EMAIL_BACKEND       = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST          = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT          = int(os.getenv('EMAIL_PORT', 587))
+EMAIL_USE_TLS       = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER     = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL  = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER or 'noreply@1957ghanaexperience.com')
+
+# Company email that receives trip-request notifications
+COMPANY_EMAIL       = os.getenv('COMPANY_EMAIL', EMAIL_HOST_USER or 'info@1957ghanaexperience.com')
+
+# Company WhatsApp number (international format without +)
+COMPANY_WHATSAPP    = os.getenv('COMPANY_WHATSAPP', '233557533568')
+
+# Logo URL for branded emails (hosted on Cloudinary)
+LOGO_URL            = os.getenv(
+    'LOGO_URL',
+    'https://res.cloudinary.com/dy8me66pj/image/upload/v1775072991/tourism/branding/logo.png',
+)
+
+# Frontend URL (used for admin links in emails)
+FRONTEND_URL        = os.getenv('FRONTEND_URL', 'http://localhost:3000')

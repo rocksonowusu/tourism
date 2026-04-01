@@ -6,7 +6,7 @@ import Badge      from '../components/ui/Badge'
 import Spinner    from '../components/ui/Spinner'
 import Modal      from '../components/ui/Modal'
 import EmptyState from '../components/ui/EmptyState'
-import s from './Events.module.css'
+import s from './Tours.module.css'
 import { usePageTitle } from '../hooks/usePageTitle'
 
 // ── Icons ─────────────────────────────────────────────────────────────────
@@ -68,21 +68,18 @@ const IconX = () => (
   </svg>
 )
 
-// Step icons for wizard
+// Step icons
 const IconFileText = () => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
     <polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/>
   </svg>
 )
-const IconMapPin = () => (
+const IconList = () => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-  </svg>
-)
-const IconStar = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+    <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
+    <line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/>
+    <line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
   </svg>
 )
 const IconImage = () => (
@@ -96,108 +93,108 @@ const IconCheck = () => (
     <polyline points="20 6 9 17 4 12"/>
   </svg>
 )
+const IconCompass = () => (
+  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+  </svg>
+)
 
 const STEPS = [
   { num: 1, label: 'Basic Info',  icon: <IconFileText /> },
-  { num: 2, label: 'Location',    icon: <IconMapPin /> },
-  { num: 3, label: 'Highlights',  icon: <IconStar /> },
+  { num: 2, label: 'Settings',    icon: <IconList /> },
+  { num: 3, label: 'Content',     icon: <IconList /> },
   { num: 4, label: 'Media',       icon: <IconImage /> },
 ]
 
 // ── Helpers ──────────────────────────────────────────────────────────────
-const fmt        = (d) => d ? new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'
-const MAX_MEDIA  = 5
+const MAX_MEDIA  = 10
 
 const EMPTY_FORM = {
-  title: '', description: '', location: '', date: '',
-  is_featured: false, tourist_site_id: '',
-  latitude: '', longitude: '', highlights: '',
+  title: '', description: '', location: '', duration: '',
+  max_group_size: '', is_active: true, is_featured: false,
+  highlights: '', inclusions: '', exclusions: '', itinerary: '',
 }
 
 // ── Component ────────────────────────────────────────────────────────────
-export default function Events() {
+export default function Tours() {
   const { addToast } = useToast()
-  usePageTitle('Events')
-  const [events,  setEvents]  = useState([])
-  const [sites,   setSites]   = useState([])
+  usePageTitle('Tours')
+  const [tours,   setTours]   = useState([])
   const [loading, setLoading] = useState(true)
   const [total,   setTotal]   = useState(0)
   const [page,    setPage]    = useState(1)
   const PAGE_SIZE = 15
 
   // filters
-  const [search,     setSearch]     = useState('')
-  const [filterFeat, setFilterFeat] = useState('')
-  const [filterSite, setFilterSite] = useState('')
+  const [search,      setSearch]      = useState('')
+  const [filterFeat,  setFilterFeat]  = useState('')
+  const [filterActive, setFilterActive] = useState('')
 
   // modal state
-  const [modal,   setModal]   = useState(null)  // null | 'create' | 'edit' | 'delete'
+  const [modal,   setModal]   = useState(null)
   const [editing, setEditing] = useState(null)
   const [form,    setForm]    = useState(EMPTY_FORM)
   const [saving,  setSaving]  = useState(false)
   const [formErr, setFormErr] = useState('')
   const [step,    setStep]    = useState(1)
-  const [slideDir, setSlideDir] = useState('next')  // 'next' | 'back'
+  const [slideDir, setSlideDir] = useState('next')
 
   // Media upload state
-  const [mediaFiles,      setMediaFiles]      = useState([])
-  const [existingMedia,   setExistingMedia]    = useState([])
-  const [mediaUploading,  setMediaUploading]   = useState(false)
+  const [mediaFiles,     setMediaFiles]     = useState([])
+  const [existingMedia,  setExistingMedia]  = useState([])
+  const [mediaUploading, setMediaUploading] = useState(false)
 
   // ── Data ──────────────────────────────────────────────────────────────
   const load = useCallback(async () => {
     setLoading(true)
     try {
       const params = { page, page_size: PAGE_SIZE }
-      if (search)     params.search       = search
-      if (filterFeat) params.is_featured  = filterFeat
-      if (filterSite) params.tourist_site = filterSite
-      const data = await api.events.list(params)
-      setEvents(data?.results ?? data ?? [])
+      if (search)       params.search      = search
+      if (filterFeat)   params.is_featured = filterFeat
+      if (filterActive) params.is_active   = filterActive
+      const data = await api.tours.list(params)
+      setTours(data?.results ?? data ?? [])
       setTotal(data?.count ?? (data?.length ?? 0))
     } catch (e) {
       console.error(e)
     } finally {
       setLoading(false)
     }
-  }, [page, search, filterFeat, filterSite])
+  }, [page, search, filterFeat, filterActive])
 
   useEffect(() => { load() }, [load])
-
-  useEffect(() => {
-    api.sites.list({ page_size: 100 })
-      .then(d => setSites(d?.results ?? d ?? []))
-      .catch(() => {})
-  }, [])
-
-  useEffect(() => { setPage(1) }, [search, filterFeat, filterSite])
+  useEffect(() => { setPage(1) }, [search, filterFeat, filterActive])
 
   // ── Form helpers ──────────────────────────────────────────────────────
   const openCreate = () => {
     setEditing(null); setForm(EMPTY_FORM); setFormErr(''); setMediaFiles([]); setExistingMedia([]); setStep(1); setSlideDir('next'); setModal('create')
   }
-  const openEdit = async (ev) => {
-    setEditing(ev)
+
+  const openEdit = async (tour) => {
+    setEditing(tour)
     setForm({
-      title:          ev.title        ?? '',
-      description:    ev.description  ?? '',
-      location:       ev.location     ?? '',
-      date:           ev.date         ? ev.date.slice(0, 16) : '',
-      is_featured:    ev.is_featured  ?? false,
-      tourist_site_id: ev.tourist_site?.id ?? ev.tourist_site ?? '',
-      latitude:       ev.latitude     ?? '',
-      longitude:      ev.longitude    ?? '',
-      highlights:     Array.isArray(ev.highlights) ? ev.highlights.join('\n') : '',
+      title:           tour.title           ?? '',
+      description:     tour.description     ?? '',
+      location:        tour.location        ?? '',
+      duration:        tour.duration         ?? '',
+      max_group_size:  tour.max_group_size   ?? '',
+      is_active:       tour.is_active        ?? true,
+      is_featured:     tour.is_featured      ?? false,
+      highlights:      Array.isArray(tour.highlights) ? tour.highlights.join('\n') : '',
+      inclusions:      Array.isArray(tour.inclusions) ? tour.inclusions.join('\n') : '',
+      exclusions:      Array.isArray(tour.exclusions) ? tour.exclusions.join('\n') : '',
+      itinerary:       Array.isArray(tour.itinerary) ? tour.itinerary.join('\n') : '',
     })
     setFormErr(''); setMediaFiles([]); setStep(1); setSlideDir('next')
-    // Fetch existing media
     try {
-      const detail = await api.events.detail(ev.id)
+      const detail = await api.tours.detail(tour.id)
       setExistingMedia(detail?.media ?? [])
     } catch { setExistingMedia([]) }
     setModal('edit')
   }
-  const openDelete = (ev) => { setEditing(ev); setModal('delete') }
+
+  const openDelete = (tour) => { setEditing(tour); setModal('delete') }
   const closeModal = () => { setModal(null); setEditing(null); setMediaFiles([]); setExistingMedia([]); setStep(1); setSlideDir('next') }
 
   const handleChange = (e) => {
@@ -228,7 +225,7 @@ export default function Events() {
 
   const deleteExistingMedia = async (mediaId) => {
     try {
-      await api.eventMedia.delete(mediaId)
+      await api.tourMedia.delete(mediaId)
       setExistingMedia(prev => prev.filter(m => m.id !== mediaId))
       addToast({ message: 'Media deleted.', type: 'success' })
     } catch (e) {
@@ -243,9 +240,6 @@ export default function Events() {
     setFormErr('')
     if (s === 1) {
       if (!form.title.trim()) { setFormErr('Title is required.'); return false }
-    }
-    if (s === 2) {
-      if (!form.date) { setFormErr('Event date & time is required.'); return false }
     }
     return true
   }
@@ -263,6 +257,10 @@ export default function Events() {
     setFormErr('')
   }
 
+  // ── Parse newline-delimited text to JSON arrays ────────────────────────
+  const toArray = (text) =>
+    text.trim() ? text.split('\n').map(l => l.trim()).filter(Boolean) : []
+
   const handleSave = async () => {
     if (!form.title.trim()) { setFormErr('Title is required.'); setStep(1); return }
     setSaving(true); setFormErr('')
@@ -271,41 +269,42 @@ export default function Events() {
         title:           form.title,
         description:     form.description,
         location:        form.location,
-        date:            form.date || null,
+        duration:        form.duration,
+        max_group_size:  form.max_group_size === '' ? null : Number(form.max_group_size),
+        is_active:       form.is_active,
         is_featured:     form.is_featured,
-        tourist_site_id: form.tourist_site_id === '' ? null : Number(form.tourist_site_id),
-        latitude:        form.latitude === '' ? null : Number(form.latitude),
-        longitude:       form.longitude === '' ? null : Number(form.longitude),
-        highlights:      form.highlights.trim()
-                           ? form.highlights.split('\n').map(h => h.trim()).filter(Boolean)
-                           : [],
-      }
-      let eventId
-      if (modal === 'create') {
-        const created = await api.events.create(payload)
-        eventId = created.id
-      } else {
-        await api.events.update(editing.id, payload)
-        eventId = editing.id
+        highlights:      toArray(form.highlights),
+        inclusions:      toArray(form.inclusions),
+        exclusions:      toArray(form.exclusions),
+        itinerary:       toArray(form.itinerary),
       }
 
-      // Upload new media files if any
-      if (mediaFiles.length > 0 && eventId) {
+      let tourId
+      if (modal === 'create') {
+        const created = await api.tours.create(payload)
+        tourId = created.id
+      } else {
+        await api.tours.update(editing.id, payload)
+        tourId = editing.id
+      }
+
+      // Upload new media files
+      if (mediaFiles.length > 0 && tourId) {
         setMediaUploading(true)
         const fd = new FormData()
         mediaFiles.forEach(f => fd.append('file', f))
         try {
-          await api.events.upload(eventId, fd)
+          await api.tours.upload(tourId, fd)
         } catch (uploadErr) {
           addToast({
-            message: uploadErr?.data?.detail ?? `Event saved but media upload failed: ${uploadErr?.message}`,
+            message: uploadErr?.data?.detail ?? `Tour saved but media upload failed: ${uploadErr?.message}`,
             type: 'warning'
           })
         }
         setMediaUploading(false)
       }
 
-      addToast({ message: modal === 'create' ? 'Event created.' : 'Event updated.', type: 'success' })
+      addToast({ message: modal === 'create' ? 'Tour created.' : 'Tour updated.', type: 'success' })
       closeModal()
       load()
     } catch (e) {
@@ -326,8 +325,8 @@ export default function Events() {
   const handleDelete = async () => {
     setSaving(true)
     try {
-      await api.events.delete(editing.id)
-      addToast({ message: 'Event deleted.', type: 'success' })
+      await api.tours.delete(editing.id)
+      addToast({ message: 'Tour deleted.', type: 'success' })
       closeModal(); load()
     } catch (e) {
       setFormErr(e?.data?.detail ?? e?.message ?? 'Delete failed.')
@@ -348,7 +347,7 @@ export default function Events() {
           <span className={s.searchIcon}><IconSearch /></span>
           <input
             className={s.search}
-            placeholder="Search events…"
+            placeholder="Search tours…"
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
@@ -366,16 +365,17 @@ export default function Events() {
           </select>
           <select
             className={s.select}
-            value={filterSite}
-            onChange={e => setFilterSite(e.target.value)}
-            aria-label="Filter by site"
+            value={filterActive}
+            onChange={e => setFilterActive(e.target.value)}
+            aria-label="Filter by status"
           >
-            <option value="">All sites</option>
-            {sites.map(st => <option key={st.id} value={st.id}>{st.name}</option>)}
+            <option value="">All statuses</option>
+            <option value="true">Active</option>
+            <option value="false">Inactive</option>
           </select>
         </div>
         <Button variant="primary" size="sm" icon={<IconPlus />} onClick={openCreate}>
-          New Event
+          New Tour
         </Button>
       </div>
 
@@ -383,8 +383,8 @@ export default function Events() {
       {!loading && (
         <div className={s.countBar}>
           <span className={s.countLabel}>
-            {total} event{total !== 1 ? 's' : ''}
-            {search || filterFeat || filterSite ? ' matching filters' : ' total'}
+            {total} tour{total !== 1 ? 's' : ''}
+            {search || filterFeat || filterActive ? ' matching filters' : ' total'}
           </span>
         </div>
       )}
@@ -393,47 +393,50 @@ export default function Events() {
       <div className={s.tableWrap}>
         {loading ? (
           <Spinner centered size="lg" />
-        ) : events.length === 0 ? (
+        ) : tours.length === 0 ? (
           <EmptyState
-            icon={
-              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
-                <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-              </svg>
-            }
-            title="No events found"
-            description={search || filterFeat || filterSite
-              ? 'No events match your current filters. Try adjusting your search.'
-              : 'You have not created any events yet.'}
-            action={<Button variant="primary" size="sm" icon={<IconPlus />} onClick={openCreate}>New Event</Button>}
+            icon={<IconCompass />}
+            title="No tours found"
+            description={search || filterFeat || filterActive
+              ? 'No tours match your current filters. Try adjusting your search.'
+              : 'You have not created any tours yet.'}
+            action={<Button variant="primary" size="sm" icon={<IconPlus />} onClick={openCreate}>New Tour</Button>}
           />
         ) : (
           <table className={s.table}>
             <thead>
               <tr>
-                <th className={s.colTitle}>Event</th>
-                <th className={s.colSite}>Site</th>
-                <th className={s.colDate}>Start Date</th>
+                <th className={s.colTitle}>Tour</th>
+                <th className={s.colLocation}>Location</th>
+                <th className={s.colDuration}>Duration</th>
                 <th className={s.colStatus}>Status</th>
                 <th className={s.colActions}>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {events.map(ev => (
-                <tr key={ev.id} className={s.row}>
+              {tours.map(tour => (
+                <tr key={tour.id} className={s.row}>
                   <td className={s.colTitle}>
-                    <span className={s.title}>{ev.title}</span>
-                    {ev.location && <span className={s.sub}>{ev.location}</span>}
+                    <span className={s.title}>{tour.title}</span>
+                    {tour.description && (
+                      <span className={s.sub}>
+                        {tour.description.length > 60
+                          ? tour.description.slice(0, 60) + '…'
+                          : tour.description}
+                      </span>
+                    )}
                   </td>
-                  <td className={`${s.colSite} ${s.muted}`}>
-                    {ev.tourist_site?.name ?? <span className={s.na}>—</span>}
+                  <td className={`${s.colLocation} ${s.muted}`}>
+                    {tour.location || <span className={s.na}>—</span>}
                   </td>
-                  <td className={`${s.colDate} ${s.muted}`}>{fmt(ev.date)}</td>
+                  <td className={`${s.colDuration} ${s.muted}`}>
+                    {tour.duration || <span className={s.na}>—</span>}
+                  </td>
                   <td className={s.colStatus}>
                     <div className={s.badges}>
-                      {ev.is_featured && <Badge variant="gold">Featured</Badge>}
-                      <Badge variant={ev.is_upcoming ? 'success' : 'default'}>
-                        {ev.is_upcoming ? 'Upcoming' : 'Past'}
+                      {tour.is_featured && <Badge variant="gold">Featured</Badge>}
+                      <Badge variant={tour.is_active ? 'success' : 'default'}>
+                        {tour.is_active ? 'Active' : 'Inactive'}
                       </Badge>
                     </div>
                   </td>
@@ -441,17 +444,17 @@ export default function Events() {
                     <div className={s.actionBtns}>
                       <button
                         className={s.iconBtn}
-                        onClick={() => openEdit(ev)}
-                        title="Edit event"
-                        aria-label="Edit event"
+                        onClick={() => openEdit(tour)}
+                        title="Edit tour"
+                        aria-label="Edit tour"
                       >
                         <IconEdit />
                       </button>
                       <button
                         className={`${s.iconBtn} ${s.iconBtnDanger}`}
-                        onClick={() => openDelete(ev)}
-                        title="Delete event"
-                        aria-label="Delete event"
+                        onClick={() => openDelete(tour)}
+                        title="Delete tour"
+                        aria-label="Delete tour"
                       >
                         <IconTrash />
                       </button>
@@ -490,9 +493,9 @@ export default function Events() {
       {/* ── Create / Edit wizard modal ─────────────────────────────── */}
       <Modal
         open={modal === 'create' || modal === 'edit'}
-        title={modal === 'create' ? 'New Event' : 'Edit Event'}
+        title={modal === 'create' ? 'New Tour' : 'Edit Tour'}
         onClose={closeModal}
-        width={620}
+        width={660}
         footer={
           <div className={s.wizardFooter}>
             <div className={s.wizardFooterLeft}>
@@ -511,14 +514,14 @@ export default function Events() {
                 </Button>
               ) : (
                 <Button variant="primary" size="sm" onClick={handleSave} loading={saving || mediaUploading}>
-                  {modal === 'create' ? 'Create Event' : 'Save Changes'}
+                  {modal === 'create' ? 'Create Tour' : 'Save Changes'}
                 </Button>
               )}
             </div>
           </div>
         }
       >
-        {/* ── Stepper bar ────────────────────────────────────────── */}
+        {/* ── Stepper bar ──────────────────────────────────────── */}
         <div className={s.stepper}>
           {STEPS.map((st) => {
             const isDone   = step > st.num
@@ -537,7 +540,8 @@ export default function Events() {
 
         {/* ── Step panes ─────────────────────────────────────────── */}
         <div className={s.stepSlider}>
-          {/* ── Step 1: Basic Info ────────────────────────────────── */}
+
+          {/* ── Step 1: Basic Info ──────────────────────────────── */}
           {step === 1 && (
             <div className={s.stepPane} key="step-1" data-dir={slideDir === 'back' ? 'back' : undefined}>
               <div className={s.stepTitle}>
@@ -545,74 +549,85 @@ export default function Events() {
               </div>
               <div className={s.form}>
                 <div className={s.formGroup}>
-                  <label className={s.label} htmlFor="ev-title">Title <span className={s.req}>*</span></label>
-                  <input id="ev-title" className={s.input} name="title" value={form.title} onChange={handleChange} placeholder="e.g. Annual Beach Festival" autoFocus />
+                  <label className={s.label} htmlFor="tour-title">Title <span className={s.req}>*</span></label>
+                  <input id="tour-title" className={s.input} name="title" value={form.title} onChange={handleChange} placeholder="e.g. Cape Coast Heritage Tour" autoFocus />
                 </div>
                 <div className={s.formGroup}>
-                  <label className={s.label} htmlFor="ev-desc">Description</label>
-                  <textarea id="ev-desc" className={s.textarea} name="description" rows={4} value={form.description} onChange={handleChange} placeholder="Brief description of the event…" />
+                  <label className={s.label} htmlFor="tour-desc">Description</label>
+                  <textarea id="tour-desc" className={s.textarea} name="description" rows={4} value={form.description} onChange={handleChange} placeholder="Brief description of the tour…" />
+                </div>
+                <div className={s.row2}>
+                  <div className={s.formGroup}>
+                    <label className={s.label} htmlFor="tour-loc">Location</label>
+                    <input id="tour-loc" className={s.input} name="location" value={form.location} onChange={handleChange} placeholder="e.g. Cape Coast, Ghana" />
+                  </div>
+                  <div className={s.formGroup}>
+                    <label className={s.label} htmlFor="tour-dur">Duration</label>
+                    <input id="tour-dur" className={s.input} name="duration" value={form.duration} onChange={handleChange} placeholder="e.g. 3 Days / 2 Nights" />
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* ── Step 2: Location & Schedule ───────────────────────── */}
+          {/* ── Step 2: Settings ─────────────────────────────── */}
           {step === 2 && (
             <div className={s.stepPane} key="step-2" data-dir={slideDir === 'back' ? 'back' : undefined}>
               <div className={s.stepTitle}>
-                <IconMapPin /> Location & Schedule
+                <IconList /> Settings
               </div>
               <div className={s.form}>
-                <div className={s.row2}>
-                  <div className={s.formGroup}>
-                    <label className={s.label} htmlFor="ev-loc">Location</label>
-                    <input id="ev-loc" className={s.input} name="location" value={form.location} onChange={handleChange} placeholder="City, venue…" autoFocus />
-                  </div>
-                  <div className={s.formGroup}>
-                    <label className={s.label} htmlFor="ev-site">Tourist Site</label>
-                    <select id="ev-site" className={s.input} name="tourist_site_id" value={form.tourist_site_id} onChange={handleChange}>
-                      <option value="">— none —</option>
-                      {sites.map(st => <option key={st.id} value={st.id}>{st.name}</option>)}
-                    </select>
-                  </div>
-                </div>
-                <div className={s.row2}>
-                  <div className={s.formGroup}>
-                    <label className={s.label} htmlFor="ev-date">Event Date & Time <span className={s.req}>*</span></label>
-                    <input id="ev-date" className={s.input} type="datetime-local" name="date" value={form.date} onChange={handleChange} />
-                  </div>
-                </div>
                 <div className={s.formGroup}>
-                  <label className={s.checkLabel}>
-                    <input type="checkbox" name="is_featured" checked={form.is_featured} onChange={handleChange} />
-                    <span>Mark as featured</span>
-                  </label>
+                  <label className={s.label} htmlFor="tour-group">Max Group Size</label>
+                  <input id="tour-group" className={s.input} type="number" min="1" name="max_group_size" value={form.max_group_size} onChange={handleChange} placeholder="Leave blank for unlimited" />
+                  <span className={s.hint}>Maximum number of travellers per group booking.</span>
+                </div>
+                <div className={s.row2}>
+                  <div className={s.formGroup}>
+                    <label className={s.checkLabel}>
+                      <input type="checkbox" name="is_active" checked={form.is_active} onChange={handleChange} />
+                      <span>Active (visible to public)</span>
+                    </label>
+                  </div>
+                  <div className={s.formGroup}>
+                    <label className={s.checkLabel}>
+                      <input type="checkbox" name="is_featured" checked={form.is_featured} onChange={handleChange} />
+                      <span>Mark as featured</span>
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* ── Step 3: Highlights & Coordinates ─────────────────── */}
+          {/* ── Step 3: Content (highlights, inclusions, exclusions, itinerary) */}
           {step === 3 && (
             <div className={s.stepPane} key="step-3" data-dir={slideDir === 'back' ? 'back' : undefined}>
               <div className={s.stepTitle}>
-                <IconStar /> Highlights & Coordinates
+                <IconList /> Tour Content
               </div>
               <div className={s.form}>
+                <div className={s.formGroup}>
+                  <label className={s.label} htmlFor="tour-highlights">Highlights</label>
+                  <textarea id="tour-highlights" className={s.textarea} name="highlights" rows={3} value={form.highlights} onChange={handleChange} placeholder={"One per line, e.g.:\nGuided tour of Cape Coast Castle\nCanopy walkway at Kakum"} autoFocus />
+                  <span className={s.hint}>Key selling points — one per line.</span>
+                </div>
                 <div className={s.row2}>
                   <div className={s.formGroup}>
-                    <label className={s.label} htmlFor="ev-lat">Latitude</label>
-                    <input id="ev-lat" className={s.input} type="number" step="0.000001" name="latitude" value={form.latitude} onChange={handleChange} placeholder="e.g. 5.6037" autoFocus />
+                    <label className={s.label} htmlFor="tour-inclusions">Inclusions</label>
+                    <textarea id="tour-inclusions" className={s.textarea} name="inclusions" rows={3} value={form.inclusions} onChange={handleChange} placeholder={"Hotel accommodation\nBreakfast daily\nTransport"} />
+                    <span className={s.hint}>What's included — one per line.</span>
                   </div>
                   <div className={s.formGroup}>
-                    <label className={s.label} htmlFor="ev-lng">Longitude</label>
-                    <input id="ev-lng" className={s.input} type="number" step="0.000001" name="longitude" value={form.longitude} onChange={handleChange} placeholder="e.g. -0.1870" />
+                    <label className={s.label} htmlFor="tour-exclusions">Exclusions</label>
+                    <textarea id="tour-exclusions" className={s.textarea} name="exclusions" rows={3} value={form.exclusions} onChange={handleChange} placeholder={"International flights\nTravel insurance\nPersonal expenses"} />
+                    <span className={s.hint}>What's NOT included — one per line.</span>
                   </div>
                 </div>
                 <div className={s.formGroup}>
-                  <label className={s.label} htmlFor="ev-highlights">Package Highlights</label>
-                  <textarea id="ev-highlights" className={s.textarea} name="highlights" rows={5} value={form.highlights} onChange={handleChange} placeholder={"One item per line, e.g.:\nGuided tour of the venue\nReturn transport from Accra\nComplimentary welcome drink"} />
-                  <span className={s.hint}>One highlight per line — shown as "What's Included" on the public page.</span>
+                  <label className={s.label} htmlFor="tour-itinerary">Itinerary</label>
+                  <textarea id="tour-itinerary" className={s.textarea} name="itinerary" rows={4} value={form.itinerary} onChange={handleChange} placeholder={"Day 1: Arrive in Accra, transfer to hotel\nDay 2: Cape Coast Castle & Kakum\nDay 3: Departure"} />
+                  <span className={s.hint}>Day-by-day plan — one day per line.</span>
                 </div>
               </div>
             </div>
@@ -629,7 +644,7 @@ export default function Events() {
                   <span className={s.mediaDividerText}>Files ({existingMedia.length + mediaFiles.length} / {MAX_MEDIA})</span>
                 </div>
 
-                {/* Existing media thumbnails (edit mode) */}
+                {/* Existing media thumbnails */}
                 {existingMedia.length > 0 && (
                   <div className={s.previewGrid}>
                     {existingMedia.map(m => (
@@ -701,14 +716,14 @@ export default function Events() {
       {/* ── Delete confirmation modal ────────────────────────────────── */}
       <Modal
         open={modal === 'delete'}
-        title="Delete Event"
+        title="Delete Tour"
         onClose={closeModal}
         width={420}
         footer={
           <div className={s.modalFooter}>
             {formErr && <span className={s.err}>{formErr}</span>}
             <Button variant="ghost"  size="sm" onClick={closeModal}   disabled={saving}>Cancel</Button>
-            <Button variant="danger" size="sm" onClick={handleDelete} loading={saving}>Delete Event</Button>
+            <Button variant="danger" size="sm" onClick={handleDelete} loading={saving}>Delete Tour</Button>
           </div>
         }
       >
@@ -719,7 +734,7 @@ export default function Events() {
               Are you sure you want to delete <strong>{editing?.title}</strong>?
             </p>
             <p className={s.deleteHint}>
-              This will permanently remove the event and cannot be undone.
+              This will permanently remove the tour and all associated media. This cannot be undone.
             </p>
           </div>
         </div>
@@ -728,4 +743,3 @@ export default function Events() {
     </div>
   )
 }
-

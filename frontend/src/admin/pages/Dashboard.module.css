@@ -32,7 +32,7 @@
 /* ── Stat grid ───────────────────────────────────────────────────────────── */
 .statsGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-5);
 }
 @media (max-width: 1100px) { .statsGrid { grid-template-columns: repeat(2, 1fr); } }
@@ -179,7 +179,7 @@
 }
 .actionsGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-4);
 }
 @media (max-width: 1100px) { .actionsGrid { grid-template-columns: repeat(2, 1fr); } }

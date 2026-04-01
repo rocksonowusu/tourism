@@ -4,13 +4,14 @@ import { useEffect, useRef } from 'react'
  * Attach to a container ref. When the element enters the viewport,
  * the class `sr--visible` is added (triggering CSS transition).
  * Pass `stagger={true}` to also animate direct children with a delay.
+ * Pass `enabled={false}` to defer observation (e.g. while data is loading).
  */
-export function useScrollReveal({ threshold = 0.12, stagger = false } = {}) {
+export function useScrollReveal({ threshold = 0.12, stagger = false, enabled = true } = {}) {
   const ref = useRef(null)
 
   useEffect(() => {
     const el = ref.current
-    if (!el) return
+    if (!el || !enabled) return
 
     const obs = new IntersectionObserver(
       ([entry]) => {
@@ -32,7 +33,7 @@ export function useScrollReveal({ threshold = 0.12, stagger = false } = {}) {
 
     obs.observe(el)
     return () => obs.disconnect()
-  }, [threshold, stagger])
+  }, [threshold, stagger, enabled])
 
   return ref
 }

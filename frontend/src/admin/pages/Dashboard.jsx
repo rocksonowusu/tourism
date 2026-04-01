@@ -75,6 +75,18 @@ const IconUpload = () => (
     <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
   </svg>
 )
+const IconCompass = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+  </svg>
+)
+const IconInbox = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/>
+    <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>
+  </svg>
+)
 
 // ── helpers ───────────────────────────────────────────────────────────────
 const fmtDate = (d) => d
@@ -107,7 +119,7 @@ export default function Dashboard() {
   useEffect(() => {
     const load = async () => {
       try {
-        const [evAll, evUp, siteAll, evMedia, siteMedia, evMediaRecent, siteMediaRecent] = await Promise.allSettled([
+        const [evAll, evUp, siteAll, evMedia, siteMedia, evMediaRecent, siteMediaRecent, tourAll, tripNew] = await Promise.allSettled([
           api.events.list({      page_size: 8, ordering: '-created_at' }),
           api.events.upcoming({  page_size: 1 }),
           api.sites.list({       page_size: 4 }),
@@ -115,6 +127,8 @@ export default function Dashboard() {
           api.siteMedia.list({   page_size: 1 }),
           api.eventMedia.list({  page_size: 4, ordering: '-created_at' }),
           api.siteMedia.list({   page_size: 4, ordering: '-created_at' }),
+          api.tours.list({       page_size: 1 }),
+          api.tripRequests.newCount(),
         ])
 
         const evData            = evAll.value            ?? { count: 0, results: [] }
@@ -124,12 +138,16 @@ export default function Dashboard() {
         const stMediaData       = siteMedia.value        ?? { count: 0 }
         const evMediaItems      = evMediaRecent.value    ?? { results: [] }
         const siteMediaItems    = siteMediaRecent.value  ?? { results: [] }
+        const tourData          = tourAll.value           ?? { count: 0 }
+        const tripNewData       = tripNew.value           ?? { count: 0 }
 
         setStats({
           totalEvents:   evData.count,
           totalSites:    siteData.count,
           upcomingCount: upData.count,
           mediaCount:    (evMediaData.count ?? 0) + (stMediaData.count ?? 0),
+          totalTours:    tourData.count,
+          newRequests:   tripNewData.count ?? 0,
         })
         setRecentEvents(evData.results    ?? [])
         setFeaturedSites(siteData.results ?? [])
@@ -171,8 +189,10 @@ export default function Dashboard() {
       <section className={s.statsGrid}>
         <StatCard label="Total Events"    value={stats?.totalEvents}   icon={<IconCalendar />} color="gold"  loading={loading} />
         <StatCard label="Tourist Sites"   value={stats?.totalSites}    icon={<IconMapPin />}   color="blue"  loading={loading} />
+        <StatCard label="Tours"           value={stats?.totalTours}    icon={<IconCompass />}   color="green" loading={loading} />
+        <StatCard label="Trip Requests"   value={stats?.newRequests}   icon={<IconInbox />}    color="gold"  loading={loading} />
         <StatCard label="Upcoming Events" value={stats?.upcomingCount} icon={<IconClock />}    color="green" loading={loading} />
-        <StatCard label="Media Files"     value={stats?.mediaCount}    icon={<IconImage />}    color="gold"  loading={loading} />
+        <StatCard label="Media Files"     value={stats?.mediaCount}    icon={<IconImage />}    color="blue"  loading={loading} />
       </section>
 
       {/* ── Quick Actions ────────────────────────────────────────────── */}
@@ -204,6 +224,24 @@ export default function Dashboard() {
             <span className={s.actionText}>
               <span className={s.actionTitle}>Upload Media</span>
               <span className={s.actionSub}>Add photos to sites or events</span>
+            </span>
+          </button>
+          <button className={s.actionCard} onClick={() => navigate('/admin/tours')}>
+            <span className={s.actionIcon} style={{ '--ac': 'rgba(16,185,129,0.20)', '--ac-fg': '#34D399' }}>
+              <IconCompass />
+            </span>
+            <span className={s.actionText}>
+              <span className={s.actionTitle}>Manage Tours</span>
+              <span className={s.actionSub}>Create & manage tour packages</span>
+            </span>
+          </button>
+          <button className={s.actionCard} onClick={() => navigate('/admin/trip-requests')}>
+            <span className={s.actionIcon} style={{ '--ac': 'rgba(239,68,68,0.15)', '--ac-fg': '#F87171' }}>
+              <IconInbox />
+            </span>
+            <span className={s.actionText}>
+              <span className={s.actionTitle}>Trip Requests</span>
+              <span className={s.actionSub}>View & respond to bookings</span>
             </span>
           </button>
           <a className={s.actionCard} href="/" target="_blank" rel="noopener noreferrer">
