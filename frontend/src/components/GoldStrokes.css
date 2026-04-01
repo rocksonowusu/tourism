@@ -1,0 +1,141 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Gold Paint Strokes — bold decorative brush stroke & splash images
+   Uses real SVG paint assets for a hand-painted feel.
+   Import once in App.css.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Ensure section content sits above the strokes ──────────────────────── */
+.gold-corners-trbl > *,
+.gold-corners-tlbr > *,
+.gold-strokes-diag > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* ── Combo: brush stroke top-right + splash bottom-left ─────────────────── */
+.gold-corners-trbl {
+  position: relative;
+  overflow: hidden;
+}
+.gold-corners-trbl::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -60px;
+  width: 380px;
+  height: 160px;
+  background: url('/assets/brush-stroke.svg') no-repeat center / contain;
+  transform: rotate(-15deg);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.6;
+}
+.gold-corners-trbl::after {
+  content: '';
+  position: absolute;
+  bottom: -50px;
+  left: -50px;
+  width: 260px;
+  height: 260px;
+  background: url('/assets/paint-splash.svg') no-repeat center / contain;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.4;
+}
+
+/* ── Combo: splash top-left + brush stroke bottom-right ─────────────────── */
+.gold-corners-tlbr {
+  position: relative;
+  overflow: hidden;
+}
+.gold-corners-tlbr::before {
+  content: '';
+  position: absolute;
+  top: -55px;
+  left: -50px;
+  width: 280px;
+  height: 280px;
+  background: url('/assets/paint-splash.svg') no-repeat center / contain;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.4;
+}
+.gold-corners-tlbr::after {
+  content: '';
+  position: absolute;
+  bottom: -30px;
+  right: -60px;
+  width: 400px;
+  height: 170px;
+  background: url('/assets/brush-stroke-2.svg') no-repeat center / contain;
+  transform: rotate(10deg);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.55;
+}
+
+/* ── Variant: brush top-left + brush bottom-right (diagonal) ─────────── */
+.gold-strokes-diag {
+  position: relative;
+  overflow: hidden;
+}
+.gold-strokes-diag::before {
+  content: '';
+  position: absolute;
+  top: -30px;
+  left: -50px;
+  width: 350px;
+  height: 150px;
+  background: url('/assets/brush-stroke-2.svg') no-repeat center / contain;
+  transform: rotate(-25deg) scaleX(-1);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+}
+.gold-strokes-diag::after {
+  content: '';
+  position: absolute;
+  bottom: -35px;
+  right: -50px;
+  width: 360px;
+  height: 150px;
+  background: url('/assets/brush-stroke.svg') no-repeat center / contain;
+  transform: rotate(15deg);
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+}
+
+/* ── Responsive — scale down on mobile so they don't overwhelm ───────── */
+@media (max-width: 768px) {
+  .gold-corners-trbl::before,
+  .gold-corners-tlbr::after,
+  .gold-strokes-diag::before,
+  .gold-strokes-diag::after {
+    width: 240px;
+    height: 110px;
+    opacity: 0.35;
+  }
+  .gold-corners-trbl::after,
+  .gold-corners-tlbr::before {
+    width: 180px;
+    height: 180px;
+    opacity: 0.22;
+  }
+}
+@media (max-width: 480px) {
+  .gold-corners-trbl::before,
+  .gold-corners-tlbr::after,
+  .gold-strokes-diag::before,
+  .gold-strokes-diag::after {
+    width: 180px;
+    height: 80px;
+    opacity: 0.28;
+  }
+  .gold-corners-trbl::after,
+  .gold-corners-tlbr::before {
+    width: 140px;
+    height: 140px;
+    opacity: 0.18;
+  }
+}

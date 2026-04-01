@@ -93,19 +93,20 @@ export default function Hero({ media = [] }) {
 
         {/* Left: text */}
         <div className="hero__text fade-in">
-          <p className="hero__eyebrow">🇬🇭 The Gateway to West Africa</p>
+          <p className="hero__eyebrow">🇬🇭 1957 — The Ghana Experience</p>
           <h1 className="hero__title">
-            Discover the<br />
-            <em className="hero__highlight">Beauty</em> of<br />
-            Ghana
+            Your Journey<br />
+            Through <em className="hero__highlight">Ghana</em><br />
+            Starts Here
           </h1>
           <p className="hero__sub">
-            From the golden sands of Labadi Beach to the ancient walls of
-            Cape Coast Castle, Ghana's rich history, vibrant culture, and
-            breathtaking landscapes await every curious traveller.
+            We craft unforgettable tours, cultural immersions, and heritage
+            experiences across Ghana — from the bustling streets of Accra to
+            the ancient castles of the coast and the wildlife of the northern
+            savannahs. Let us show you the real Ghana.
           </p>
           <div className="hero__cta">
-            <a href="#destinations" className="btn-primary">Explore Destinations</a>
+            <a href="#destinations" className="btn-primary">Explore Our Experiences</a>
             <a href="#events" className="hero__cta-secondary">Upcoming Events →</a>
           </div>
           <div className="hero__stats">
@@ -116,12 +117,12 @@ export default function Hero({ media = [] }) {
             <div className="hero__stat-divider" />
             <div className="hero__stat">
               <span className="hero__stat-num">200+</span>
-              <span className="hero__stat-label">Tourist Sites</span>
+              <span className="hero__stat-label">Experiences</span>
             </div>
             <div className="hero__stat-divider" />
             <div className="hero__stat">
-              <span className="hero__stat-num">1M+</span>
-              <span className="hero__stat-label">Annual Visitors</span>
+              <span className="hero__stat-num">Since</span>
+              <span className="hero__stat-label">1957</span>
             </div>
           </div>
         </div>
@@ -143,12 +144,11 @@ export default function Hero({ media = [] }) {
           {/* Floating badge */}
           <div className="hero__badge">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="12" cy="12" r="10"/>
-              <polyline points="12 6 12 12 16 14"/>
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
             </svg>
             <div>
-              <span className="hero__badge-top">Best time to visit</span>
-              <span className="hero__badge-bot">Nov – Apr (Dry Season)</span>
+              <span className="hero__badge-top">Curated Experiences</span>
+              <span className="hero__badge-bot">Tours · Culture · Heritage</span>
             </div>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import './Stories.css'
+import PaintStrokes from './PaintStrokes'
 
 const IconArrowLeft = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -128,13 +129,17 @@ export default function Stories() {
 
   return (
     <section className="stories" id="culture">
+      <PaintStrokes items={[
+        { variant: 'b', position: 'tl', width: 320, opacity: 0.45 },
+        { variant: 'a', position: 'br', width: 350, opacity: 0.5 },
+      ]} />
       <div className="container">
 
         {/* Header */}
         <div className="stories__header">
           <div>
-            <p className="stories__eyebrow">Ghana Culture &amp; Travel</p>
-            <h2 className="stories__title">Explore Ghana's Stories</h2>
+            <p className="stories__eyebrow">Stories From the Field</p>
+            <h2 className="stories__title">The Ghana Experience Journal</h2>
           </div>
           <div className="stories__nav-btns">
             <button

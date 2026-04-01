@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import './Destinations.css'
+import PaintStrokes from './PaintStrokes'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 
 const IconMapPin = () => (
@@ -222,7 +223,7 @@ function SiteCard({ item, delay }) {
             {images.map((_, i) => (
               <span key={i} className={`dest__dot ${i === idx ? 'dest__dot--active' : ''}`} />
             ))}
-          </div>
+          </div> 
         )}
 
         {/* Photo count badge top-right */}
@@ -289,16 +290,20 @@ export default function Destinations({ destinations = [], loading }) {
 
   return (
     <section className="destinations" id="destinations">
+      <PaintStrokes items={[
+        { variant: 'a', position: 'tr', width: 350, opacity: 0.5 },
+        { variant: 'b', position: 'bl', width: 320, opacity: 0.45 },
+      ]} />
       <div className="container">
 
         {/* Header row */}
         <div className="dest__header sr" ref={headerRef}>
           <div>
-            <p className="dest__eyebrow">Explore Ghana</p>
-            <h2 className="dest__title">Top Tourist Sites</h2>
+            <p className="dest__eyebrow">Handpicked Destinations</p>
+            <h2 className="dest__title">Places We'll Take You</h2>
           </div>
           <Link to="/sites" className="dest__view-all">
-            View all sites <IconArrowRight />
+            View all destinations <IconArrowRight />
           </Link>
         </div>
 

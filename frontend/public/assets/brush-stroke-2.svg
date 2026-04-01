@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 300" fill="none">
+  <!-- Thick diagonal brush stroke -->
+  <g opacity="1">
+    <!-- Main thick stroke -->
+    <path d="M30 200 C60 170, 120 130, 200 110 C280 90, 350 85, 430 75 C510 65, 580 58, 640 50 C660 47, 675 52, 678 62 C682 78, 670 95, 640 105 C580 125, 500 135, 420 145 C340 155, 260 162, 180 175 C120 185, 70 198, 40 210 C28 215, 22 210, 30 200Z" fill="#D4AF37"/>
+    <!-- Second layer - offset -->
+    <path d="M50 215 C80 188, 140 150, 220 130 C300 110, 370 102, 450 92 C530 82, 590 75, 650 68 C668 66, 680 72, 676 82 C670 98, 630 110, 560 122 C480 138, 400 148, 320 160 C240 172, 160 185, 90 202 C58 210, 40 218, 50 215Z" fill="#C5A028"/>
+    <!-- Splatter at start -->
+    <circle cx="20" cy="215" r="8" fill="#D4AF37"/>
+    <circle cx="10" cy="230" r="5" fill="#C5A028"/>
+    <circle cx="35" cy="235" r="4" fill="#E5B83C"/>
+    <circle cx="15" cy="195" r="3.5" fill="#D4AF37"/>
+    <circle cx="5" cy="210" r="3" fill="#E5B83C"/>
+    <!-- Splatter at end -->
+    <circle cx="685" cy="55" r="7" fill="#D4AF37"/>
+    <circle cx="695" cy="42" r="4.5" fill="#C5A028"/>
+    <circle cx="690" cy="70" r="3.5" fill="#E5B83C"/>
+    <circle cx="670" cy="40" r="3" fill="#D4AF37"/>
+    <!-- Edge texture -->
+    <path d="M100 170 C108 158, 120 152, 130 158" fill="#E5B83C"/>
+    <path d="M300 120 C310 108, 325 105, 335 112" fill="#D4AF37"/>
+    <path d="M500 90 C512 78, 528 76, 535 84" fill="#E5B83C"/>
+    <!-- Drip -->
+    <path d="M350 155 C352 170, 348 185, 350 198" stroke="#D4AF37" stroke-width="3" stroke-linecap="round"/>
+    <path d="M530 125 C532 138, 528 148, 530 158" stroke="#C5A028" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+</svg>

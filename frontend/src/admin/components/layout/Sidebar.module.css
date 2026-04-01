@@ -1,9 +1,7 @@
 .sidebar {
   width: var(--sidebar-width);
-  background: rgba(18, 14, 6, 0.55);
-  backdrop-filter: blur(20px) saturate(1.4);
-  -webkit-backdrop-filter: blur(20px) saturate(1.4);
-  border-right: 1px solid rgba(197, 160, 40, 0.18);
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--sidebar-border);
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -22,16 +20,15 @@
   border-bottom: 1px solid var(--sidebar-border);
   flex-shrink: 0;
 }
-.brandIcon {
-  width: 28px; height: 28px;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--gold-rich); flex-shrink: 0;
+.brandLogo {
+  width: 54px; height: 54px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
-.brandIcon svg { display: block; }
 .brandName {
   font-size: var(--text-md);
   font-weight: 700;
-  color: #EDE8D8;
+  color: var(--ash-deep);
   letter-spacing: -0.3px;
 }
 .brandAccent { color: var(--gold-warm); }
@@ -52,11 +49,11 @@
   transition: background var(--transition-fast), color var(--transition-fast);
 }
 .navLink:hover {
-  background: rgba(197,160,40,.10);
-  color: #EDE8D8;
+  background: var(--color-hover-bg);
+  color: var(--ash-deep);
 }
 .navLink.active {
-  background: rgba(197,160,40,.16);
+  background: var(--color-primary-light);
   color: var(--sidebar-text-active);
 }
 .navIcon   {
@@ -87,7 +84,7 @@
   flex-shrink: 0;
 }
 .userInfo { display: flex; flex-direction: column; min-width: 0; }
-.userName { font-size: var(--text-sm); font-weight: 600; color: #EDE8D8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.userName { font-size: var(--text-sm); font-weight: 600; color: var(--ash-deep); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .userRole { font-size: var(--text-xs); color: var(--sidebar-text); }
 
 .logoutBtn {
@@ -100,7 +97,7 @@
   transition: background var(--transition-fast), color var(--transition-fast);
   flex-shrink: 0;
 }
-.logoutBtn:hover { background: rgba(239,68,68,.15); color: #FCA5A5; }
+.logoutBtn:hover { background: rgba(239,68,68,.10); color: var(--red); }
 
 /* ── Responsive: slide-over drawer on mobile ───────────────────────────── */
 @media (max-width: 768px) {

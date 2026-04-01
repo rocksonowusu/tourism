@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import './Newsletter.css'
+import PaintStrokes from './PaintStrokes'
 
 export default function Newsletter() {
   const [email, setEmail] = useState('')
@@ -12,16 +13,21 @@ export default function Newsletter() {
 
   return (
     <section className="newsletter" id="plan">
+      <PaintStrokes items={[
+        { variant: 'a', position: 'tr', width: 340, opacity: 0.45 },
+        { variant: 'b', position: 'bl', width: 300, opacity: 0.4 },
+      ]} />
       <div className="newsletter__bg" aria-hidden="true" />
       <div className="container newsletter__inner">
         <div className="newsletter__text">
-          <p className="newsletter__eyebrow">🇬🇭 Stay Connected</p>
+          <p className="newsletter__eyebrow">🇬🇭 Join the Experience</p>
           <h2 className="newsletter__title">
-            Plan Your Perfect<br />Ghana Adventure
+            Get Insider Access to<br />Ghana's Best Kept Secrets
           </h2>
           <p className="newsletter__sub">
-            Get event alerts, new site listings, travel tips and exclusive Ghana
-            travel guides delivered straight to your inbox.&nbsp;
+            Be the first to know about new tours, exclusive festival
+            invitations, travel tips, and curated Ghana experience guides —
+            delivered straight to your inbox.&nbsp;
             <a href="/" className="newsletter__privacy">Privacy Policy.</a>
           </p>
         </div>
@@ -31,7 +37,7 @@ export default function Newsletter() {
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="20 6 9 17 4 12"/>
             </svg>
-            Akwaaba! You're on the list.
+            Akwaaba! Welcome to The Ghana Experience family.
           </div>
         ) : (
           <form className="newsletter__form" onSubmit={handleSubmit}>

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 250" fill="none">
+  <!-- Bold rough paint brush stroke in gold -->
+  <g opacity="1">
+    <!-- Main stroke body -->
+    <path d="M60 140 C80 95, 140 70, 220 65 C300 58, 360 72, 440 68 C520 62, 580 55, 660 60 C700 63, 730 72, 750 85 C765 95, 760 115, 745 130 C725 150, 680 158, 620 162 C540 168, 460 165, 380 168 C300 172, 220 178, 150 170 C100 164, 65 155, 60 140Z" fill="#D4AF37"/>
+    <!-- Thick overlay for paint texture -->
+    <path d="M90 130 C110 90, 170 72, 250 70 C340 66, 400 78, 480 74 C560 68, 620 62, 700 68 C735 72, 748 88, 738 108 C725 132, 670 145, 600 150 C520 156, 440 152, 360 155 C280 160, 200 165, 130 158 C95 154, 82 145, 90 130Z" fill="#C5A028"/>
+    <!-- Rough edge details top -->
+    <path d="M55 135 C50 125, 58 110, 75 105 C85 102, 80 118, 70 125Z" fill="#D4AF37"/>
+    <path d="M180 62 C190 50, 210 48, 225 55 C215 58, 195 56, 180 62Z" fill="#E5B83C"/>
+    <path d="M350 60 C365 48, 385 50, 395 58 C380 55, 360 52, 350 60Z" fill="#D4AF37"/>
+    <path d="M550 55 C565 42, 590 44, 600 54 C585 50, 565 48, 550 55Z" fill="#E5B83C"/>
+    <path d="M720 62 C735 52, 755 58, 760 70 C750 64, 732 58, 720 62Z" fill="#D4AF37"/>
+    <!-- Rough edge details bottom -->
+    <path d="M120 172 C130 182, 150 185, 160 178 C148 182, 132 180, 120 172Z" fill="#C5A028"/>
+    <path d="M300 175 C315 185, 340 188, 355 180 C338 184, 318 182, 300 175Z" fill="#D4AF37"/>
+    <path d="M500 168 C515 178, 540 180, 555 172 C538 176, 518 175, 500 168Z" fill="#C5A028"/>
+    <path d="M650 160 C665 170, 688 172, 700 164 C685 168, 668 167, 650 160Z" fill="#D4AF37"/>
+    <!-- Splatter dots from brush edges -->
+    <circle cx="40" cy="120" r="6" fill="#D4AF37"/>
+    <circle cx="30" cy="140" r="4" fill="#C5A028"/>
+    <circle cx="48" cy="100" r="3" fill="#E5B83C"/>
+    <circle cx="25" cy="155" r="3.5" fill="#D4AF37"/>
+    <circle cx="770" cy="90" r="5" fill="#D4AF37"/>
+    <circle cx="780" cy="110" r="3.5" fill="#C5A028"/>
+    <circle cx="762" cy="70" r="3" fill="#E5B83C"/>
+    <circle cx="758" cy="145" r="4" fill="#D4AF37"/>
+    <!-- Paint drip lines -->
+    <path d="M200 170 C202 185, 198 195, 200 205" stroke="#D4AF37" stroke-width="3" stroke-linecap="round"/>
+    <path d="M450 168 C452 180, 448 190, 450 198" stroke="#C5A028" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M630 158 C632 168, 628 175, 630 182" stroke="#D4AF37" stroke-width="2" stroke-linecap="round"/>
+    <!-- Inner texture streaks -->
+    <path d="M120 110 C200 100, 320 95, 420 100 C520 105, 600 98, 680 95" stroke="#B8860B" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+    <path d="M150 135 C230 128, 350 125, 450 130 C550 135, 620 128, 700 125" stroke="#B8860B" stroke-width="1.5" stroke-linecap="round" opacity="0.3"/>
+  </g>
+</svg>

@@ -34,11 +34,6 @@ const IconLogout = () => (
     <line x1="21" y1="12" x2="9" y2="12"/>
   </svg>
 )
-const IconBrand = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-  </svg>
-)
 
 const NAV = [
   { to: '/admin',        label: 'Dashboard', Icon: IconGrid,     exact: true },
@@ -61,8 +56,8 @@ export default function Sidebar({ open, onClose }) {
     <aside className={`${styles.sidebar} ${open ? styles.sidebarOpen : ''}`}>
       {/* Brand */}
       <div className={styles.brand}>
-        <span className={styles.brandIcon}><IconBrand /></span>
-        <span className={styles.brandName}>Tourism<span className={styles.brandAccent}>Admin</span></span>
+        <img src="/assets/Logo.PNG" alt="The Ghana Experience" className={styles.brandLogo} />
+        <span className={styles.brandName}>The Ghana<span className={styles.brandAccent}> Experience</span></span>
       </div>
 
       {/* Nav */}

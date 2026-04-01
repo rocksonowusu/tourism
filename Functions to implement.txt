@@ -1,3 +1,0 @@
-Functions to implement (Tourism)
-1. Alow people to book events and request for events to be organised for them
-2. Allow customers to request a visit to tourist sites

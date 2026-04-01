@@ -34,7 +34,10 @@ export default function Login() {
   return (
     <div className={styles.page}>
       {/* Full-bleed background */}
-      <div className={styles.bg} aria-hidden="true" />
+      <div className={styles.bg} aria-hidden="true">
+        <img src="/assets/brush-stroke.svg" alt="" className={styles.strokeTR} />
+        <img src="/assets/brush-stroke-2.svg" alt="" className={styles.strokeBL} />
+      </div>
 
       {/* Back to public site */}
       <Link to="/" className={styles.backLink}>
@@ -47,14 +50,10 @@ export default function Login() {
       <div className={styles.card}>
         {/* Logo */}
         <div className={styles.brand}>
-          <span className={styles.brandIcon}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
-            </svg>
-          </span>
+          <img src="/assets/Logo.PNG" alt="The Ghana Experience" className={styles.brandLogo} />
           <div>
-            <div className={styles.brandName}>Tourism<span>Admin</span></div>
-            <div className={styles.brandSub}>Management Dashboard</div>
+            <div className={styles.brandName}>The Ghana<span> Experience</span></div>
+            <div className={styles.brandSub}>Admin Portal</div>
           </div>
         </div>
 
@@ -106,7 +105,7 @@ export default function Login() {
         </form>
       </div>
 
-      <p className={styles.footer}>Tourism Management System © {new Date().getFullYear()}</p>
+      <p className={styles.footer}>© {new Date().getFullYear()} 1957 The Ghana Experience LBG</p>
     </div>
   )
 }

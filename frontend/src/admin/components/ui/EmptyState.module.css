@@ -4,14 +4,14 @@
 }
 .icon {
   width: 52px; height: 52px;
-  background: rgba(255,255,255,0.08);
+  background: var(--ash-soft);
   border-radius: var(--radius-lg);
   display: flex; align-items: center; justify-content: center;
-  color: rgba(237,232,216,0.50);
+  color: var(--ash-light);
   margin-bottom: var(--space-2);
   font-size: 28px; line-height: 1;
 }
 .icon svg { display: block; width: 26px; height: 26px; }
-.title { font-size: var(--text-lg); font-weight: 600; color: #EDE8D8; margin: 0; }
-.desc  { font-size: var(--text-sm); color: rgba(237,232,216,0.55); max-width: 360px; margin: 0; }
+.title { font-size: var(--text-lg); font-weight: 600; color: var(--ash-deep); margin: 0; }
+.desc  { font-size: var(--text-sm); color: var(--ash-medium); max-width: 360px; margin: 0; }
 .action { margin-top: var(--space-3); }

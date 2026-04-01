@@ -6,6 +6,7 @@ import './admin/styles/admin.css'
 // Public site components
 import Header         from './components/Header'
 import Hero           from './components/Hero'
+import Features       from './components/Features'
 import Destinations   from './components/Destinations'
 import EventsSection  from './components/EventsSection'
 import Stories        from './components/Stories'
@@ -91,6 +92,7 @@ function PublicSite() {
     <div className="app">
       <Header />
       <Hero media={heroMedia} />
+      <Features />
       <EventsSection events={events} loading={eventsLoading} />
       <Destinations destinations={destinations} loading={loading} />
       <Stories />

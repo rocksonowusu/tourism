@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import api from '../api/client'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import PaintStrokes from '../components/PaintStrokes'
 import './SiteDetail.css'
 
 // ── Icons ─────────────────────────────────────────────────────────────────
@@ -211,6 +212,10 @@ export default function SiteDetail() {
 
       {/* ── Body ──────────────────────────────────────────────────── */}
       <section className="std__body">
+        <PaintStrokes items={[
+          { variant: 'a', position: 'tr', width: 330, opacity: 0.45 },
+          { variant: 'b', position: 'bl', width: 300, opacity: 0.4 },
+        ]} />
         <div className="container std__layout">
 
           {/* Left column */}

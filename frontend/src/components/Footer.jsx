@@ -1,5 +1,6 @@
 import React from 'react'
 import './Footer.css'
+import PaintStrokes from './PaintStrokes'
 
 const IconFB = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
@@ -22,11 +23,11 @@ const IconPin = () => (
 
 const COLS = [
   {
-    heading: 'Explore Ghana',
-    links: ['Tourist Sites', 'Upcoming Events', 'Culture & Heritage', 'Wildlife & Nature', 'Beaches', 'National Parks'],
+    heading: 'Our Experiences',
+    links: ['Curated Tours', 'Cultural Immersion', 'Heritage Walks', 'Wildlife Safaris', 'Beach Getaways', 'Festival Packages'],
   },
   {
-    heading: 'Top Regions',
+    heading: 'Destinations',
     links: ['Greater Accra', 'Ashanti Region', 'Central Region', 'Northern Region', 'Volta Region', 'Eastern Region'],
   },
   {
@@ -34,25 +35,26 @@ const COLS = [
     links: ['Travel Guide', 'Best Time to Visit', 'Visa Information', 'Getting Around', 'Where to Stay', 'Safety Tips'],
   },
   {
-    heading: 'About',
-    links: ['About Visit Ghana', 'Ghana Tourism Authority', 'Contact Us', 'Privacy Policy', 'Terms of Use'],
+    heading: 'Company',
+    links: ['About Us', 'Our Story', 'Contact Us', 'Careers', 'Privacy Policy', 'Terms of Service'],
   },
 ]
 
 export default function Footer() {
   return (
     <footer className="footer" id="contact">
+      <PaintStrokes items={[
+        { variant: 'b', position: 'tl', width: 300, opacity: 0.4 },
+        { variant: 'a', position: 'br', width: 320, opacity: 0.45 },
+      ]} />
       <div className="container">
         <div className="footer__top">
           <div className="footer__brand">
             <a href="/" className="footer__logo">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
-                <circle cx="12" cy="9" r="2.5"/>
-              </svg>
-              Visit Ghana
+              <img src="/assets/Logo.PNG" alt="The Ghana Experience" className="footer__logo-img" />
+              The Ghana Experience
             </a>
-            <p className="footer__tagline">Your official guide to Ghana's most breathtaking tourist sites, festivals, and cultural experiences.</p>
+            <p className="footer__tagline">1957 The Ghana Experience LBG — Connecting the world to Ghana through curated tours, cultural immersions, and unforgettable heritage experiences across all 16 regions.</p>
             <div className="footer__social">
               <a href="/" className="footer__social-link" aria-label="Facebook"><IconFB /></a>
               <a href="/" className="footer__social-link" aria-label="Instagram"><IconIG /></a>
@@ -75,7 +77,7 @@ export default function Footer() {
         </div>
 
         <div className="footer__bottom">
-          <p>© 2026 Visit Ghana. Powered by Ghana Tourism Authority. All rights reserved.</p>
+          <p>© 2026 1957 The Ghana Experience LBG. All rights reserved.</p>
           <div className="footer__bottom-links">
             <a href="/">Privacy Policy</a>
             <span>·</span>

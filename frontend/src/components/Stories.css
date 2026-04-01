@@ -6,6 +6,7 @@
   padding: 88px 0 100px;
   background: var(--white-off, #FAFAF7);
   overflow: hidden;
+  position: relative;
 }
 
 /* ── Header ──────────────────────────────────────────────────── */

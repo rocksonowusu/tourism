@@ -36,11 +36,8 @@ export default function Header() {
 
         {/* Logo */}
         <Link to="/" className="header__logo">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
-            <circle cx="12" cy="9" r="2.5"/>
-          </svg>
-          <span>Visit Ghana</span>
+          <img src="/assets/Logo.PNG" alt="The Ghana Experience" className="header__logo-img" />
+          <span>The Ghana Experience</span>
         </Link>
 
         {/* Nav — center */}
@@ -48,7 +45,7 @@ export default function Header() {
           <Link to="/sites"  className="header__link" onClick={() => setMenuOpen(false)}>Destinations</Link>
           <Link to="/events" className="header__link" onClick={() => setMenuOpen(false)}>Events</Link>
           <a href="/#culture"      className="header__link" onClick={() => setMenuOpen(false)}>Culture</a>
-          <a href="/#plan"         className="header__link" onClick={() => setMenuOpen(false)}>Plan Your Trip</a>
+          <a href="/#features"     className="header__link" onClick={() => setMenuOpen(false)}>Our Experiences</a>
           <a href="/#contact"      className="header__link" onClick={() => setMenuOpen(false)}>Contact</a>
         </nav>
 

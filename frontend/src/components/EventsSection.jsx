@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import './EventsSection.css'
+import PaintStrokes from './PaintStrokes'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 
 const IconCalendar = () => (
@@ -181,13 +182,17 @@ export default function EventsSection({ events = [], loading }) {
 
   return (
     <section className="ev-section" id="events">
+      <PaintStrokes items={[
+        { variant: 'b', position: 'tl', width: 340, opacity: 0.5 },
+        { variant: 'a', position: 'br', width: 380, opacity: 0.5 },
+      ]} />
       <div className="container">
 
         {/* ── Section header ──────────────────────────────────────── */}
         <div className="ev__header sr" ref={headerRef}>
           <div>
-            <p className="ev__eyebrow">What's On in Ghana</p>
-            <h2 className="ev__title">Upcoming Events</h2>
+            <p className="ev__eyebrow">Festivals &amp; Experiences</p>
+            <h2 className="ev__title">Events We're Part Of</h2>
           </div>
           <Link to="/events" className="ev__view-all">
             View all events <IconArrow />

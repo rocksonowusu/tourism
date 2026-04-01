@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import api from '../api/client'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import PaintStrokes from '../components/PaintStrokes'
 import './AllEvents.css'
 
 // ── Icons ─────────────────────────────────────────────────────────────────
@@ -152,6 +153,10 @@ export default function AllEvents() {
     <div className="app">
       <Header />
       <section className="all-events">
+        <PaintStrokes items={[
+          { variant: 'a', position: 'tr', width: 360, opacity: 0.5 },
+          { variant: 'b', position: 'bl', width: 320, opacity: 0.45 },
+        ]} />
         <div className="container">
 
           {/* Breadcrumb */}

@@ -10,17 +10,6 @@
   overflow: hidden;
 }
 
-/* Subtle warm texture overlay */
-.ev-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 80% 60% at 10% 40%, rgba(197,160,40,.06) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 50% at 90% 80%, rgba(197,160,40,.04) 0%, transparent 55%);
-  pointer-events: none;
-}
-
 /* ── Section header ──────────────────────────────────────────────────────── */
 .ev__header {
   display: flex;

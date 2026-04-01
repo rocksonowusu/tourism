@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import api from '../api/client'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import PaintStrokes from '../components/PaintStrokes'
 import './EventDetail.css'
 
 // ── Icons ─────────────────────────────────────────────────────────────────
@@ -322,6 +323,10 @@ export default function EventDetail() {
 
       {/* ── Main content ─────────────────────────────────────────── */}
       <section className="evd__body">
+        <PaintStrokes items={[
+          { variant: 'b', position: 'tl', width: 320, opacity: 0.4 },
+          { variant: 'a', position: 'br', width: 340, opacity: 0.45 },
+        ]} />
         <div className="container evd__layout">
 
           {/* Left: content column */}

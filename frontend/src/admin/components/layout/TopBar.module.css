@@ -1,9 +1,7 @@
 .topbar {
   height: var(--topbar-height);
-  background: rgba(10, 8, 2, 0.45);
-  backdrop-filter: blur(18px) saturate(1.4);
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
-  border-bottom: 1px solid rgba(197, 160, 40, 0.15);
+  background: var(--white-pure);
+  border-bottom: 1px solid var(--ash-pale);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -17,7 +15,7 @@
 .pageTitle {
   font-size: var(--text-lg);
   font-weight: 600;
-  color: #EDE8D8;
+  color: var(--ash-deep);
   margin: 0;
 }
 
@@ -55,12 +53,12 @@
 .userName {
   font-size: var(--text-sm);
   font-weight: 500;
-  color: #EDE8D8;
+  color: var(--ash-deep);
   white-space: nowrap;
 }
 .userRole {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.50);
+  color: var(--ash-medium);
   white-space: nowrap;
 }
 
@@ -69,17 +67,17 @@
   width: 32px; height: 32px;
   display: flex; align-items: center; justify-content: center;
   background: none;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid var(--ash-pale);
   border-radius: var(--radius-md);
-  color: rgba(255, 255, 255, 0.60);
+  color: var(--ash-medium);
   cursor: pointer;
   transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
   flex-shrink: 0;
 }
 .logoutBtn:hover {
-  background: rgba(220, 38, 38, 0.20);
-  border-color: rgba(252, 165, 165, 0.40);
-  color: #fca5a5;
+  background: rgba(220, 38, 38, 0.08);
+  border-color: rgba(239, 68, 68, 0.30);
+  color: var(--red);
 }
 .logoutBtn svg { display: block; }
 
@@ -91,16 +89,16 @@
   align-items: center;
   justify-content: center;
   background: none;
-  border: 1px solid rgba(197, 160, 40, 0.25);
+  border: 1px solid var(--ash-pale);
   border-radius: var(--radius-md);
-  color: var(--gold-warm);
+  color: var(--gold-rich);
   cursor: pointer;
   flex-shrink: 0;
   transition: background var(--transition-fast), border-color var(--transition-fast);
 }
 .menuBtn:hover {
-  background: rgba(197, 160, 40, 0.12);
-  border-color: rgba(197, 160, 40, 0.4);
+  background: var(--color-primary-light);
+  border-color: rgba(197, 160, 40, 0.3);
 }
 .menuBtn svg { display: block; }
 

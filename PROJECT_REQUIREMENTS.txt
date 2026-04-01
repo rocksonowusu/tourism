@@ -1,0 +1,513 @@
+================================================================================
+  1957 THE GHANA EXPERIENCE LBG — PROJECT REQUIREMENTS & PHASES
+================================================================================
+
+  Client:       1957 The Ghana Experience LBG
+  Project:      Tourism Platform — Full Rebuild & Feature Expansion
+  Date:         April 1, 2026
+  Prepared by:  Development Team
+  Logo:         ✅ Received (footprint-style logo with "THE GHANA Experience")
+
+================================================================================
+  MISSION CONTEXT
+================================================================================
+
+  "At 1957 The Ghana Experience LBG, our mission is to deliver authentic and
+   unforgettable travel experiences that showcase the rich culture, heritage,
+   and natural beauty of Ghana."
+
+  KEY BUSINESS RULES:
+  • The site is INFORMATIONAL — no payment processing, no online booking.
+  • All customer actions (trip planning, apartment requests, event requests,
+    car rental inquiries) result in:
+      1. An EMAIL sent to the company's email address, AND
+      2. A record/notification appearing in the Admin Portal, AND/OR
+      3. Opening WhatsApp with a PRE-FILLED message based on user selections.
+  • Media (images/videos) is central to every feature — everything has
+    corresponding media files uploaded via the admin portal.
+
+================================================================================
+  WHAT ALREADY EXISTS (Current Codebase)
+================================================================================
+
+  Backend (Django 6 + DRF):
+    ✅ TouristSite model (CRUD, slug, featured, media)
+    ✅ Event model (CRUD, slug, featured, date, price, highlights, media)
+    ✅ EventMedia & TouristSiteMedia models (Cloudinary storage)
+    ✅ JWT authentication (login, refresh, logout, register)
+    ✅ Filtering, search, ordering, pagination
+    ✅ Health check endpoint
+
+  Frontend (React 18 + Vite):
+    ✅ Public site: Hero, Destinations, Events, Stories, Newsletter, Footer
+    ✅ Detail pages: EventDetail, SiteDetail
+    ✅ Listing pages: AllEvents, AllSites
+    ✅ Admin portal: Dashboard, Events CRUD, Sites CRUD, Media Library
+    ✅ Glass-morphism admin UI (dark theme with gold accents)
+    ✅ JWT auth flow, toast notifications, mobile sidebar
+
+  Hosting:
+    ✅ Frontend on Vercel, Backend on Render
+    ✅ Cloudinary for media storage
+
+================================================================================
+  PHASE 1 — THEME OVERHAUL (Light Theme)
+================================================================================
+
+  REQUIREMENT: Client wants a LIGHT-themed design for both the public site
+  and the admin portal. The gold accent colour palette must be PRESERVED.
+  The current dark/glass-morphism style must be replaced.
+
+  Tasks:
+  ────────────────────────────────────────────────────────────────────────────
+
+  1.1  PUBLIC SITE — Light Theme
+       • Replace dark backgrounds with clean white/light-grey/cream tones.
+       • Keep gold (#D4A843 or similar) as the primary accent colour.
+       • Update Header, Hero, Destinations, Events, Stories, Newsletter,
+         Footer components — all CSS files.
+       • Ensure text is dark on light backgrounds for readability.
+       • Update buttons, links, hover states to use gold on light surfaces.
+       • Update all detail pages (EventDetail, SiteDetail) and listing pages
+         (AllEvents, AllSites) to match the new light theme.
+
+  1.2  ADMIN PORTAL — Light Theme
+       • Replace glass-morphism dark cards with clean, light-themed cards.
+       • Keep gold accent for active states, buttons, highlights.
+       • Update admin.css, Dashboard.module.css, Events.module.css,
+         Sites.module.css, Media.module.css, Login.module.css.
+       • Ensure form modals, tables, sidebars all follow light theme.
+       • Replace dark elephant photography background with a lighter,
+         brand-appropriate background or clean solid colour.
+
+  1.3  LOGO INTEGRATION
+       • Integrate the company logo ("The Ghana Experience" footprint logo)
+         into the Header/Navbar on the public site.
+       • Add logo to the Admin portal login page and sidebar.
+
+  Deliverables:
+       • All CSS/style files updated.
+       • Both public site and admin portal fully light-themed with gold.
+       • Logo visible in navigation and admin.
+       • Fully responsive (mobile, tablet, desktop).
+
+
+================================================================================
+  PHASE 2 — TOUR TRIP PLANNING & REQUEST SYSTEM
+================================================================================
+
+  REQUIREMENT: Customers should be able to plan a trip by selecting from
+  available tours, entering traveller details by age group, and submitting a
+  request. This sends an email to the company AND creates a record in the
+  admin portal. Option to open WhatsApp with a pre-filled message.
+
+  Tasks:
+  ────────────────────────────────────────────────────────────────────────────
+
+  BACKEND:
+  2.1  Tour/Package Model
+       • Create a Tour model (or repurpose/extend Event) with fields:
+         – title, slug, description, location, duration, price_per_adult,
+           price_per_child, price_per_infant, highlights, inclusions,
+           exclusions, itinerary (JSON), is_active, is_featured,
+           max_group_size, media (related).
+       • Create TourMedia model (images/videos per tour, Cloudinary).
+
+  2.2  Trip Request Model
+       • Create a TripRequest model with fields:
+         – tour (FK), customer_name, customer_email, customer_phone,
+           number_of_adults, number_of_children (ages 3-12),
+           number_of_infants (under 3), preferred_date, special_requests,
+           status (new/contacted/confirmed/cancelled), created_at.
+       • Admin can view, filter, update status of requests.
+
+  2.3  Trip Request API
+       • POST /api/trip-requests/ — PUBLIC (no auth required) to submit.
+       • GET /api/trip-requests/ — ADMIN only, with filtering & pagination.
+       • PATCH /api/trip-requests/{id}/ — ADMIN only, update status.
+
+  2.4  Email Notification
+       • On trip request submission, send a formatted email to the company
+         email with all trip details (tour name, dates, group breakdown,
+         contact info, special requests).
+       • Send a confirmation email to the customer.
+
+  FRONTEND:
+  2.5  Public Site — Trip Planning Page/Flow
+       • New page/section: "Plan Your Trip"
+       • Display available tours with images, price, duration.
+       • Tour detail view with full info + "Request This Tour" form.
+       • Form fields: name, email, phone, preferred date, number of adults,
+         children, infants, special requests/notes.
+       • On submit → call API → show success message.
+       • "Chat on WhatsApp" button that opens WhatsApp with a pre-filled
+         message summarising the selected tour and group details.
+
+  2.6  Admin Portal — Trip Requests Management
+       • New admin page: "Trip Requests"
+       • Table listing all requests with filters (status, date, tour).
+       • Click to view full request details.
+       • Update status (new → contacted → confirmed → cancelled).
+       • Notification/badge showing new unread requests.
+
+  2.7  Tours Management in Admin
+       • CRUD for Tours (similar to existing Events CRUD).
+       • Upload media for each tour.
+
+  Deliverables:
+       • Tour & TripRequest models + migrations.
+       • API endpoints for tours (CRUD) and trip requests.
+       • Email sending on request submission.
+       • Public trip planning UI with WhatsApp integration.
+       • Admin trip requests management page.
+
+
+================================================================================
+  PHASE 3 — APARTMENT / ACCOMMODATION LISTINGS
+================================================================================
+
+  REQUIREMENT: The company helps find apartments for visitors (work meetings,
+  vacations, etc.) — similar to Airbnb-style listings. Apartments have media
+  (photos/videos). Customers request apartments, not book online.
+
+  Tasks:
+  ────────────────────────────────────────────────────────────────────────────
+
+  BACKEND:
+  3.1  Apartment Model
+       • Create an Apartment model with fields:
+         – title, slug, description, location, address, latitude, longitude,
+           property_type (apartment/house/villa/suite), bedrooms, bathrooms,
+           max_guests, price_per_night (indicative), amenities (JSON list),
+           rules (JSON list), is_available, is_featured, created_at.
+       • Create ApartmentMedia model (images/videos, Cloudinary).
+
+  3.2  Accommodation Request Model
+       • Create an AccommodationRequest model:
+         – apartment (FK, nullable — can be general inquiry),
+           customer_name, customer_email, customer_phone,
+           check_in_date, check_out_date, number_of_guests,
+           purpose (vacation/business/event/other), message,
+           status (new/contacted/confirmed/cancelled), created_at.
+
+  3.3  Accommodation API
+       • Full CRUD for Apartments (admin) + public listing/detail.
+       • POST /api/accommodation-requests/ — PUBLIC.
+       • GET/PATCH /api/accommodation-requests/ — ADMIN only.
+
+  3.4  Email Notification
+       • Email company on new accommodation request.
+       • Confirmation email to customer.
+
+  FRONTEND:
+  3.5  Public Site — Accommodations Page
+       • New page: "Accommodations" / "Stay With Us"
+       • Grid of apartment cards with hero image, location, price/night,
+         bedrooms, guests capacity.
+       • Apartment detail page with image gallery, amenities list,
+         description, location map placeholder, "Request This Apartment" form.
+       • WhatsApp button with pre-filled accommodation inquiry.
+
+  3.6  Admin Portal — Apartments Management
+       • CRUD page for apartments with media upload.
+       • Accommodation requests listing with status management.
+
+  Deliverables:
+       • Apartment & AccommodationRequest models + migrations.
+       • Full API for apartments and accommodation requests.
+       • Public accommodations listing + detail pages.
+       • Admin apartments & requests management.
+
+
+================================================================================
+  PHASE 4 — EVENTS & EXPERIENCE REQUESTS (Enhanced)
+================================================================================
+
+  REQUIREMENT: The company organises custom events — corporate retreats,
+  family/friends gatherings, recreational activities. Customers can request
+  events to be organised for them. The public site should showcase all the
+  types of experiences they offer. Everything has media.
+
+  Tasks:
+  ────────────────────────────────────────────────────────────────────────────
+
+  BACKEND:
+  4.1  Event Categories / Types
+       • Add a category field to the Event model (or create an EventCategory
+         model): Corporate, Family & Friends, Retreat, Recreational,
+         Cultural, Custom, etc.
+       • Add fields if needed: activities (JSON list of included activities),
+         suitable_for (e.g., "families", "corporate groups").
+
+  4.2  Event Request Model
+       • Create an EventRequest model:
+         – event_type (corporate/family/retreat/recreational/custom),
+           customer_name, customer_email, customer_phone,
+           preferred_date, expected_attendees, location_preference,
+           budget_range, activities_interested_in (JSON),
+           special_requirements, status (new/contacted/confirmed/cancelled),
+           created_at.
+       • This is for CUSTOM event requests (not attending existing events).
+
+  4.3  Event Request API
+       • POST /api/event-requests/ — PUBLIC.
+       • GET/PATCH /api/event-requests/ — ADMIN only.
+
+  4.4  Email Notification
+       • Email company on new event request.
+       • Confirmation email to customer.
+
+  FRONTEND:
+  4.5  Public Site — Enhanced Events & Experiences
+       • Enhance existing events pages to show event categories/types.
+       • Add an "Experiences" or "What We Do" section on the home page
+         showcasing the different types of events/experiences offered.
+       • Add a "Request an Event" page/form where customers describe what
+         they want organised.
+       • WhatsApp button with pre-filled event request message.
+
+  4.6  Admin Portal — Event Requests Management
+       • New admin page: "Event Requests"
+       • Table with all custom event requests, filterable by type/status.
+       • View details + update status.
+
+  Deliverables:
+       • Updated Event model with categories.
+       • EventRequest model + migrations.
+       • Event request API.
+       • Enhanced public events UI with categories and request form.
+       • Admin event requests management.
+
+
+================================================================================
+  PHASE 5 — COMMUNITY & CHARITY SHOWCASE
+================================================================================
+
+  REQUIREMENT: A detailed section to showcase the community volunteering and
+  charity work the company has done. This is part of their mission — giving
+  back to communities with educational materials and personal hygiene items.
+
+  Tasks:
+  ────────────────────────────────────────────────────────────────────────────
+
+  BACKEND:
+  5.1  Community Project Model
+       • Create a CommunityProject model:
+         – title, slug, description, location, date, impact_summary,
+           beneficiaries_count, is_featured, created_at.
+       • Create CommunityProjectMedia model (images/videos, Cloudinary).
+
+  FRONTEND:
+  5.2  Public Site — Community Impact Page
+       • New page: "Community Impact" / "Giving Back"
+       • Hero section with mission statement about community work.
+       • Grid/timeline of community projects with images, descriptions,
+         impact metrics (people helped, items donated, etc.).
+       • Project detail view with full gallery and story.
+
+  5.3  Public Site — Home Page Section
+       • Add a "Community Impact" teaser section on the home page with
+         a few highlighted projects and a "See All" link.
+
+  5.4  Admin Portal — Community Projects Management
+       • CRUD page for community projects with media upload.
+
+  Deliverables:
+       • CommunityProject model + migrations + API.
+       • Public community impact page + home page section.
+       • Admin community projects management.
+
+
+================================================================================
+  PHASE 6 — CAR RENTAL LISTINGS
+================================================================================
+
+  REQUIREMENT: The company offers car rentals — from buses to private sedans.
+  Customers can view available vehicles and send a rental inquiry.
+
+  Tasks:
+  ────────────────────────────────────────────────────────────────────────────
+
+  BACKEND:
+  6.1  Vehicle Model
+       • Create a Vehicle model:
+         – name, slug, description, vehicle_type (sedan/SUV/van/bus/luxury),
+           brand, model_year, seats, transmission (automatic/manual),
+           fuel_type, price_per_day (indicative), features (JSON list),
+           is_available, is_featured, created_at.
+       • Create VehicleMedia model (images/videos, Cloudinary).
+
+  6.2  Car Rental Request Model
+       • Create a CarRentalRequest model:
+         – vehicle (FK, nullable — can be general inquiry),
+           customer_name, customer_email, customer_phone,
+           pickup_date, return_date, pickup_location, return_location,
+           with_driver (boolean), purpose, message,
+           status (new/contacted/confirmed/cancelled), created_at.
+
+  6.3  Car Rental API
+       • Full CRUD for Vehicles (admin) + public listing/detail.
+       • POST /api/car-rental-requests/ — PUBLIC.
+       • GET/PATCH /api/car-rental-requests/ — ADMIN only.
+
+  6.4  Email Notification
+       • Email company on new car rental request.
+       • Confirmation email to customer.
+
+  FRONTEND:
+  6.5  Public Site — Car Rentals Page
+       • New page: "Car Rentals"
+       • Grid of vehicle cards with image, type, seats, price/day.
+       • Vehicle detail page with gallery, specs, features.
+       • "Request This Vehicle" form (dates, pickup/return, with driver?).
+       • WhatsApp button with pre-filled rental inquiry.
+
+  6.6  Admin Portal — Vehicles Management
+       • CRUD page for vehicles with media upload.
+       • Car rental requests listing with status management.
+
+  Deliverables:
+       • Vehicle & CarRentalRequest models + migrations.
+       • Full API for vehicles and rental requests.
+       • Public car rentals listing + detail pages.
+       • Admin vehicles & rental requests management.
+
+
+================================================================================
+  PHASE 7 — REVIEWS & RATINGS
+================================================================================
+
+  REQUIREMENT: Customers who visit the site should be able to review and rate
+  the company's services. Reviews should be visible on the public site.
+
+  Tasks:
+  ────────────────────────────────────────────────────────────────────────────
+
+  BACKEND:
+  7.1  Review Model
+       • Create a Review model:
+         – reviewer_name, reviewer_email, reviewer_photo (optional,
+           Cloudinary), rating (1-5 stars), title, comment,
+           service_type (tour/accommodation/event/car-rental/general),
+           is_approved (boolean, default False — admin moderates),
+           is_featured, created_at.
+       • Reviews must be APPROVED by admin before showing publicly.
+
+  7.2  Review API
+       • POST /api/reviews/ — PUBLIC (submit a review).
+       • GET /api/reviews/ — PUBLIC (only approved reviews).
+       • GET /api/reviews/featured/ — PUBLIC (featured approved reviews).
+       • PATCH /api/reviews/{id}/ — ADMIN (approve/feature/delete).
+
+  FRONTEND:
+  7.3  Public Site — Reviews Display
+       • Testimonials / Reviews section on the home page (featured reviews).
+       • Dedicated "Reviews" page showing all approved reviews with
+         star ratings, service type filter.
+       • "Leave a Review" form (name, email, rating stars, service used,
+         title, comment).
+
+  7.4  Admin Portal — Reviews Moderation
+       • Reviews management page with pending/approved/rejected tabs.
+       • Approve, feature, or delete reviews.
+       • Review statistics (average rating, total reviews by service).
+
+  Deliverables:
+       • Review model + migrations + API.
+       • Public reviews section + submission form.
+       • Admin reviews moderation page.
+
+
+================================================================================
+  PHASE 8 — SOCIAL MEDIA LINKS & WHATSAPP INTEGRATION
+================================================================================
+
+  REQUIREMENT: Social media links should be on the site — clicking them opens
+  the respective platform. WhatsApp integration throughout for customer
+  communication with pre-filled messages.
+
+  Tasks:
+  ────────────────────────────────────────────────────────────────────────────
+
+  BACKEND:
+  8.1  Company Settings / Social Links
+       • Create a SiteSettings or CompanyInfo model (singleton):
+         – company_name, phone, email, whatsapp_number,
+           facebook_url, instagram_url, twitter_url, tiktok_url,
+           youtube_url, linkedin_url, address, about_text.
+       • API endpoint to GET company settings (public, read-only).
+       • Admin can update these from the admin portal.
+
+  FRONTEND:
+  8.2  Social Media Links
+       • Add social media icons to the Footer (and optionally Header).
+       • Each icon links to the respective platform URL (opens in new tab).
+       • Icons: Facebook, Instagram, Twitter/X, TikTok, YouTube, LinkedIn
+         (based on what the company uses).
+
+  8.3  WhatsApp Integration (Global)
+       • Floating WhatsApp button on all public pages (bottom-right corner).
+       • On each service page (tours, apartments, car rentals, events),
+         the WhatsApp button generates a pre-filled message like:
+           "Hi, I'm interested in [Tour Name]. I'd like to book for
+            [X adults, Y children] on [preferred date]. Please let me know
+            the availability. Thank you!"
+       • WhatsApp link format: https://wa.me/{number}?text={encoded_message}
+
+  8.4  Admin Portal — Settings Page
+       • New admin page: "Settings" / "Company Info"
+       • Form to update company contact info, social links, WhatsApp number.
+
+  Deliverables:
+       • SiteSettings model + API.
+       • Social media icons in footer/header.
+       • WhatsApp floating button with context-aware pre-filled messages.
+       • Admin settings page.
+
+
+================================================================================
+  PHASE SUMMARY & PRIORITY ORDER
+================================================================================
+
+  Phase │ Feature                              │ Priority  │ Depends On
+  ──────┼──────────────────────────────────────┼───────────┼────────────
+    1   │ Light Theme Overhaul + Logo           │ HIGH      │ None
+    2   │ Tour Trip Planning & Requests         │ HIGH      │ Phase 1
+    3   │ Apartment / Accommodation Listings    │ HIGH      │ Phase 1
+    4   │ Events & Experience Requests          │ HIGH      │ Phase 1
+    5   │ Community & Charity Showcase          │ MEDIUM    │ Phase 1
+    6   │ Car Rental Listings                   │ MEDIUM    │ Phase 1
+    7   │ Reviews & Ratings                     │ MEDIUM    │ Phase 1
+    8   │ Social Media & WhatsApp Integration   │ HIGH      │ Phase 1
+  ──────┴──────────────────────────────────────┴───────────┴────────────
+
+  NOTE: Phase 1 (Theme) should be done first since it affects every page.
+  After Phase 1, Phases 2-8 can be worked on in the listed order, or
+  re-prioritised based on client feedback. Phase 8 (WhatsApp/Social)
+  should ideally be done early as it is used across all other features.
+
+================================================================================
+  CROSS-CUTTING CONCERNS (Apply to ALL Phases)
+================================================================================
+
+  • RESPONSIVE DESIGN: Every page must work on mobile (≤480px),
+    tablet (≤768px), and desktop.
+  • MEDIA HANDLING: All new models with media follow the same pattern —
+    Cloudinary storage, admin upload via drag-and-drop.
+  • EMAIL SYSTEM: Set up Django email backend (SMTP) for all request
+    notifications. Use HTML email templates.
+  • WHATSAPP MESSAGES: Every request form should have a WhatsApp
+    alternative button with a pre-filled message.
+  • ADMIN NOTIFICATIONS: All incoming customer requests should show
+    a count/badge in the admin sidebar.
+  • SEO: All new pages should have proper meta tags, slugs, and
+    semantic HTML.
+  • NAVIGATION: Update Header/Navbar on public site with links to all
+    new sections (Tours, Accommodations, Car Rentals, Community, Reviews).
+  • ADMIN SIDEBAR: Update admin sidebar with links to all new management
+    pages (Tours, Apartments, Vehicles, Event Requests, Trip Requests,
+    Accommodation Requests, Car Rental Requests, Reviews, Settings).
+
+================================================================================
+  END OF REQUIREMENTS DOCUMENT
+================================================================================

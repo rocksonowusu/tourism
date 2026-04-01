@@ -1,0 +1,10 @@
+/* ── Decorative paint stroke images ──────────────────────────── */
+.paint-stroke {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  height: auto;
+  max-width: none;          /* don't let container shrink it */
+  user-select: none;
+  -webkit-user-drag: none;
+}

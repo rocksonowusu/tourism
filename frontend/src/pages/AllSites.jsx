@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import api from '../api/client'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
+import PaintStrokes from '../components/PaintStrokes'
 import './AllSites.css'
 
 // ── Icons ─────────────────────────────────────────────────────────────────
@@ -120,6 +121,10 @@ export default function AllSites() {
     <div className="app">
       <Header />
       <section className="all-sites">
+        <PaintStrokes items={[
+          { variant: 'b', position: 'tl', width: 340, opacity: 0.45 },
+          { variant: 'a', position: 'br', width: 350, opacity: 0.5 },
+        ]} />
         <div className="container">
 
           {/* Breadcrumb */}

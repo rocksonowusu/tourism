@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" fill="none">
+  <!-- Bold paint splash in gold -->
+  <g opacity="1">
+    <!-- Main splash body -->
+    <path d="M250 120 C310 100, 380 130, 390 190 C400 250, 370 310, 320 340 C270 370, 200 360, 160 320 C120 280, 110 210, 140 160 C160 130, 200 115, 250 120Z" fill="#D4AF37"/>
+    <!-- Overlay blob -->
+    <path d="M240 140 C290 125, 350 148, 365 200 C380 252, 355 300, 310 325 C265 350, 210 342, 175 305 C140 268, 135 218, 158 175 C175 145, 210 132, 240 140Z" fill="#C5A028"/>
+    
+    <!-- Splash arms - top right -->
+    <path d="M370 170 C400 140, 430 120, 445 100 C450 92, 445 85, 435 90 C420 100, 395 135, 375 165Z" fill="#D4AF37"/>
+    <path d="M380 150 C410 115, 440 95, 460 75 C465 68, 458 62, 450 68 C435 82, 405 115, 382 148Z" fill="#E5B83C"/>
+    
+    <!-- Splash arms - top left -->
+    <path d="M170 140 C140 110, 110 90, 90 70 C84 62, 78 65, 82 72 C92 88, 125 115, 165 142Z" fill="#D4AF37"/>
+    <path d="M185 128 C158 98, 130 75, 115 55 C110 48, 102 50, 106 58 C116 75, 148 100, 180 130Z" fill="#C5A028"/>
+    
+    <!-- Splash arms - bottom left -->
+    <path d="M155 320 C120 345, 88 365, 65 385 C58 392, 60 400, 68 395 C85 380, 115 355, 152 325Z" fill="#D4AF37"/>
+    <path d="M145 340 C108 368, 78 390, 55 410 C48 418, 52 425, 60 418 C78 400, 108 375, 142 345Z" fill="#E5B83C"/>
+    
+    <!-- Splash arms - bottom right -->
+    <path d="M330 335 C360 360, 385 382, 405 400 C412 408, 418 405, 412 396 C398 378, 368 355, 335 332Z" fill="#D4AF37"/>
+    <path d="M345 345 C378 372, 402 395, 425 415 C432 422, 438 418, 430 410 C415 392, 388 368, 350 342Z" fill="#C5A028"/>
+    
+    <!-- Splash arms - top -->
+    <path d="M260 125 C268 90, 272 55, 270 30 C270 22, 262 20, 262 28 C260 52, 258 88, 258 122Z" fill="#D4AF37"/>
+    <path d="M230 130 C220 95, 215 60, 210 35 C208 26, 200 26, 202 35 C206 58, 215 92, 228 128Z" fill="#E5B83C"/>
+    
+    <!-- Splash arms - bottom -->
+    <path d="M250 360 C255 395, 258 425, 260 450 C262 460, 268 460, 268 450 C265 428, 260 398, 255 362Z" fill="#D4AF37"/>
+    
+    <!-- Splash arms - left -->
+    <path d="M140 240 C105 235, 70 232, 45 228 C35 226, 32 234, 42 236 C65 240, 100 242, 138 242Z" fill="#D4AF37"/>
+    
+    <!-- Splash arms - right -->
+    <path d="M390 220 C425 218, 455 215, 475 210 C485 208, 488 216, 478 218 C458 222, 428 224, 392 224Z" fill="#D4AF37"/>
+    
+    <!-- Flying droplets -->
+    <circle cx="455" cy="60" r="10" fill="#D4AF37"/>
+    <circle cx="470" cy="45" r="6" fill="#E5B83C"/>
+    <circle cx="480" cy="70" r="4" fill="#C5A028"/>
+    <circle cx="445" cy="40" r="5" fill="#D4AF37"/>
+    
+    <circle cx="70" cy="50" r="9" fill="#D4AF37"/>
+    <circle cx="55" cy="35" r="5" fill="#C5A028"/>
+    <circle cx="50" cy="60" r="4" fill="#E5B83C"/>
+    
+    <circle cx="40" cy="400" r="8" fill="#D4AF37"/>
+    <circle cx="28" cy="420" r="5" fill="#E5B83C"/>
+    <circle cx="50" cy="430" r="4" fill="#C5A028"/>
+    
+    <circle cx="440" cy="420" r="9" fill="#D4AF37"/>
+    <circle cx="455" cy="435" r="5.5" fill="#C5A028"/>
+    <circle cx="460" cy="410" r="4" fill="#E5B83C"/>
+    
+    <circle cx="25" cy="230" r="6" fill="#D4AF37"/>
+    <circle cx="490" cy="205" r="7" fill="#D4AF37"/>
+    <circle cx="275" cy="15" r="5" fill="#C5A028"/>
+    <circle cx="265" cy="465" r="6" fill="#D4AF37"/>
+    
+    <!-- Tiny scattered dots -->
+    <circle cx="420" cy="90" r="3" fill="#E5B83C"/>
+    <circle cx="95" cy="45" r="3" fill="#D4AF37"/>
+    <circle cx="35" cy="380" r="3" fill="#C5A028"/>
+    <circle cx="470" cy="390" r="3" fill="#D4AF37"/>
+    <circle cx="15" cy="250" r="3" fill="#E5B83C"/>
+    <circle cx="495" cy="240" r="3" fill="#C5A028"/>
+    
+    <!-- Inner texture -->
+    <path d="M190 180 C230 170, 290 175, 320 200 C350 225, 340 270, 310 290" stroke="#B8860B" stroke-width="2" stroke-linecap="round" opacity="0.35" fill="none"/>
+    <path d="M200 220 C240 215, 280 218, 300 240" stroke="#B8860B" stroke-width="1.5" stroke-linecap="round" opacity="0.3" fill="none"/>
+  </g>
+</svg>

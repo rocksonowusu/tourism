@@ -202,6 +202,8 @@
 .std__body {
   padding: 3rem 0 4rem;
   background: var(--white-off, #F9F7F2);
+  position: relative;
+  overflow: hidden;
 }
 
 .std__layout {

@@ -6,6 +6,8 @@
   padding: 120px 0 80px;
   background: linear-gradient(180deg, #FAFAF7 0%, #F5F2EB 100%);
   min-height: 100vh;
+  position: relative;
+  overflow: hidden;
 }
 
 /* ── Breadcrumb ──────────────────────────────────────────────────────────── */

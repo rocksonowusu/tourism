@@ -1,20 +1,9 @@
 /* ── Destinations ────────────────────────────────────────────────────────── */
 .destinations {
   padding: 80px 0 96px;
-  background: #111009;
+  background: var(--white-off, #F9F7F2);
   position: relative;
   overflow: hidden;
-}
-
-/* Subtle warm texture overlay */
-.destinations::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 80% 60% at 10% 40%, rgba(197,160,40,.07) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 50% at 90% 80%, rgba(197,160,40,.05) 0%, transparent 55%);
-  pointer-events: none;
 }
 
 /* Header */
@@ -36,7 +25,7 @@
 .dest__title {
   font-size: clamp(22px, 3vw, 30px);
   font-weight: 800;
-  color: #fff;
+  color: var(--ash-deep, #1A1508);
   letter-spacing: -.02em;
   margin: 0;
 }
@@ -47,17 +36,17 @@
   font-size: 13px;
   white-space: nowrap;
   text-decoration: none;
-  color: var(--gold-warm, #E5B83C);
-  border: 1px solid rgba(229,184,60,.35);
+  color: var(--gold-rich, #C5A028);
+  border: 1px solid rgba(197,160,40,.35);
   padding: 8px 18px;
   border-radius: 50px;
   font-weight: 600;
   transition: background .2s, color .2s, border-color .2s;
 }
 .dest__view-all:hover {
-  background: var(--gold-warm, #E5B83C);
-  color: #111;
-  border-color: var(--gold-warm, #E5B83C);
+  background: var(--gold-rich, #C5A028);
+  color: #fff;
+  border-color: var(--gold-rich, #C5A028);
 }
 .dest__view-all svg { flex-shrink: 0; }
 
@@ -68,7 +57,7 @@
   gap: 6px;
   flex-wrap: wrap;
   margin-bottom: 32px;
-  border-bottom: 1px solid rgba(255,255,255,0.10);
+  border-bottom: 1px solid rgba(0,0,0,0.08);
   padding-bottom: 12px;
 }
 .dest__tab {
@@ -79,17 +68,17 @@
   border-radius: 20px;
   font-size: 13px;
   font-weight: 500;
-  color: rgba(255,255,255,.50);
+  color: var(--ash-medium, #6B6B6B);
   background: none;
   border: 1.5px solid transparent;
   cursor: pointer;
   transition: all .18s;
 }
-.dest__tab:hover { color: #fff; background: rgba(255,255,255,.08); }
+.dest__tab:hover { color: var(--ash-deep, #1A1508); background: rgba(0,0,0,.04); }
 .dest__tab--active {
-  color: var(--gold-warm, #E5B83C);
-  border-color: rgba(229,184,60,.35);
-  background: rgba(229,184,60,.10);
+  color: var(--gold-rich, #C5A028);
+  border-color: rgba(197,160,40,.35);
+  background: rgba(197,160,40,.08);
   font-weight: 600;
 }
 
@@ -121,24 +110,22 @@
 .dest__card {
   border-radius: var(--radius-xl);
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px) saturate(1.2);
-  -webkit-backdrop-filter: blur(10px) saturate(1.2);
-  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   transition: transform .3s cubic-bezier(.22,.68,0,1.2), box-shadow .3s ease, border-color .3s ease;
   cursor: pointer;
 }
 .dest__card:hover {
   transform: translateY(-6px) scale(1.01);
-  box-shadow: 0 16px 40px rgba(197,160,40,.16), 0 4px 12px rgba(0,0,0,0.15);
-  border-color: rgba(229,184,60,0.25);
+  box-shadow: 0 16px 40px rgba(197,160,40,.12), 0 4px 12px rgba(0,0,0,0.08);
+  border-color: rgba(197,160,40,0.25);
 }
 .dest__card-img {
   height: 210px;
   overflow: hidden;
   position: relative;
-  background: rgba(255,255,255,0.04);
+  background: var(--ash-soft, #F3F4F6);
 }
 
 /* All slides stacked absolutely */
@@ -229,7 +216,7 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: rgba(255,255,255,.45);
+  background: rgba(255,255,255,.65);
   transition: background .3s, transform .3s;
 }
 .dest__dot--active {
@@ -244,12 +231,12 @@
 .dest__card-name {
   font-size: 15px;
   font-weight: 700;
-  color: #fff;
+  color: var(--ash-deep, #2C2C2C);
   margin-bottom: 4px;
 }
 .dest__card-loc {
   font-size: 12px;
-  color: rgba(255,255,255,.50);
+  color: var(--ash-medium, #6B6B6B);
   display: flex;
   align-items: center;
   gap: 4px;
@@ -270,7 +257,7 @@
 .dest__skeleton {
   height: 270px;
   border-radius: var(--radius-xl);
-  background: linear-gradient(90deg, rgba(255,255,255,.04) 25%, rgba(255,255,255,.09) 50%, rgba(255,255,255,.04) 75%);
+  background: linear-gradient(90deg, rgba(0,0,0,.04) 25%, rgba(0,0,0,.07) 50%, rgba(0,0,0,.04) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
 }
