@@ -5,7 +5,8 @@ Sends two branded HTML emails on every new request:
   1. To the company — full details so staff can follow up.
   2. To the customer — confirmation that the request was received.
 
-Emails are sent in a background thread so the API responds instantly.
+Emails are sent in a non-daemon background thread with join() to ensure
+they complete before Gunicorn recycles the worker (important for Render).
 """
 
 import logging
@@ -25,6 +26,10 @@ LOGO_URL         = getattr(
     'https://res.cloudinary.com/dy8me66pj/image/upload/v1775072991/tourism/branding/logo.png',
 )
 
+# Maximum seconds to wait for the email thread before returning the response.
+# Gmail SMTP typically takes 1-3s. 15s is generous enough for slow networks.
+EMAIL_THREAD_TIMEOUT = 15
+
 
 # ---------------------------------------------------------------------------
 # Public API
@@ -32,22 +37,28 @@ LOGO_URL         = getattr(
 
 def send_trip_request_emails(trip_request):
     """
-    Fire-and-forget email pair for a newly created TripRequest.
-    Snapshots all data on the calling thread, then sends from a daemon thread.
+    Send email pair for a newly created TripRequest.
+    Uses a non-daemon thread with join() so Gunicorn cannot kill it mid-send.
     """
     ctx = _snapshot(trip_request)
-    thread = threading.Thread(target=_send_emails_sync, args=(ctx,), daemon=True)
+    thread = threading.Thread(target=_send_emails_sync, args=(ctx,), daemon=False)
     thread.start()
+    thread.join(timeout=EMAIL_THREAD_TIMEOUT)
+    if thread.is_alive():
+        logger.warning('Email thread for TripRequest #%s still running after %ss', ctx['pk'], EMAIL_THREAD_TIMEOUT)
 
 
 def send_custom_tour_request_emails(custom_request):
     """
-    Fire-and-forget email pair for a newly created CustomTourRequest.
-    Snapshots all data on the calling thread, then sends from a daemon thread.
+    Send email pair for a newly created CustomTourRequest.
+    Uses a non-daemon thread with join() so Gunicorn cannot kill it mid-send.
     """
     ctx = _custom_snapshot(custom_request)
-    thread = threading.Thread(target=_send_custom_emails_sync, args=(ctx,), daemon=True)
+    thread = threading.Thread(target=_send_custom_emails_sync, args=(ctx,), daemon=False)
     thread.start()
+    thread.join(timeout=EMAIL_THREAD_TIMEOUT)
+    if thread.is_alive():
+        logger.warning('Email thread for CustomTourRequest #%s still running after %ss', ctx['pk'], EMAIL_THREAD_TIMEOUT)
 
 
 # ---------------------------------------------------------------------------
@@ -115,11 +126,16 @@ def _send_emails_sync(ctx):
 
     # ── Send on a fresh connection ────────────────────────────────────
     try:
+        logger.info(
+            'Sending trip request emails for #%s — FROM: %s, TO_COMPANY: %s, TO_CUSTOMER: %s, HOST: %s:%s',
+            ctx['pk'], from_email, COMPANY_EMAIL, ctx['customer_email'],
+            settings.EMAIL_HOST, settings.EMAIL_PORT,
+        )
         connection = get_connection(fail_silently=False)
         connection.open()
-        connection.send_messages([company_msg, customer_msg])
+        sent = connection.send_messages([company_msg, customer_msg])
         connection.close()
-        logger.info('Trip request emails sent for TripRequest #%s', ctx['pk'])
+        logger.info('Trip request emails sent for TripRequest #%s — %s message(s) delivered', ctx['pk'], sent)
     except Exception:
         logger.exception('Failed to send emails for TripRequest #%s', ctx['pk'])
 
@@ -187,10 +203,15 @@ def _send_custom_emails_sync(ctx):
     customer_msg.attach_alternative(customer_html, 'text/html')
 
     try:
+        logger.info(
+            'Sending custom tour emails for #%s — FROM: %s, TO_COMPANY: %s, TO_CUSTOMER: %s, HOST: %s:%s',
+            ctx['pk'], from_email, COMPANY_EMAIL, ctx['customer_email'],
+            settings.EMAIL_HOST, settings.EMAIL_PORT,
+        )
         connection = get_connection(fail_silently=False)
         connection.open()
-        connection.send_messages([company_msg, customer_msg])
+        sent = connection.send_messages([company_msg, customer_msg])
         connection.close()
-        logger.info('Custom tour request emails sent for CustomTourRequest #%s', ctx['pk'])
+        logger.info('Custom tour request emails sent for CustomTourRequest #%s — %s message(s) delivered', ctx['pk'], sent)
     except Exception:
         logger.exception('Failed to send emails for CustomTourRequest #%s', ctx['pk'])
