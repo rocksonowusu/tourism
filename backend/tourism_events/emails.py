@@ -125,19 +125,24 @@ def _send_emails_sync(ctx):
     customer_msg.attach_alternative(customer_html, 'text/html')
 
     # ── Send on a fresh connection ────────────────────────────────────
-    try:
-        logger.info(
-            'Sending trip request emails for #%s — FROM: %s, TO_COMPANY: %s, TO_CUSTOMER: %s, HOST: %s:%s',
-            ctx['pk'], from_email, COMPANY_EMAIL, ctx['customer_email'],
-            settings.EMAIL_HOST, settings.EMAIL_PORT,
-        )
-        connection = get_connection(fail_silently=False)
-        connection.open()
-        sent = connection.send_messages([company_msg, customer_msg])
-        connection.close()
-        logger.info('Trip request emails sent for TripRequest #%s — %s message(s) delivered', ctx['pk'], sent)
-    except Exception:
-        logger.exception('Failed to send emails for TripRequest #%s', ctx['pk'])
+    logger.info(
+        'Sending trip request emails for #%s — FROM: %s, TO_COMPANY: %s, TO_CUSTOMER: %s',
+        ctx['pk'], from_email, COMPANY_EMAIL, ctx['customer_email'],
+    )
+
+    sent = 0
+    for label, msg in [('company', company_msg), ('customer', customer_msg)]:
+        try:
+            connection = get_connection(fail_silently=False)
+            connection.open()
+            result = connection.send_messages([msg])
+            connection.close()
+            sent += result or 0
+            logger.info('TripRequest #%s — %s email sent', ctx['pk'], label)
+        except Exception:
+            logger.exception('TripRequest #%s — failed to send %s email', ctx['pk'], label)
+
+    logger.info('Trip request emails for #%s — %s of 2 delivered', ctx['pk'], sent)
 
 
 # ---------------------------------------------------------------------------
@@ -202,16 +207,21 @@ def _send_custom_emails_sync(ctx):
     )
     customer_msg.attach_alternative(customer_html, 'text/html')
 
-    try:
-        logger.info(
-            'Sending custom tour emails for #%s — FROM: %s, TO_COMPANY: %s, TO_CUSTOMER: %s, HOST: %s:%s',
-            ctx['pk'], from_email, COMPANY_EMAIL, ctx['customer_email'],
-            settings.EMAIL_HOST, settings.EMAIL_PORT,
-        )
-        connection = get_connection(fail_silently=False)
-        connection.open()
-        sent = connection.send_messages([company_msg, customer_msg])
-        connection.close()
-        logger.info('Custom tour request emails sent for CustomTourRequest #%s — %s message(s) delivered', ctx['pk'], sent)
-    except Exception:
-        logger.exception('Failed to send emails for CustomTourRequest #%s', ctx['pk'])
+    logger.info(
+        'Sending custom tour emails for #%s — FROM: %s, TO_COMPANY: %s, TO_CUSTOMER: %s',
+        ctx['pk'], from_email, COMPANY_EMAIL, ctx['customer_email'],
+    )
+
+    sent = 0
+    for label, msg in [('company', company_msg), ('customer', customer_msg)]:
+        try:
+            connection = get_connection(fail_silently=False)
+            connection.open()
+            result = connection.send_messages([msg])
+            connection.close()
+            sent += result or 0
+            logger.info('CustomTourRequest #%s — %s email sent', ctx['pk'], label)
+        except Exception:
+            logger.exception('CustomTourRequest #%s — failed to send %s email', ctx['pk'], label)
+
+    logger.info('Custom tour request emails for #%s — %s of 2 delivered', ctx['pk'], sent)
