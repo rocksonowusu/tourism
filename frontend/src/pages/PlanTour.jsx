@@ -615,6 +615,18 @@ export default function PlanTour() {
 
         </div>
       </div>
+
+      {/* ── Submitting overlay ───────────────────────────────── */}
+      {submitting && (
+        <div className="pt__overlay">
+          <div className="pt__overlay-box">
+            <div className="pt__overlay-spinner" />
+            <p className="pt__overlay-text">Submitting your request…</p>
+            <p className="pt__overlay-sub">Please wait while we process your custom tour.</p>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </>
   )

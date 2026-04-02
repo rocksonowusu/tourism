@@ -443,6 +443,17 @@ export default function TourDetail() {
         </div>
       </section>
 
+      {/* ── Submitting overlay ───────────────────────────────── */}
+      {submitting && (
+        <div className="td__overlay">
+          <div className="td__overlay-box">
+            <div className="td__overlay-spinner" />
+            <p className="td__overlay-text">Submitting your request…</p>
+            <p className="td__overlay-sub">Please wait while we process your booking.</p>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </div>
   )
