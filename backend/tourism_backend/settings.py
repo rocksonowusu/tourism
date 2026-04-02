@@ -263,9 +263,10 @@ _frontend_url = os.getenv('FRONTEND_URL', '')
 if _frontend_url:
     CORS_ALLOWED_ORIGINS.append(_frontend_url.rstrip('/'))
 
-# Also allow all *.vercel.app preview/production domains
+# Also allow all *.vercel.app preview/production domains + ghanaexperience.xyz
 CORS_ALLOWED_ORIGIN_REGEXES = [
     r'^https://.*\.vercel\.app$',
+    r'^https://(www\.)?ghanaexperience\.xyz$',
 ]
 
 CORS_ALLOW_METHODS = [
