@@ -121,6 +121,7 @@ def _send_emails_sync(ctx):
         body=customer_text,
         from_email=from_email,
         to=[ctx['customer_email']],
+        reply_to=[COMPANY_EMAIL],
     )
     customer_msg.attach_alternative(customer_html, 'text/html')
 
@@ -204,6 +205,7 @@ def _send_custom_emails_sync(ctx):
         body=customer_text,
         from_email=from_email,
         to=[ctx['customer_email']],
+        reply_to=[COMPANY_EMAIL],
     )
     customer_msg.attach_alternative(customer_html, 'text/html')
 
