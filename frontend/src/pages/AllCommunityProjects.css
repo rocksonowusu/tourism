@@ -33,7 +33,7 @@
   stroke: #C5A028;
 }
 .page-community__hero-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-sans);
   font-size: clamp(2rem, 5vw, 3.2rem);
   color: #fff;
   margin-bottom: 14px;
@@ -182,7 +182,7 @@
   stroke: #C5A028;
 }
 .page-community__card-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-sans);
   font-size: 1.1rem;
   color: #1a1a2e;
   margin-bottom: 10px;
@@ -263,7 +263,7 @@
   padding: 80px 20px;
 }
 .page-community__empty h3 {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-sans);
   font-size: 1.4rem;
   color: #1a1a2e;
   margin-bottom: 8px;

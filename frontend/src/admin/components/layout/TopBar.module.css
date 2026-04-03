@@ -28,10 +28,23 @@
 .actions { display: flex; align-items: center; gap: var(--space-3); }
 
 /* User info */
-.userInfo {
+.profileWrapper {
+  position: relative;
+}
+.profileToggle {
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+.profileToggle:hover {
+  background: var(--ash-soft);
+  border-color: var(--ash-pale);
 }
 .avatar {
   width: 32px; height: 32px;
@@ -49,6 +62,7 @@
   flex-direction: column;
   gap: 1px;
   line-height: 1;
+  text-align: left;
 }
 .userName {
   font-size: var(--text-sm);
@@ -61,25 +75,62 @@
   color: var(--ash-medium);
   white-space: nowrap;
 }
+.chevron {
+  display: flex;
+  align-items: center;
+  color: var(--ash-medium);
+  transition: transform var(--transition-fast);
+}
+.chevronOpen {
+  transform: rotate(180deg);
+}
 
-/* Logout button */
-.logoutBtn {
-  width: 32px; height: 32px;
-  display: flex; align-items: center; justify-content: center;
-  background: none;
+/* Profile dropdown */
+.profileDropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 180px;
+  background: var(--white-pure);
   border: 1px solid var(--ash-pale);
   border-radius: var(--radius-md);
-  color: var(--ash-medium);
-  cursor: pointer;
-  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
-  flex-shrink: 0;
+  box-shadow: var(--shadow-md);
+  padding: 4px;
+  z-index: 100;
+  animation: dropIn .15s ease;
 }
-.logoutBtn:hover {
-  background: rgba(220, 38, 38, 0.08);
-  border-color: rgba(239, 68, 68, 0.30);
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.profileDropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  font-size: var(--text-sm);
+  color: var(--ash-deep);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+.profileDropdownItem:hover {
+  background: var(--ash-soft);
+}
+.profileDropdownDivider {
+  height: 1px;
+  background: var(--ash-pale);
+  margin: 4px 0;
+}
+.profileDropdownDanger {
   color: var(--red);
 }
-.logoutBtn svg { display: block; }
+.profileDropdownDanger:hover {
+  background: rgba(220, 38, 38, 0.08);
+}
 
 /* ── Hamburger button (hidden on desktop) ──────────────────────────────── */
 .menuBtn {
@@ -112,6 +163,7 @@
 
 @media (max-width: 640px) {
   .userMeta { display: none; }
+  .chevron { display: none; }
 }
 
 @media (max-width: 480px) {

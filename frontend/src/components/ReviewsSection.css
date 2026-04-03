@@ -23,7 +23,7 @@
   margin-bottom: 8px;
 }
 .reviews-section__title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-sans);
   font-size: clamp(1.7rem, 3.5vw, 2.5rem);
   color: #1a1a2e;
 }
@@ -84,7 +84,7 @@
 }
 
 .reviews-section__review-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-sans);
   font-size: 1.2rem;
   color: #1a1a2e;
   margin-bottom: 12px;

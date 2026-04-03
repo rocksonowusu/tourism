@@ -20,6 +20,7 @@ from .views import (
     CommunityProjectViewSet,
     CommunityProjectMediaViewSet,
     ReviewViewSet,
+    SiteSettingsViewSet,
 )
 
 router = DefaultRouter()
@@ -43,6 +44,14 @@ router.register(r'community-projects', CommunityProjectViewSet, basename='commun
 router.register(r'community-project-media', CommunityProjectMediaViewSet, basename='communityprojectmedia')
 router.register(r'reviews', ReviewViewSet, basename='review')
 
+# Singleton view for site settings
+site_settings_detail = SiteSettingsViewSet.as_view({
+    'get':   'retrieve',
+    'put':   'update',
+    'patch': 'partial_update',
+})
+
 urlpatterns = [
+    path('site-settings/', site_settings_detail, name='site-settings'),
     path('', include(router.urls)),
 ]

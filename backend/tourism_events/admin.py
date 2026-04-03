@@ -14,6 +14,7 @@ from .models import (
     CarRentalRequest, CarRentalRequestStatus,
     CommunityProject, CommunityProjectMedia,
     Review, ReviewServiceType,
+    SiteSettings,
 )
 
 
@@ -869,3 +870,37 @@ class ReviewAdmin(admin.ModelAdmin):
             'fields': ('created_at',),
         }),
     )
+
+
+# ============================================================================
+#  PHASE 8 — Site Settings Admin (Singleton)
+# ============================================================================
+
+@admin.register(SiteSettings)
+class SiteSettingsAdmin(admin.ModelAdmin):
+    list_display = ('company_name', 'phone', 'email', 'whatsapp_number', 'updated_at')
+    readonly_fields = ('updated_at',)
+
+    fieldsets = (
+        ('Company Information', {
+            'fields': ('company_name', 'phone', 'email', 'address', 'about_text'),
+        }),
+        ('WhatsApp', {
+            'fields': ('whatsapp_number',),
+        }),
+        ('Social Media Links', {
+            'fields': ('facebook_url', 'instagram_url', 'twitter_url',
+                       'tiktok_url', 'youtube_url', 'linkedin_url'),
+        }),
+        ('Meta', {
+            'classes': ('collapse',),
+            'fields': ('updated_at',),
+        }),
+    )
+
+    def has_add_permission(self, request):
+        # Only allow one instance
+        return not SiteSettings.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False

@@ -1065,3 +1065,54 @@ class Review(models.Model):
     def __str__(self):
         return f"{self.reviewer_name} – {self.rating}★ – {self.title}"
         return f"{self.customer_name} — {veh} ({self.get_status_display()})"
+
+
+# ============================================================================
+#  PHASE 8 — SITE SETTINGS (Singleton) & SOCIAL LINKS
+# ============================================================================
+
+class SiteSettings(models.Model):
+    """
+    Singleton model holding company contact info, social-media URLs,
+    and WhatsApp details.  Only one row should ever exist.
+    """
+
+    # Company info
+    company_name     = models.CharField(max_length=255, default='1957 The Ghana Experience LBG')
+    phone            = models.CharField(max_length=30, blank=True)
+    email            = models.EmailField(blank=True)
+    address          = models.TextField(blank=True)
+    about_text       = models.TextField(blank=True)
+
+    # WhatsApp
+    whatsapp_number  = models.CharField(
+                           max_length=30, blank=True,
+                           help_text='International format, e.g. 233XXXXXXXXX')
+
+    # Social media URLs
+    facebook_url     = models.URLField(blank=True)
+    instagram_url    = models.URLField(blank=True)
+    twitter_url      = models.URLField(blank=True)
+    tiktok_url       = models.URLField(blank=True)
+    youtube_url      = models.URLField(blank=True)
+    linkedin_url     = models.URLField(blank=True)
+
+    updated_at       = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Site Settings'
+        verbose_name_plural = 'Site Settings'
+
+    def __str__(self):
+        return self.company_name
+
+    def save(self, *args, **kwargs):
+        # Enforce singleton: always use pk=1
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def load(cls):
+        """Return the singleton row, creating one with defaults if needed."""
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj

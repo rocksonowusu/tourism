@@ -379,6 +379,14 @@ class TourismAPIClient {
     stats:    ()           => this.get('/api/reviews/stats/'),
   }
 
+  // ── Site Settings endpoints (Phase 8 — singleton) ───────────────────
+
+  siteSettings = {
+    get:    ()     => this.get('/api/site-settings/'),
+    update: (data) => this.put('/api/site-settings/', data),
+    patch:  (data) => this.patch('/api/site-settings/', data),
+  }
+
   // ── Health ───────────────────────────────────────────────────────────
 
   health = () => this.get('/health/')

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import './App.css'
 import './admin/styles/admin.css'
 
@@ -13,6 +13,7 @@ import CommunityImpact from './components/CommunityImpact'
 import ReviewsSection  from './components/ReviewsSection'
 import Newsletter      from './components/Newsletter'
 import Footer          from './components/Footer'
+import WhatsAppButton  from './components/WhatsAppButton'
 
 // Detail pages
 import EventDetail from './pages/EventDetail'
@@ -45,11 +46,20 @@ import Vehicles        from './admin/pages/Vehicles'
 import ServiceRequests from './admin/pages/ServiceRequests'
 import CommunityProjectsAdmin from './admin/pages/CommunityProjects'
 import ReviewsAdmin            from './admin/pages/Reviews'
+import SettingsAdmin           from './admin/pages/Settings'
 
 import PlanTour from './pages/PlanTour'
 import RequestEvent from './pages/RequestEvent'
 
 import apiClient from './api/client'
+
+// ── Global WhatsApp (hidden on admin routes) ─────────────────────────────
+
+function GlobalWhatsApp() {
+  const { pathname } = useLocation()
+  if (pathname.startsWith('/admin')) return null
+  return <WhatsAppButton />
+}
 
 // ── Public site page ─────────────────────────────────────────────────────
 
@@ -178,11 +188,14 @@ export default function App() {
             <Route path="service-requests" element={<ServiceRequests />} />
             <Route path="community-projects" element={<CommunityProjectsAdmin />} />
             <Route path="reviews"            element={<ReviewsAdmin />} />
+            <Route path="settings"           element={<SettingsAdmin />} />
           </Route>
 
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        {/* Floating WhatsApp — visible on all public pages */}
+        <GlobalWhatsApp />
         </ToastProvider>
       </AuthProvider>
     </BrowserRouter>

@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .models import Event, TouristSite, EventMedia, TouristSiteMedia, Tour, TourMedia, TripRequest, CustomTourRequest, EventRequest, EventBooking, Apartment, ApartmentMedia, AccommodationRequest, Vehicle, VehicleMedia, CarRentalRequest, CommunityProject, CommunityProjectMedia, Review
+from .models import Event, TouristSite, EventMedia, TouristSiteMedia, Tour, TourMedia, TripRequest, CustomTourRequest, EventRequest, EventBooking, Apartment, ApartmentMedia, AccommodationRequest, Vehicle, VehicleMedia, CarRentalRequest, CommunityProject, CommunityProjectMedia, Review, SiteSettings
 from .serializers import (
     EventSerializer,
     EventListSerializer,
@@ -33,6 +33,7 @@ from .serializers import (
     CommunityProjectListSerializer,
     CommunityProjectMediaSerializer,
     ReviewSerializer,
+    SiteSettingsSerializer,
 )
 from .filters import (
     EventFilter, TouristSiteFilter, EventMediaFilter, TouristSiteMediaFilter,
@@ -1343,3 +1344,39 @@ class ReviewViewSet(viewsets.ModelViewSet):
                 .order_by('-count')
             ),
         })
+
+
+# ---------------------------------------------------------------------------
+# SiteSettingsViewSet  (Phase 8 — singleton)
+# ---------------------------------------------------------------------------
+
+class SiteSettingsViewSet(viewsets.ViewSet):
+    """
+    GET  /api/site-settings/          – PUBLIC (read company info)
+    PUT  /api/site-settings/          – ADMIN  (update company info)
+    PATCH /api/site-settings/         – ADMIN  (partial update)
+    """
+
+    def get_permissions(self):
+        if self.action in ('retrieve',):
+            return [AllowAny()]
+        return [IsAdminUser()]
+
+    def retrieve(self, request, *args, **kwargs):
+        settings = SiteSettings.load()
+        serializer = SiteSettingsSerializer(settings)
+        return Response(serializer.data)
+
+    def update(self, request, *args, **kwargs):
+        settings = SiteSettings.load()
+        serializer = SiteSettingsSerializer(settings, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def partial_update(self, request, *args, **kwargs):
+        settings = SiteSettings.load()
+        serializer = SiteSettingsSerializer(settings, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)

@@ -27,7 +27,7 @@
   margin-bottom: 12px;
 }
 .reviews-page__hero-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-sans);
   font-size: clamp(2rem, 5vw, 3.2rem);
   color: #fff;
   margin-bottom: 14px;
@@ -163,7 +163,7 @@
 }
 
 .reviews-page__card-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-sans);
   font-size: 1.05rem;
   color: #1a1a2e;
   margin-bottom: 8px;
@@ -243,7 +243,7 @@
   line-height: 1;
 }
 .reviews-page__modal-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-sans);
   font-size: 1.5rem;
   color: #1a1a2e;
   margin-bottom: 24px;
@@ -330,7 +330,7 @@
   margin-bottom: 16px;
 }
 .reviews-page__success h3 {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-sans);
   font-size: 1.4rem;
   color: #1a1a2e;
   margin-bottom: 8px;
@@ -370,7 +370,7 @@
   padding: 80px 20px;
 }
 .reviews-page__empty h3 {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-sans);
   font-size: 1.4rem;
   color: #1a1a2e;
   margin-bottom: 8px;

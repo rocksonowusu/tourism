@@ -8,6 +8,7 @@ from .models import (
     Vehicle, VehicleMedia, CarRentalRequest,
     CommunityProject, CommunityProjectMedia,
     Review,
+    SiteSettings,
 )
 
 
@@ -783,3 +784,29 @@ class ReviewSerializer(serializers.ModelSerializer):
                 return url
             return f'https://res.cloudinary.com/{url}'
         return None
+
+
+# ============================================================================
+#  PHASE 8 — Site Settings serializer
+# ============================================================================
+
+class SiteSettingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model  = SiteSettings
+        fields = (
+            'id',
+            'company_name',
+            'phone',
+            'email',
+            'address',
+            'about_text',
+            'whatsapp_number',
+            'facebook_url',
+            'instagram_url',
+            'twitter_url',
+            'tiktok_url',
+            'youtube_url',
+            'linkedin_url',
+            'updated_at',
+        )
+        read_only_fields = ('id', 'updated_at')

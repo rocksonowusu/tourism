@@ -36,7 +36,7 @@
   color: #E5B83C;
 }
 .cp-detail__title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-sans);
   font-size: clamp(1.8rem, 4vw, 2.8rem);
   color: #fff;
   margin-bottom: 16px;
@@ -81,7 +81,7 @@
 }
 .cp-detail__stat-value {
   display: block;
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-sans);
   font-size: 1.2rem;
   font-weight: 700;
   color: #1a1a2e;
@@ -103,7 +103,7 @@
   max-width: 760px;
 }
 .cp-detail__description h2 {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-sans);
   font-size: 1.5rem;
   color: #1a1a2e;
   margin-bottom: 20px;
@@ -120,7 +120,7 @@
   margin-top: 48px;
 }
 .cp-detail__gallery h2 {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-sans);
   font-size: 1.5rem;
   color: #1a1a2e;
   margin-bottom: 20px;
@@ -198,7 +198,7 @@
   padding: 200px 20px;
 }
 .cp-detail__not-found h2 {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-sans);
   color: #1a1a2e;
   margin-bottom: 12px;
 }

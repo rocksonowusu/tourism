@@ -1,4 +1,5 @@
 import { NavLink, useNavigate, useLocation } from 'react-router-dom'
+import { useState, useRef, useEffect } from 'react'
 import { useAuth } from '../../context/AuthContext'
 import styles from './Sidebar.module.css'
 
@@ -71,6 +72,11 @@ const IconMessageSquare = () => (
     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
   </svg>
 )
+const IconSettings = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+  </svg>
+)
 const IconLogout = () => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -91,17 +97,31 @@ const NAV = [
   { to: '/admin/community-projects', label: 'Community',     Icon: IconHeart            },
   { to: '/admin/reviews',           label: 'Reviews',        Icon: IconMessageSquare     },
   { to: '/admin/sites',        label: 'Sites & Media', Icon: IconMapPin                },
+  { to: '/admin/settings',     label: 'Settings',      Icon: IconSettings              },
 ]
 
 export default function Sidebar({ open, onClose }) {
   const { user, logout } = useAuth()
   const navigate         = useNavigate()
   const location         = useLocation()
+  const [profileOpen, setProfileOpen] = useState(false)
+  const profileRef = useRef(null)
 
   const handleLogout = async () => {
     await logout()
     navigate('/admin/login', { replace: true })
   }
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const onClickOutside = (e) => {
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setProfileOpen(false)
+      }
+    }
+    if (profileOpen) document.addEventListener('mousedown', onClickOutside)
+    return () => document.removeEventListener('mousedown', onClickOutside)
+  }, [profileOpen])
 
   return (
     <aside className={`${styles.sidebar} ${open ? styles.sidebarOpen : ''}`}>
@@ -132,18 +152,48 @@ export default function Sidebar({ open, onClose }) {
         </ul>
       </nav>
 
-      {/* Footer */}
-      <div className={styles.foot}>
-        <div className={styles.userRow}>
+      {/* Footer with profile dropdown */}
+      <div className={styles.foot} ref={profileRef}>
+        {/* Profile dropdown */}
+        {profileOpen && (
+          <div className={styles.profileDropdown}>
+            <button
+              className={styles.profileDropdownItem}
+              onClick={() => {
+                setProfileOpen(false)
+                navigate('/admin/settings')
+                onClose?.()
+              }}
+            >
+              <IconSettings />
+              <span>Settings</span>
+            </button>
+            <div className={styles.profileDropdownDivider} />
+            <button
+              className={`${styles.profileDropdownItem} ${styles.profileDropdownDanger}`}
+              onClick={handleLogout}
+            >
+              <IconLogout />
+              <span>Sign Out</span>
+            </button>
+          </div>
+        )}
+
+        <div
+          className={`${styles.userRow} ${styles.userRowClickable}`}
+          onClick={() => setProfileOpen(p => !p)}
+          role="button"
+          tabIndex={0}
+        >
           <div className={styles.avatar}>{user?.username?.[0]?.toUpperCase() ?? 'A'}</div>
           <div className={styles.userInfo}>
             <span className={styles.userName}>{user?.first_name || user?.username}</span>
             <span className={styles.userRole}>{user?.is_staff ? 'Admin' : 'Staff'}</span>
           </div>
+          <svg className={`${styles.chevron} ${profileOpen ? styles.chevronUp : ''}`} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
         </div>
-        <button className={styles.logoutBtn} onClick={handleLogout} title="Sign out">
-          <IconLogout />
-        </button>
       </div>
     </aside>
   )
