@@ -356,15 +356,6 @@
   overflow: hidden;
 }
 
-.ae__card-price {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--gold-rich, #C5A028);
-}
-.ae__card-price--free {
-  color: #6ee7b7;
-}
-
 /* ── Pagination ──────────────────────────────────────────────────────────── */
 .ae__pagination {
   display: flex;

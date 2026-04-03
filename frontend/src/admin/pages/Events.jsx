@@ -111,7 +111,7 @@ const MAX_MEDIA  = 5
 const EMPTY_FORM = {
   title: '', description: '', location: '', date: '',
   category: '', is_featured: false, tourist_site_id: '',
-  latitude: '', longitude: '', highlights: '',
+  highlights: '',
 }
 
 // ── Component ────────────────────────────────────────────────────────────
@@ -186,8 +186,6 @@ export default function Events() {
       category:       ev.category     ?? '',
       is_featured:    ev.is_featured  ?? false,
       tourist_site_id: ev.tourist_site?.id ?? ev.tourist_site ?? '',
-      latitude:       ev.latitude     ?? '',
-      longitude:      ev.longitude    ?? '',
       highlights:     Array.isArray(ev.highlights) ? ev.highlights.join('\n') : '',
     })
     setFormErr(''); setMediaFiles([]); setStep(1); setSlideDir('next')
@@ -276,8 +274,6 @@ export default function Events() {
         category:        form.category || '',
         is_featured:     form.is_featured,
         tourist_site_id: form.tourist_site_id === '' ? null : Number(form.tourist_site_id),
-        latitude:        form.latitude === '' ? null : Number(form.latitude),
-        longitude:       form.longitude === '' ? null : Number(form.longitude),
         highlights:      form.highlights.trim()
                            ? form.highlights.split('\n').map(h => h.trim()).filter(Boolean)
                            : [],
@@ -607,23 +603,13 @@ export default function Events() {
             </div>
           )}
 
-          {/* ── Step 3: Highlights & Coordinates ─────────────────── */}
+          {/* ── Step 3: Highlights ────────────────────────────── */}
           {step === 3 && (
             <div className={s.stepPane} key="step-3" data-dir={slideDir === 'back' ? 'back' : undefined}>
               <div className={s.stepTitle}>
-                <IconStar /> Highlights & Coordinates
+                <IconStar /> Highlights
               </div>
               <div className={s.form}>
-                <div className={s.row2}>
-                  <div className={s.formGroup}>
-                    <label className={s.label} htmlFor="ev-lat">Latitude</label>
-                    <input id="ev-lat" className={s.input} type="number" step="0.000001" name="latitude" value={form.latitude} onChange={handleChange} placeholder="e.g. 5.6037" autoFocus />
-                  </div>
-                  <div className={s.formGroup}>
-                    <label className={s.label} htmlFor="ev-lng">Longitude</label>
-                    <input id="ev-lng" className={s.input} type="number" step="0.000001" name="longitude" value={form.longitude} onChange={handleChange} placeholder="e.g. -0.1870" />
-                  </div>
-                </div>
                 <div className={s.formGroup}>
                   <label className={s.label} htmlFor="ev-highlights">Package Highlights</label>
                   <textarea id="ev-highlights" className={s.textarea} name="highlights" rows={5} value={form.highlights} onChange={handleChange} placeholder={"One item per line, e.g.:\nGuided tour of the venue\nReturn transport from Accra\nComplimentary welcome drink"} />

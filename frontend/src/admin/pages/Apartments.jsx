@@ -108,7 +108,6 @@ const MAX_MEDIA  = 10
 
 const EMPTY_FORM = {
   title: '', description: '', location: '', address: '',
-  latitude: '', longitude: '',
   property_type: 'apartment', bedrooms: '', bathrooms: '', max_guests: '',
   price_per_night: '',
   amenities: '', rules: '',
@@ -178,8 +177,6 @@ export default function Apartments() {
       description:    item.description    ?? '',
       location:       item.location       ?? '',
       address:        item.address        ?? '',
-      latitude:       item.latitude       ?? '',
-      longitude:      item.longitude      ?? '',
       property_type:  item.property_type  ?? 'apartment',
       bedrooms:       item.bedrooms       ?? '',
       bathrooms:      item.bathrooms      ?? '',
@@ -252,7 +249,6 @@ export default function Apartments() {
       const payload = {
         title: form.title, description: form.description,
         location: form.location, address: form.address,
-        latitude: form.latitude || null, longitude: form.longitude || null,
         property_type: form.property_type,
         bedrooms: form.bedrooms === '' ? null : Number(form.bedrooms),
         bathrooms: form.bathrooms === '' ? null : Number(form.bathrooms),
@@ -471,16 +467,6 @@ export default function Apartments() {
                 <div className={s.formGroup}>
                   <label className={s.label}>Address</label>
                   <input className={s.input} name="address" value={form.address} onChange={handleChange} placeholder="Full street address" />
-                </div>
-                <div className={s.row2}>
-                  <div className={s.formGroup}>
-                    <label className={s.label}>Latitude</label>
-                    <input className={s.input} type="number" step="any" name="latitude" value={form.latitude} onChange={handleChange} placeholder="e.g. 5.6037" />
-                  </div>
-                  <div className={s.formGroup}>
-                    <label className={s.label}>Longitude</label>
-                    <input className={s.input} type="number" step="any" name="longitude" value={form.longitude} onChange={handleChange} placeholder="e.g. -0.1870" />
-                  </div>
                 </div>
                 <div className={s.row2}>
                   <div className={s.formGroup}>

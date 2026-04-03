@@ -7,7 +7,7 @@
   position: relative;
   min-height: 420px;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   background-size: cover;
   background-position: center;
   padding: 0;
@@ -15,12 +15,12 @@
 .cp-detail__hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(26,21,8,0.3) 0%, rgba(26,21,8,0.88) 100%);
+  background: linear-gradient(180deg, rgba(26,21,8,0.25) 0%, rgba(26,21,8,0.55) 40%, rgba(26,21,8,0.85) 100%);
 }
 .cp-detail__hero-inner {
   position: relative;
   z-index: 1;
-  padding: 60px 0 48px;
+  padding: 80px 0 40px;
 }
 .cp-detail__back {
   display: inline-flex;
@@ -213,7 +213,7 @@
     min-height: 320px;
   }
   .cp-detail__hero-inner {
-    padding: 40px 0 32px;
+    padding: 60px 0 32px;
   }
   .cp-detail__stats {
     flex-direction: column;

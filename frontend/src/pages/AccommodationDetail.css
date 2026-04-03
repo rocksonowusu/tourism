@@ -34,12 +34,12 @@
 .ad__hero-bg img { width: 100%; height: 100%; object-fit: cover; }
 .ad__hero-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.15) 60%, rgba(0,0,0,0.25) 100%);
+  background: linear-gradient(to top, rgba(0,0,0,0.70) 0%, rgba(0,0,0,0.40) 40%, rgba(0,0,0,0.25) 100%);
 }
 .ad__hero-inner {
   position: relative; height: 100%;
-  display: flex; flex-direction: column; justify-content: space-between;
-  padding-top: 100px; padding-bottom: 40px;
+  display: flex; flex-direction: column; justify-content: center;
+  padding-top: 100px; padding-bottom: 2rem;
 }
 .ad__breadcrumb {
   display: inline-flex; align-items: center; gap: 6px;
@@ -48,7 +48,6 @@
 }
 .ad__breadcrumb:hover { color: #fff; }
 
-.ad__hero-content { margin-top: auto; }
 .ad__hero-featured {
   display: inline-flex; align-items: center; gap: 5px;
   padding: 4px 12px; border-radius: 6px;
@@ -181,5 +180,5 @@
 }
 @media (max-width: 600px) {
   .ad__hero { height: 300px; }
-  .ad__hero-inner { padding-top: 80px; padding-bottom: 24px; }
+  .ad__hero-inner { padding-top: 80px; }
 }

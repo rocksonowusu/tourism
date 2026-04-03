@@ -263,9 +263,6 @@ export default function AllEvents() {
                 const d = formatDate(ev.date)
                 const season = ev.season_label && SEASON_MAP[ev.season_label]
                 const img = ev.media?.[0]?.file_url ?? FALLBACK_IMG
-                const price = ev.price != null && Number(ev.price) > 0
-                  ? `GH₵${Number(ev.price).toFixed(2)}`
-                  : null
 
                 return (
                   <Link key={ev.id} to={`/events/${ev.slug}`} className="ae__card-link">
@@ -310,9 +307,6 @@ export default function AllEvents() {
                         {ev.description && (
                           <p className="ae__card-desc">{ev.description}</p>
                         )}
-                        <span className={`ae__card-price ${!price ? 'ae__card-price--free' : ''}`}>
-                          {price ?? 'Free'}
-                        </span>
                       </div>
                     </article>
                   </Link>
