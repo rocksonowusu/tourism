@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .models import Event, TouristSite, EventMedia, TouristSiteMedia, Tour, TourMedia, TripRequest, CustomTourRequest, EventRequest, EventBooking, Apartment, ApartmentMedia, AccommodationRequest, Vehicle, VehicleMedia, CarRentalRequest, CommunityProject, CommunityProjectMedia, Review, SiteSettings
+from .models import Event, TouristSite, EventMedia, TouristSiteMedia, Tour, TourMedia, TripRequest, CustomTourRequest, EventRequest, EventBooking, Apartment, ApartmentMedia, AccommodationRequest, Vehicle, VehicleMedia, CarRentalRequest, CommunityProject, CommunityProjectMedia, Review, SiteSettings, Notification
 from .serializers import (
     EventSerializer,
     EventListSerializer,
@@ -34,6 +34,7 @@ from .serializers import (
     CommunityProjectMediaSerializer,
     ReviewSerializer,
     SiteSettingsSerializer,
+    NotificationSerializer,
 )
 from .filters import (
     EventFilter, TouristSiteFilter, EventMediaFilter, TouristSiteMediaFilter,
@@ -1380,3 +1381,41 @@ class SiteSettingsViewSet(viewsets.ViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+
+
+# ---------------------------------------------------------------------------
+# NotificationViewSet  (Phase 9)
+# ---------------------------------------------------------------------------
+
+class NotificationViewSet(viewsets.ModelViewSet):
+    """
+    Admin-only notification management.
+
+    GET    /api/notifications/               – list (most recent first, paginated)
+    GET    /api/notifications/{id}/          – detail
+    PATCH  /api/notifications/{id}/          – mark read (is_read: true)
+    DELETE /api/notifications/{id}/          – delete
+
+    Custom actions
+    ──────────────
+    GET    /api/notifications/unread-count/  – { count: N }
+    POST   /api/notifications/mark-all-read/ – mark every notification as read
+    """
+
+    queryset         = Notification.objects.all()
+    serializer_class = NotificationSerializer
+    permission_classes = [IsAdminUser]
+    filter_backends  = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = ['is_read', 'notification_type']
+    ordering_fields  = ['created_at']
+    ordering         = ['-created_at']
+
+    @action(detail=False, methods=['get'], url_path='unread-count')
+    def unread_count(self, request):
+        count = Notification.objects.filter(is_read=False).count()
+        return Response({'count': count})
+
+    @action(detail=False, methods=['post'], url_path='mark-all-read')
+    def mark_all_read(self, request):
+        updated = Notification.objects.filter(is_read=False).update(is_read=True)
+        return Response({'updated': updated})

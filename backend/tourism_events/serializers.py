@@ -9,6 +9,7 @@ from .models import (
     CommunityProject, CommunityProjectMedia,
     Review,
     SiteSettings,
+    Notification,
 )
 
 
@@ -810,3 +811,22 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
             'updated_at',
         )
         read_only_fields = ('id', 'updated_at')
+
+
+# ============================================================================
+#  PHASE 9 — Notification serializer
+# ============================================================================
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model  = Notification
+        fields = (
+            'id',
+            'notification_type',
+            'title',
+            'message',
+            'link',
+            'is_read',
+            'created_at',
+        )
+        read_only_fields = ('id', 'notification_type', 'title', 'message', 'link', 'created_at')

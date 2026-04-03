@@ -15,6 +15,7 @@ from .models import (
     CommunityProject, CommunityProjectMedia,
     Review, ReviewServiceType,
     SiteSettings,
+    Notification,
 )
 
 
@@ -904,3 +905,27 @@ class SiteSettingsAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+
+# ---------------------------------------------------------------------------
+# NotificationAdmin  (Phase 9)
+# ---------------------------------------------------------------------------
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ('title', 'notification_type', 'is_read', 'created_at')
+    list_filter = ('notification_type', 'is_read')
+    search_fields = ('title', 'message')
+    readonly_fields = ('notification_type', 'title', 'message', 'link', 'created_at')
+    list_per_page = 50
+    ordering = ('-created_at',)
+
+    actions = ['mark_as_read', 'mark_as_unread']
+
+    @admin.action(description='Mark selected as read')
+    def mark_as_read(self, request, queryset):
+        queryset.update(is_read=True)
+
+    @admin.action(description='Mark selected as unread')
+    def mark_as_unread(self, request, queryset):
+        queryset.update(is_read=False)

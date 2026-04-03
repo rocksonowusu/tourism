@@ -97,7 +97,6 @@ const NAV = [
   { to: '/admin/community-projects', label: 'Community',     Icon: IconHeart            },
   { to: '/admin/reviews',           label: 'Reviews',        Icon: IconMessageSquare     },
   { to: '/admin/sites',        label: 'Sites & Media', Icon: IconMapPin                },
-  { to: '/admin/settings',     label: 'Settings',      Icon: IconSettings              },
 ]
 
 export default function Sidebar({ open, onClose }) {

@@ -21,6 +21,7 @@ from .views import (
     CommunityProjectMediaViewSet,
     ReviewViewSet,
     SiteSettingsViewSet,
+    NotificationViewSet,
 )
 
 router = DefaultRouter()
@@ -43,6 +44,7 @@ router.register(r'car-rental-requests', CarRentalRequestViewSet, basename='carre
 router.register(r'community-projects', CommunityProjectViewSet, basename='communityproject')
 router.register(r'community-project-media', CommunityProjectMediaViewSet, basename='communityprojectmedia')
 router.register(r'reviews', ReviewViewSet, basename='review')
+router.register(r'notifications', NotificationViewSet, basename='notification')
 
 # Singleton view for site settings
 site_settings_detail = SiteSettingsViewSet.as_view({

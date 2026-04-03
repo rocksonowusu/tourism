@@ -387,6 +387,17 @@ class TourismAPIClient {
     patch:  (data) => this.patch('/api/site-settings/', data),
   }
 
+  // ── Notifications endpoints (Phase 9) ───────────────────────────────
+
+  notifications = {
+    list:        (params)   => this.get('/api/notifications/', params),
+    detail:      (id)       => this.get(`/api/notifications/${id}/`),
+    markRead:    (id)       => this.patch(`/api/notifications/${id}/`, { is_read: true }),
+    markAllRead: ()         => this.post('/api/notifications/mark-all-read/'),
+    unreadCount: ()         => this.get('/api/notifications/unread-count/'),
+    delete:      (id)       => this.delete(`/api/notifications/${id}/`),
+  }
+
   // ── Health ───────────────────────────────────────────────────────────
 
   health = () => this.get('/health/')

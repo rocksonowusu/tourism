@@ -1,0 +1,178 @@
+/* ── Notifications admin page ─────────────────────────────────────────── */
+
+.page {
+  max-width: 740px;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--space-5);
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+.heading {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--ash-deep);
+  margin: 0 0 2px;
+}
+.subtitle {
+  font-size: var(--text-sm);
+  color: var(--ash-medium);
+  margin: 0;
+}
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* ── Filter tabs ───────────────────────────────────────────────────────── */
+.filterTabs {
+  display: flex;
+  background: var(--ash-soft);
+  border-radius: var(--radius-md);
+  padding: 3px;
+}
+.tab {
+  padding: 6px 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--ash-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+.tabActive {
+  background: var(--white-pure);
+  color: var(--ash-deep);
+  box-shadow: 0 1px 3px rgba(0,0,0,.08);
+}
+
+.markAllBtn {
+  padding: 6px 14px;
+  border: 1px solid var(--ash-pale);
+  border-radius: var(--radius-md);
+  background: var(--white-pure);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--gold-rich);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+.markAllBtn:hover {
+  background: var(--gold-pale);
+}
+
+/* ── List ───────────────────────────────────────────────────────────────── */
+.list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--ash-pale);
+  border-radius: var(--radius-lg);
+  background: var(--white-pure);
+  overflow: hidden;
+}
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  border-bottom: 1px solid var(--ash-pale);
+}
+.item:last-child { border-bottom: none; }
+.item:hover { background: var(--ash-soft); }
+
+.itemUnread {
+  background: rgba(197, 160, 40, 0.04);
+}
+
+.dot {
+  width: 10px;
+  flex-shrink: 0;
+  padding-top: 5px;
+}
+.dot span {
+  display: block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--gold-rich);
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.type {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ash-medium);
+}
+.time {
+  font-size: 11px;
+  color: var(--ash-light);
+  flex-shrink: 0;
+}
+.itemTitle {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--ash-deep);
+  line-height: 1.35;
+}
+.itemMsg {
+  font-size: 12px;
+  color: var(--ash-medium);
+  line-height: 1.3;
+}
+
+.deleteBtn {
+  width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  font-size: 16px;
+  color: var(--ash-light);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+  flex-shrink: 0;
+}
+.item:hover .deleteBtn { opacity: 1; }
+.deleteBtn:hover {
+  background: rgba(220, 38, 38, 0.08);
+  color: var(--red);
+}
+
+/* ── Empty state ───────────────────────────────────────────────────────── */
+.empty {
+  text-align: center;
+  padding: 48px 16px;
+  color: var(--ash-medium);
+  font-size: var(--text-sm);
+  background: var(--white-pure);
+  border: 1px solid var(--ash-pale);
+  border-radius: var(--radius-lg);
+}
+
+/* ── Responsive ────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .header { flex-direction: column; }
+  .headerActions { width: 100%; justify-content: space-between; }
+}

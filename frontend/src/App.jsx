@@ -47,6 +47,7 @@ import ServiceRequests from './admin/pages/ServiceRequests'
 import CommunityProjectsAdmin from './admin/pages/CommunityProjects'
 import ReviewsAdmin            from './admin/pages/Reviews'
 import SettingsAdmin           from './admin/pages/Settings'
+import NotificationsAdmin      from './admin/pages/Notifications'
 
 import PlanTour from './pages/PlanTour'
 import RequestEvent from './pages/RequestEvent'
@@ -189,6 +190,7 @@ export default function App() {
             <Route path="community-projects" element={<CommunityProjectsAdmin />} />
             <Route path="reviews"            element={<ReviewsAdmin />} />
             <Route path="settings"           element={<SettingsAdmin />} />
+            <Route path="notifications"      element={<NotificationsAdmin />} />
           </Route>
 
           {/* Fallback */}

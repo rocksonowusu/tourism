@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import { NotificationProvider } from '../../context/NotificationContext'
 import Sidebar from './Sidebar'
 import TopBar from './TopBar'
 import Spinner from '../ui/Spinner'
@@ -15,19 +16,21 @@ export default function DashboardLayout({ topBarActions }) {
   if (!user)   return <Navigate to="/admin/login" replace />
 
   return (
-    <div className={styles.shell}>
-      {/* Mobile overlay */}
-      {sidebarOpen && (
-        <div className={styles.overlay} onClick={() => setSidebarOpen(false)} />
-      )}
-      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <div className={styles.main}>
-        <TopBar actions={topBarActions} onMenuToggle={() => setSidebarOpen(o => !o)} />
-        <main className={styles.content}>
-          <Outlet />
-        </main>
+    <NotificationProvider>
+      <div className={styles.shell}>
+        {/* Mobile overlay */}
+        {sidebarOpen && (
+          <div className={styles.overlay} onClick={() => setSidebarOpen(false)} />
+        )}
+        <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <div className={styles.main}>
+          <TopBar actions={topBarActions} onMenuToggle={() => setSidebarOpen(o => !o)} />
+          <main className={styles.content}>
+            <Outlet />
+          </main>
+        </div>
+        <ToastStack />
       </div>
-      <ToastStack />
-    </div>
+    </NotificationProvider>
   )
 }

@@ -1116,3 +1116,46 @@ class SiteSettings(models.Model):
         """Return the singleton row, creating one with defaults if needed."""
         obj, _ = cls.objects.get_or_create(pk=1)
         return obj
+
+
+# ============================================================================
+#  PHASE 9 — ADMIN NOTIFICATIONS
+# ============================================================================
+
+class NotificationType(models.TextChoices):
+    REVIEW              = 'review',              'New Review'
+    TRIP_REQUEST        = 'trip_request',         'Trip Request'
+    CUSTOM_TOUR_REQUEST = 'custom_tour_request',  'Custom Tour Request'
+    EVENT_REQUEST       = 'event_request',        'Event Request'
+    EVENT_BOOKING       = 'event_booking',        'Event Booking'
+    ACCOMMODATION_REQ   = 'accommodation_req',    'Accommodation Request'
+    CAR_RENTAL_REQ      = 'car_rental_req',       'Car Rental Request'
+    SYSTEM              = 'system',               'System'
+
+
+class Notification(models.Model):
+    """
+    Admin notification created automatically when users submit requests,
+    reviews, bookings, etc.  Displayed in the admin top-bar bell dropdown
+    and used to trigger browser push notifications.
+    """
+
+    notification_type = models.CharField(
+                            max_length=30,
+                            choices=NotificationType.choices,
+                            default=NotificationType.SYSTEM)
+    title             = models.CharField(max_length=255)
+    message           = models.TextField(blank=True)
+    link              = models.CharField(
+                            max_length=500, blank=True,
+                            help_text='Frontend admin route to navigate to, e.g. /admin/reviews')
+    is_read           = models.BooleanField(default=False)
+    created_at        = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Notification'
+        verbose_name_plural = 'Notifications'
+
+    def __str__(self):
+        return f"{'✓' if self.is_read else '●'} {self.title}"
