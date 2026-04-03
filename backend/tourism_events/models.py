@@ -942,4 +942,126 @@ class CarRentalRequest(models.Model):
 
     def __str__(self):
         veh = self.vehicle.name if self.vehicle else 'General Inquiry'
+        return f"{self.customer_name} – {veh}"
+
+
+# ============================================================================
+#  PHASE 5 — COMMUNITY & CHARITY SHOWCASE
+# ============================================================================
+
+class CommunityProject(models.Model):
+    """A community or charity project / initiative."""
+
+    title            = models.CharField(max_length=255)
+    slug             = models.SlugField(
+                           max_length=255, unique=True, blank=True,
+                           help_text='SEO-friendly URL. Auto-generated from title.')
+    description      = models.TextField()
+    location         = models.CharField(max_length=255)
+    date             = models.DateField(
+                           null=True, blank=True,
+                           help_text='Date of the project / event.')
+    impact_summary   = models.TextField(
+                           blank=True,
+                           help_text='Short summary of the project community impact.')
+    beneficiaries_count = models.PositiveIntegerField(
+                           default=0,
+                           help_text='Number of people positively impacted.')
+    is_featured      = models.BooleanField(default=False)
+    created_at       = models.DateTimeField(auto_now_add=True)
+    updated_at       = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-date', '-created_at']
+        verbose_name = 'Community Project'
+        verbose_name_plural = 'Community Projects'
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = self._unique_slug()
+        super().save(*args, **kwargs)
+
+    def _unique_slug(self) -> str:
+        base = slugify(self.title)
+        slug, n = base, 1
+        while CommunityProject.objects.filter(slug=slug).exclude(pk=self.pk or 0).exists():
+            slug = f'{base}-{n}'
+            n += 1
+        return slug
+
+    @property
+    def media_count(self) -> int:
+        return self.media.count()
+
+
+class CommunityProjectMedia(BaseMedia):
+    """Images / videos attached to a community project."""
+
+    community_project = models.ForeignKey(
+        CommunityProject, on_delete=models.CASCADE, related_name='media')
+    file = CloudinaryField(
+        'file',
+        folder='tourism/community_projects',
+        resource_type='auto',
+        validators=[validate_media_file_type, validate_media_file_size],
+    )
+
+    class Meta:
+        ordering = ['created_at']
+        verbose_name = 'Community Project Media'
+        verbose_name_plural = 'Community Project Media'
+
+    def __str__(self):
+        return f"{self.get_media_type_display()} – {self.community_project.title}"
+
+
+# ============================================================================
+#  PHASE 7 — REVIEWS & RATINGS
+# ============================================================================
+
+class ReviewServiceType(models.TextChoices):
+    TOUR          = 'tour',          'Tour'
+    ACCOMMODATION = 'accommodation', 'Accommodation'
+    EVENT         = 'event',         'Event'
+    CAR_RENTAL    = 'car_rental',    'Car Rental'
+    GENERAL       = 'general',       'General'
+
+
+class Review(models.Model):
+    """
+    A review / testimonial submitted by a visitor.
+    Must be approved by an admin before it appears publicly.
+    """
+
+    reviewer_name    = models.CharField(max_length=255)
+    reviewer_email   = models.EmailField()
+    reviewer_photo   = CloudinaryField(
+                           'reviewer_photo',
+                           folder='tourism/reviewer_photos',
+                           resource_type='image',
+                           blank=True, null=True,
+                           help_text='Optional photo of the reviewer.')
+    rating           = models.PositiveSmallIntegerField(
+                           help_text='Rating from 1 to 5.',
+                           default=5)
+    title            = models.CharField(max_length=255)
+    comment          = models.TextField()
+    service_type     = models.CharField(
+                           max_length=20,
+                           choices=ReviewServiceType.choices,
+                           default=ReviewServiceType.GENERAL)
+    is_approved      = models.BooleanField(default=False)
+    is_featured      = models.BooleanField(default=False)
+    created_at       = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Review'
+        verbose_name_plural = 'Reviews'
+
+    def __str__(self):
+        return f"{self.reviewer_name} – {self.rating}★ – {self.title}"
         return f"{self.customer_name} — {veh} ({self.get_status_display()})"

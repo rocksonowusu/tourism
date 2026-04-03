@@ -14,11 +14,6 @@ const IconClose = () => (
     <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
   </svg>
 )
-const IconSearch = () => (
-  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-  </svg>
-)
 const IconChevDown = () => (
   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="6 9 12 15 18 9"/>
@@ -65,6 +60,9 @@ export default function Header() {
           <Link to="/tours"  className="header__link" onClick={closeAll}>Tours</Link>
           <Link to="/events" className="header__link" onClick={closeAll}>Events</Link>
 
+          <Link to="/community" className="header__link" onClick={closeAll}>Community</Link>
+          <Link to="/reviews"   className="header__link" onClick={closeAll}>Reviews</Link>
+
           {/* Other Services dropdown */}
           <div
             className={`header__dropdown ${dropdownOpen ? 'header__dropdown--open' : ''}`}
@@ -89,16 +87,12 @@ export default function Header() {
             </div>
           </div>
 
-          <a href="/#features" className="header__link" onClick={closeAll}>Our Experiences</a>
+          
           <a href="/#contact"  className="header__link" onClick={closeAll}>Contact</a>
         </nav>
 
         {/* Right actions */}
         <div className="header__actions">
-          <button className="header__search-btn" aria-label="Search">
-            <IconSearch />
-          </button>
-          <Link to="/admin/login" className="header__signin">Admin Login</Link>
           <button
             className="header__burger"
             onClick={() => setMenuOpen(o => !o)}

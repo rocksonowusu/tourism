@@ -196,12 +196,12 @@ export default function Dashboard() {
       {/* ── Stat cards ──────────────────────────────────────────────── */}
       <section className={s.statsGrid}>
         <StatCard label="Total Events"    value={stats?.totalEvents}   icon={<IconCalendar />} color="gold"  loading={loading} />
-        <StatCard label="Tourist Sites"   value={stats?.totalSites}    icon={<IconMapPin />}   color="blue"  loading={loading} />
-        <StatCard label="Tours"           value={stats?.totalTours}    icon={<IconCompass />}   color="green" loading={loading} />
+        {/* <StatCard label="Tourist Sites"   value={stats?.totalSites}    icon={<IconMapPin />}   color="blue"  loading={loading} /> */}
+        {/* <StatCard label="Tours"           value={stats?.totalTours}    icon={<IconCompass />}   color="green" loading={loading} /> */}
         <StatCard label="Trip Requests"   value={stats?.newRequests}   icon={<IconInbox />}    color="gold"  loading={loading} />
         <StatCard label="Event Requests"  value={stats?.newEventRequests} icon={<IconStarOutline />}  color="gold"  loading={loading} />
-        <StatCard label="Upcoming Events" value={stats?.upcomingCount} icon={<IconClock />}    color="green" loading={loading} />
-        <StatCard label="Media Files"     value={stats?.mediaCount}    icon={<IconImage />}    color="blue"  loading={loading} />
+        {/* <StatCard label="Upcoming Events" value={stats?.upcomingCount} icon={<IconClock />}    color="green" loading={loading} /> */}
+        {/* <StatCard label="Media Files"     value={stats?.mediaCount}    icon={<IconImage />}    color="blue"  loading={loading} /> */}
       </section>
 
       {/* ── Quick Actions ────────────────────────────────────────────── */}
@@ -235,7 +235,7 @@ export default function Dashboard() {
               <span className={s.actionSub}>Add photos to sites or events</span>
             </span>
           </button>
-          <button className={s.actionCard} onClick={() => navigate('/admin/tours')}>
+          {/* <button className={s.actionCard} onClick={() => navigate('/admin/tours')}>
             <span className={s.actionIcon} style={{ '--ac': 'rgba(16,185,129,0.20)', '--ac-fg': '#34D399' }}>
               <IconCompass />
             </span>
@@ -243,7 +243,7 @@ export default function Dashboard() {
               <span className={s.actionTitle}>Manage Tours</span>
               <span className={s.actionSub}>Create & manage tour packages</span>
             </span>
-          </button>
+          </button> */}
           <button className={s.actionCard} onClick={() => navigate('/admin/trip-requests')}>
             <span className={s.actionIcon} style={{ '--ac': 'rgba(239,68,68,0.15)', '--ac-fg': '#F87171' }}>
               <IconInbox />

@@ -12,6 +12,8 @@ from .models import (
     AccommodationRequest, AccommodationRequestStatus,
     Vehicle, VehicleMedia,
     CarRentalRequest, CarRentalRequestStatus,
+    CommunityProject, CommunityProjectMedia,
+    Review, ReviewServiceType,
 )
 
 
@@ -767,6 +769,100 @@ class CarRentalRequestAdmin(admin.ModelAdmin):
         }),
         ('Status', {
             'fields': ('status',),
+        }),
+        ('Timestamps', {
+            'classes': ('collapse',),
+            'fields': ('created_at',),
+        }),
+    )
+
+
+# ============================================================================
+#  PHASE 5 — Community Project Admin
+# ============================================================================
+
+class CommunityProjectMediaInline(admin.TabularInline):
+    model = CommunityProjectMedia
+    extra = 0
+    readonly_fields = ('thumbnail', 'media_type', 'created_at')
+    fields = ('thumbnail', 'file', 'media_type', 'caption', 'created_at')
+
+    @admin.display(description='Preview')
+    def thumbnail(self, obj):
+        return _thumbnail(obj)
+
+
+@admin.register(CommunityProject)
+class CommunityProjectAdmin(admin.ModelAdmin):
+    list_display = ('title', 'location', 'date', 'beneficiaries_count', 'is_featured', 'media_count', 'created_at')
+    list_filter = ('is_featured', 'date', 'created_at')
+    list_editable = ('is_featured',)
+    search_fields = ('title', 'description', 'location')
+    prepopulated_fields = {'slug': ('title',)}
+    ordering = ('-date', '-created_at')
+    readonly_fields = ('created_at', 'updated_at')
+    inlines = [CommunityProjectMediaInline]
+    fieldsets = (
+        (None, {
+            'fields': ('title', 'slug', 'description'),
+        }),
+        ('Details', {
+            'fields': ('location', 'date', 'impact_summary', 'beneficiaries_count'),
+        }),
+        ('Visibility', {
+            'fields': ('is_featured',),
+        }),
+        ('Timestamps', {
+            'classes': ('collapse',),
+            'fields': ('created_at', 'updated_at'),
+        }),
+    )
+
+    @admin.display(description='Media')
+    def media_count(self, obj):
+        return obj.media_count
+
+
+@admin.register(CommunityProjectMedia)
+class CommunityProjectMediaAdmin(admin.ModelAdmin):
+    list_display = ('thumbnail', 'community_project', 'media_type', 'caption', 'created_at')
+    list_filter = ('media_type', 'created_at')
+    search_fields = ('caption', 'community_project__title')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at',)
+    raw_id_fields = ('community_project',)
+
+    @admin.display(description='Preview')
+    def thumbnail(self, obj):
+        if obj.file:
+            url = obj.file.url if hasattr(obj.file, 'url') else obj.file
+            if obj.media_type == MediaType.VIDEO:
+                return format_html('<video src="{}" width="80" controls></video>', url)
+            return format_html('<img src="{}" width="80" style="border-radius:4px" />', url)
+        return '-'
+
+
+# ============================================================================
+#  PHASE 7 — Review Admin
+# ============================================================================
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('reviewer_name', 'title', 'rating', 'service_type', 'is_approved', 'is_featured', 'created_at')
+    list_filter = ('is_approved', 'is_featured', 'service_type', 'rating', 'created_at')
+    list_editable = ('is_approved', 'is_featured')
+    search_fields = ('reviewer_name', 'reviewer_email', 'title', 'comment')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at',)
+    fieldsets = (
+        ('Reviewer', {
+            'fields': ('reviewer_name', 'reviewer_email', 'reviewer_photo'),
+        }),
+        ('Review', {
+            'fields': ('rating', 'title', 'comment', 'service_type'),
+        }),
+        ('Moderation', {
+            'fields': ('is_approved', 'is_featured'),
         }),
         ('Timestamps', {
             'classes': ('collapse',),

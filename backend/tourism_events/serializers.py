@@ -6,6 +6,8 @@ from .models import (
     EventBooking,
     Apartment, ApartmentMedia, AccommodationRequest, AccommodationPurpose,
     Vehicle, VehicleMedia, CarRentalRequest,
+    CommunityProject, CommunityProjectMedia,
+    Review,
 )
 
 
@@ -702,3 +704,82 @@ class CarRentalRequestSerializer(serializers.ModelSerializer):
             'created_at',
         )
         read_only_fields = ('id', 'vehicle_name', 'created_at')
+
+
+# ============================================================================
+#  PHASE 5 — Community Project serializers
+# ============================================================================
+
+class CommunityProjectMediaSerializer(serializers.ModelSerializer):
+    file_url   = serializers.SerializerMethodField()
+    media_type = serializers.CharField(read_only=True)
+
+    class Meta:
+        model  = CommunityProjectMedia
+        fields = (
+            'id', 'community_project', 'file', 'file_url',
+            'media_type', 'caption', 'created_at',
+        )
+        read_only_fields = ('id', 'media_type', 'file_url', 'created_at')
+
+    def get_file_url(self, obj):
+        return obj.file_url
+
+
+class CommunityProjectSerializer(serializers.ModelSerializer):
+    """Full detail serializer with nested media."""
+    media       = CommunityProjectMediaSerializer(many=True, read_only=True)
+    media_count = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model  = CommunityProject
+        fields = (
+            'id', 'title', 'slug', 'description', 'location',
+            'date', 'impact_summary', 'beneficiaries_count',
+            'is_featured', 'media_count', 'media',
+            'created_at', 'updated_at',
+        )
+        read_only_fields = ('id', 'slug', 'media_count', 'created_at', 'updated_at')
+
+
+class CommunityProjectListSerializer(serializers.ModelSerializer):
+    """Lightweight serializer for list endpoints."""
+    media_count = serializers.IntegerField(read_only=True)
+    media       = CommunityProjectMediaSerializer(many=True, read_only=True)
+
+    class Meta:
+        model  = CommunityProject
+        fields = (
+            'id', 'title', 'slug', 'location', 'date',
+            'impact_summary', 'beneficiaries_count',
+            'is_featured', 'media_count', 'media',
+            'created_at',
+        )
+        read_only_fields = fields
+
+
+# ============================================================================
+#  PHASE 7 — Review serializer
+# ============================================================================
+
+class ReviewSerializer(serializers.ModelSerializer):
+    reviewer_photo_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model  = Review
+        fields = (
+            'id', 'reviewer_name', 'reviewer_email',
+            'reviewer_photo', 'reviewer_photo_url',
+            'rating', 'title', 'comment',
+            'service_type', 'is_approved', 'is_featured',
+            'created_at',
+        )
+        read_only_fields = ('id', 'reviewer_photo_url', 'created_at')
+
+    def get_reviewer_photo_url(self, obj):
+        if obj.reviewer_photo:
+            url = obj.reviewer_photo.url if hasattr(obj.reviewer_photo, 'url') else str(obj.reviewer_photo)
+            if url.startswith('http'):
+                return url
+            return f'https://res.cloudinary.com/{url}'
+        return None

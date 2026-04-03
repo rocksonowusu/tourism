@@ -5,6 +5,8 @@ from .models import (
     EventRequest,
     Apartment, ApartmentMedia, AccommodationRequest,
     Vehicle, VehicleMedia, CarRentalRequest,
+    CommunityProject, CommunityProjectMedia,
+    Review,
 )
 
 
@@ -254,3 +256,45 @@ class CarRentalRequestFilter(django_filters.FilterSet):
     class Meta:
         model  = CarRentalRequest
         fields = ['status', 'vehicle', 'date_after', 'date_before']
+
+
+# ============================================================================
+#  PHASE 5 — Community Project filters
+# ============================================================================
+
+class CommunityProjectFilter(django_filters.FilterSet):
+    is_featured  = django_filters.BooleanFilter(field_name='is_featured')
+    location     = django_filters.CharFilter(field_name='location', lookup_expr='icontains')
+    date_after   = django_filters.DateFilter(field_name='date', lookup_expr='gte')
+    date_before  = django_filters.DateFilter(field_name='date', lookup_expr='lte')
+
+    class Meta:
+        model  = CommunityProject
+        fields = ['is_featured', 'location', 'date_after', 'date_before']
+
+
+class CommunityProjectMediaFilter(django_filters.FilterSet):
+    media_type = django_filters.ChoiceFilter(
+        field_name='media_type',
+        choices=[('image', 'Image'), ('video', 'Video')],
+    )
+
+    class Meta:
+        model  = CommunityProjectMedia
+        fields = ['community_project', 'media_type']
+
+
+# ============================================================================
+#  PHASE 7 — Review filter
+# ============================================================================
+
+class ReviewFilter(django_filters.FilterSet):
+    service_type = django_filters.CharFilter(field_name='service_type')
+    is_approved  = django_filters.BooleanFilter(field_name='is_approved')
+    is_featured  = django_filters.BooleanFilter(field_name='is_featured')
+    rating       = django_filters.NumberFilter(field_name='rating')
+    min_rating   = django_filters.NumberFilter(field_name='rating', lookup_expr='gte')
+
+    class Meta:
+        model  = Review
+        fields = ['service_type', 'is_approved', 'is_featured', 'rating', 'min_rating']

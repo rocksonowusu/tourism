@@ -1,0 +1,196 @@
+/* ============================================================
+   Reviews / Testimonials – Home Page Section
+   ============================================================ */
+
+.reviews-section {
+  position: relative;
+  padding: 56px 0 48px;
+  background: #fff;
+  overflow: hidden;
+}
+
+/* ── Header ─────────────────────────────────────────── */
+.reviews-section__header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.reviews-section__eyebrow {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #C5A028;
+  margin-bottom: 8px;
+}
+.reviews-section__title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.7rem, 3.5vw, 2.5rem);
+  color: #1a1a2e;
+}
+
+/* ── Carousel ───────────────────────────────────────── */
+.reviews-section__carousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.reviews-section__nav {
+  flex-shrink: 0;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 2px solid #e5e5e5;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s;
+  color: #1a1a2e;
+}
+.reviews-section__nav:hover {
+  border-color: #C5A028;
+  color: #C5A028;
+  background: #faf6e8;
+}
+
+/* ── Card ───────────────────────────────────────────── */
+.reviews-section__card {
+  flex: 1;
+  text-align: center;
+  padding: 28px 28px;
+  background: #fafaf7;
+  border-radius: 20px;
+  animation: reviewFadeIn 0.45s ease;
+}
+@keyframes reviewFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reviews-section__card > svg:first-child {
+  margin-bottom: 12px;
+}
+
+/* Stars */
+.reviews-section__stars {
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+  margin-bottom: 16px;
+}
+
+.reviews-section__review-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  color: #1a1a2e;
+  margin-bottom: 12px;
+}
+
+.reviews-section__comment {
+  font-size: 0.92rem;
+  color: #555;
+  line-height: 1.65;
+  max-width: 520px;
+  margin: 0 auto 18px;
+}
+
+/* Reviewer info */
+.reviews-section__reviewer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.reviews-section__avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #C5A028;
+}
+.reviews-section__avatar--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #C5A028, #E5B83C);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+.reviews-section__name {
+  display: block;
+  font-weight: 600;
+  color: #1a1a2e;
+  font-size: 0.92rem;
+  text-align: left;
+}
+.reviews-section__service {
+  display: block;
+  font-size: 0.78rem;
+  color: #C5A028;
+  text-align: left;
+}
+
+/* ── Dots ───────────────────────────────────────────── */
+.reviews-section__dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+}
+.reviews-section__dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  border: none;
+  background: #ddd;
+  cursor: pointer;
+  transition: all 0.3s;
+  padding: 0;
+}
+.reviews-section__dot--active {
+  background: #C5A028;
+  transform: scale(1.3);
+}
+
+/* ── CTA ────────────────────────────────────────────── */
+.reviews-section__cta {
+  text-align: center;
+  margin-top: 24px;
+}
+.reviews-section__cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border: 2px solid #C5A028;
+  color: #C5A028;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+.reviews-section__cta-btn:hover {
+  background: #C5A028;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* ── Responsive ─────────────────────────────────────── */
+@media (max-width: 640px) {
+  .reviews-section {
+    padding: 40px 0 36px;
+  }
+  .reviews-section__carousel {
+    gap: 12px;
+  }
+  .reviews-section__card {
+    padding: 20px 16px;
+  }
+  .reviews-section__nav {
+    width: 36px; height: 36px;
+  }
+}

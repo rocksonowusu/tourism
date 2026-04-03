@@ -61,6 +61,16 @@ const IconClipboard = () => (
     <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
   </svg>
 )
+const IconHeart = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+  </svg>
+)
+const IconMessageSquare = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>
+)
 const IconLogout = () => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -78,8 +88,9 @@ const NAV = [
   { to: '/admin/apartments',   label: 'Apartments',    Icon: IconHome                  },
   { to: '/admin/vehicles',     label: 'Vehicles',      Icon: IconTruck                 },
   { to: '/admin/service-requests', label: 'Service Requests', Icon: IconClipboard       },
-  { to: '/admin/media',        label: 'Media',         Icon: IconImage                 },
-  { to: '/admin/sites',        label: 'Sites',         Icon: IconMapPin                },
+  { to: '/admin/community-projects', label: 'Community',     Icon: IconHeart            },
+  { to: '/admin/reviews',           label: 'Reviews',        Icon: IconMessageSquare     },
+  { to: '/admin/sites',        label: 'Sites & Media', Icon: IconMapPin                },
 ]
 
 export default function Sidebar({ open, onClose }) {

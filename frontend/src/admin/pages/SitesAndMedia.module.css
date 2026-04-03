@@ -1,0 +1,47 @@
+/* ── Sites & Media combined page ──────────────────── */
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.tabBar {
+  display: flex;
+  gap: var(--space-1);
+  border-bottom: 2px solid var(--ash-200, #e5e5e5);
+  margin-bottom: var(--space-5);
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: var(--space-3) var(--space-5);
+  background: none;
+  border: none;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--color-text-secondary, #888);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.tab:hover {
+  color: var(--color-text, #333);
+}
+
+.tab svg {
+  flex-shrink: 0;
+}
+
+.tabActive {
+  color: var(--gold-600, #C5A028);
+  border-bottom-color: var(--gold-600, #C5A028);
+  font-weight: 600;
+}
+
+.content {
+  /* content inherits admin layout */
+}

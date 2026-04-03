@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .models import Event, TouristSite, EventMedia, TouristSiteMedia, Tour, TourMedia, TripRequest, CustomTourRequest, EventRequest, EventBooking, Apartment, ApartmentMedia, AccommodationRequest, Vehicle, VehicleMedia, CarRentalRequest
+from .models import Event, TouristSite, EventMedia, TouristSiteMedia, Tour, TourMedia, TripRequest, CustomTourRequest, EventRequest, EventBooking, Apartment, ApartmentMedia, AccommodationRequest, Vehicle, VehicleMedia, CarRentalRequest, CommunityProject, CommunityProjectMedia, Review
 from .serializers import (
     EventSerializer,
     EventListSerializer,
@@ -29,6 +29,10 @@ from .serializers import (
     VehicleListSerializer,
     VehicleMediaSerializer,
     CarRentalRequestSerializer,
+    CommunityProjectSerializer,
+    CommunityProjectListSerializer,
+    CommunityProjectMediaSerializer,
+    ReviewSerializer,
 )
 from .filters import (
     EventFilter, TouristSiteFilter, EventMediaFilter, TouristSiteMediaFilter,
@@ -36,6 +40,8 @@ from .filters import (
     EventRequestFilter,
     ApartmentFilter, ApartmentMediaFilter, AccommodationRequestFilter,
     VehicleFilter, VehicleMediaFilter, CarRentalRequestFilter,
+    CommunityProjectFilter, CommunityProjectMediaFilter,
+    ReviewFilter,
 )
 from .emails import send_trip_request_emails, send_custom_tour_request_emails, send_event_request_emails, send_event_booking_emails
 
@@ -1160,3 +1166,180 @@ class CarRentalRequestViewSet(viewsets.ModelViewSet):
     def new_count(self, request):
         count = self.get_queryset().filter(status='new').count()
         return Response({'count': count})
+
+
+# ============================================================================
+#  PHASE 5 — CommunityProject ViewSets
+# ============================================================================
+
+class CommunityProjectViewSet(viewsets.ModelViewSet):
+    """
+    CRUD for community / charity projects.
+
+    GET    /api/community-projects/                      – list (public, paginated)
+    GET    /api/community-projects/{id}/                 – detail
+    GET    /api/community-projects/featured/             – featured only
+    GET    /api/community-projects/by-slug/{slug}/       – by slug
+    GET    /api/community-projects/{id}/media/           – media list
+    POST   /api/community-projects/{id}/upload/          – media upload (admin)
+    """
+
+    queryset = (
+        CommunityProject.objects
+        .prefetch_related('media')
+        .all()
+    )
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    parser_classes     = (MultiPartParser, FormParser, JSONParser)
+    filter_backends    = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_class    = CommunityProjectFilter
+    search_fields      = ['title', 'description', 'location']
+    ordering_fields    = ['date', 'created_at', 'beneficiaries_count']
+    ordering           = ['-date', '-created_at']
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return CommunityProjectListSerializer
+        return CommunityProjectSerializer
+
+    @action(detail=False, methods=['get'])
+    def featured(self, request):
+        qs = self.filter_queryset(self.get_queryset().filter(is_featured=True))
+        return self._paginated_response(qs, CommunityProjectListSerializer)
+
+    @action(detail=False, methods=['get'], url_path='by-slug/(?P<slug>[-\\w]+)')
+    def by_slug(self, request, slug=None):
+        obj = self.get_queryset().filter(slug=slug).first()
+        if not obj:
+            return Response({'detail': 'Not found.'}, status=status.HTTP_404_NOT_FOUND)
+        return Response(CommunityProjectSerializer(obj, context={'request': request}).data)
+
+    @action(detail=True, methods=['get'])
+    def media(self, request, pk=None):
+        obj = self.get_object()
+        serializer = CommunityProjectMediaSerializer(obj.media.all(), many=True, context={'request': request})
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'], url_path='upload',
+            parser_classes=[MultiPartParser, FormParser])
+    def upload_media(self, request, pk=None):
+        MAX_MEDIA = 10
+        obj   = self.get_object()
+        files = request.FILES.getlist('file')
+        if not files:
+            return Response({'detail': 'No files provided.'}, status=status.HTTP_400_BAD_REQUEST)
+        existing = obj.media.count()
+        if existing >= MAX_MEDIA:
+            return Response({'detail': f'Max {MAX_MEDIA} media files reached.'}, status=status.HTTP_400_BAD_REQUEST)
+        slots = MAX_MEDIA - existing
+        if len(files) > slots:
+            return Response({'detail': f'Can only upload {slots} more file(s).'}, status=status.HTTP_400_BAD_REQUEST)
+        created, errors = [], []
+        for f in files:
+            ser = CommunityProjectMediaSerializer(
+                data={'community_project': obj.pk, 'file': f, 'caption': request.data.get('caption', '')},
+                context={'request': request})
+            if ser.is_valid():
+                ser.save(); created.append(ser.data)
+            else:
+                errors.append({'file': f.name, 'errors': ser.errors})
+        if errors and not created:
+            return Response({'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
+        resp = {'created': created}
+        if errors: resp['errors'] = errors
+        return Response(resp, status=status.HTTP_201_CREATED)
+
+    def _paginated_response(self, qs, serializer_class):
+        page = self.paginate_queryset(qs)
+        if page is not None:
+            s = serializer_class(page, many=True, context={'request': self.request})
+            return self.get_paginated_response(s.data)
+        return Response(serializer_class(qs, many=True, context={'request': self.request}).data)
+
+
+class CommunityProjectMediaViewSet(viewsets.ModelViewSet):
+    queryset         = CommunityProjectMedia.objects.select_related('community_project').all()
+    serializer_class = CommunityProjectMediaSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    parser_classes   = (MultiPartParser, FormParser, JSONParser)
+    filter_backends  = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_class  = CommunityProjectMediaFilter
+    search_fields    = ['caption', 'community_project__title']
+    ordering_fields  = ['created_at']
+    ordering         = ['-created_at']
+
+
+# ============================================================================
+#  PHASE 7 — Review ViewSet
+# ============================================================================
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    """
+    POST   /api/reviews/                – PUBLIC (submit a review)
+    GET    /api/reviews/                – PUBLIC (approved only) / ADMIN (all)
+    GET    /api/reviews/featured/       – PUBLIC (featured + approved)
+    GET    /api/reviews/pending/        – ADMIN (is_approved=False)
+    PATCH  /api/reviews/{id}/           – ADMIN (approve / feature)
+    DELETE /api/reviews/{id}/           – ADMIN
+    GET    /api/reviews/stats/          – ADMIN
+    """
+
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    filter_backends  = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_class  = ReviewFilter
+    search_fields    = ['reviewer_name', 'title', 'comment']
+    ordering_fields  = ['created_at', 'rating']
+    ordering         = ['-created_at']
+    parser_classes   = (MultiPartParser, FormParser, JSONParser)
+
+    def get_permissions(self):
+        if self.action in ('create', 'list', 'retrieve', 'featured'):
+            return [AllowAny()]
+        return [IsAdminUser()]
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if not (self.request.user and self.request.user.is_authenticated and self.request.user.is_staff):
+            qs = qs.filter(is_approved=True)
+        return qs
+
+    @action(detail=False, methods=['get'])
+    def featured(self, request):
+        qs = Review.objects.filter(is_featured=True, is_approved=True)
+        page = self.paginate_queryset(qs)
+        if page is not None:
+            s = ReviewSerializer(page, many=True, context={'request': request})
+            return self.get_paginated_response(s.data)
+        return Response(ReviewSerializer(qs, many=True, context={'request': request}).data)
+
+    @action(detail=False, methods=['get'])
+    def pending(self, request):
+        if not request.user.is_staff:
+            return Response({'detail': 'Not authorized.'}, status=status.HTTP_403_FORBIDDEN)
+        qs = Review.objects.filter(is_approved=False)
+        page = self.paginate_queryset(qs)
+        if page is not None:
+            s = ReviewSerializer(page, many=True, context={'request': request})
+            return self.get_paginated_response(s.data)
+        return Response(ReviewSerializer(qs, many=True, context={'request': request}).data)
+
+    @action(detail=False, methods=['get'])
+    def stats(self, request):
+        if not request.user.is_staff:
+            return Response({'detail': 'Not authorized.'}, status=status.HTTP_403_FORBIDDEN)
+        from django.db.models import Avg, Count
+        all_reviews = Review.objects.all()
+        return Response({
+            'total': all_reviews.count(),
+            'approved': all_reviews.filter(is_approved=True).count(),
+            'pending': all_reviews.filter(is_approved=False).count(),
+            'featured': all_reviews.filter(is_featured=True).count(),
+            'average_rating': all_reviews.filter(is_approved=True).aggregate(avg=Avg('rating'))['avg'] or 0,
+            'by_service_type': list(
+                all_reviews.filter(is_approved=True)
+                .values('service_type')
+                .annotate(count=Count('id'), avg_rating=Avg('rating'))
+                .order_by('-count')
+            ),
+        })

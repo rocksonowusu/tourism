@@ -346,6 +346,39 @@ class TourismAPIClient {
     newCount: ()           => this.get('/api/car-rental-requests/new-count/'),
   }
 
+  // ── Community Projects endpoints (Phase 5) ───────────────────────────
+
+  communityProjects = {
+    list:     (params)     => this.get('/api/community-projects/', params),
+    detail:   (id)         => this.get(`/api/community-projects/${id}/`),
+    create:   (data)       => this.post('/api/community-projects/', data),
+    update:   (id, data)   => this.patch(`/api/community-projects/${id}/`, data),
+    delete:   (id)         => this.delete(`/api/community-projects/${id}/`),
+    bySlug:   (slug)       => this.get(`/api/community-projects/by-slug/${slug}/`),
+    featured: (params)     => this.get('/api/community-projects/featured/', params),
+    media:    (id)         => this.get(`/api/community-projects/${id}/media/`),
+    upload:   (id, form)   => this.post(`/api/community-projects/${id}/upload/`, form),
+  }
+
+  communityProjectMedia = {
+    list:   (params)   => this.get('/api/community-project-media/', params),
+    delete: (id)       => this.delete(`/api/community-project-media/${id}/`),
+    update: (id, data) => this.patch(`/api/community-project-media/${id}/`, data),
+  }
+
+  // ── Reviews endpoints (Phase 7) ─────────────────────────────────────
+
+  reviews = {
+    list:     (params)     => this.get('/api/reviews/', params),
+    detail:   (id)         => this.get(`/api/reviews/${id}/`),
+    submit:   (data)       => this.post('/api/reviews/', data),
+    update:   (id, data)   => this.patch(`/api/reviews/${id}/`, data),
+    delete:   (id)         => this.delete(`/api/reviews/${id}/`),
+    featured: (params)     => this.get('/api/reviews/featured/', params),
+    pending:  (params)     => this.get('/api/reviews/pending/', params),
+    stats:    ()           => this.get('/api/reviews/stats/'),
+  }
+
   // ── Health ───────────────────────────────────────────────────────────
 
   health = () => this.get('/health/')

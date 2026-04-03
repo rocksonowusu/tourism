@@ -9,9 +9,10 @@ import Hero           from './components/Hero'
 import Features       from './components/Features'
 import ToursSection   from './components/ToursSection'
 import EventsSection  from './components/EventsSection'
-import Stories        from './components/Stories'
-import Newsletter     from './components/Newsletter'
-import Footer         from './components/Footer'
+import CommunityImpact from './components/CommunityImpact'
+import ReviewsSection  from './components/ReviewsSection'
+import Newsletter      from './components/Newsletter'
+import Footer          from './components/Footer'
 
 // Detail pages
 import EventDetail from './pages/EventDetail'
@@ -24,6 +25,9 @@ import AllAccommodations   from './pages/AllAccommodations'
 import AccommodationDetail from './pages/AccommodationDetail'
 import AllVehicles         from './pages/AllVehicles'
 import VehicleDetail       from './pages/VehicleDetail'
+import AllCommunityProjects   from './pages/AllCommunityProjects'
+import CommunityProjectDetail from './pages/CommunityProjectDetail'
+import AllReviews              from './pages/AllReviews'
 
 // Admin
 import { AuthProvider } from './admin/context/AuthContext'
@@ -32,14 +36,15 @@ import DashboardLayout from './admin/components/layout/DashboardLayout'
 import Login      from './admin/pages/Login'
 import Dashboard  from './admin/pages/Dashboard'
 import Events     from './admin/pages/Events'
-import Sites      from './admin/pages/Sites'
-import Media      from './admin/pages/Media'
+import Sites      from './admin/pages/SitesAndMedia'
 import Tours      from './admin/pages/Tours'
 import TripRequests from './admin/pages/TripRequests'
 import EventRequests from './admin/pages/EventRequests'
 import Apartments      from './admin/pages/Apartments'
 import Vehicles        from './admin/pages/Vehicles'
 import ServiceRequests from './admin/pages/ServiceRequests'
+import CommunityProjectsAdmin from './admin/pages/CommunityProjects'
+import ReviewsAdmin            from './admin/pages/Reviews'
 
 import PlanTour from './pages/PlanTour'
 import RequestEvent from './pages/RequestEvent'
@@ -119,7 +124,8 @@ function PublicSite() {
       <Features />
       <ToursSection tours={tours} loading={toursLoading} />
       <EventsSection heroMedia={heroMedia} />
-      <Stories />
+      <CommunityImpact />
+      <ReviewsSection />
       <Newsletter />
       <Footer />
     </div>
@@ -143,6 +149,8 @@ export default function App() {
           <Route path="/tours"  element={<AllTours />} />
           <Route path="/accommodations" element={<AllAccommodations />} />
           <Route path="/car-rentals"    element={<AllVehicles />} />
+          <Route path="/community"      element={<AllCommunityProjects />} />
+          <Route path="/reviews"        element={<AllReviews />} />
 
           {/* Detail pages */}
           <Route path="/events/:slug" element={<EventDetail />} />
@@ -150,6 +158,7 @@ export default function App() {
           <Route path="/tours/:slug"  element={<TourDetail />} />
           <Route path="/accommodations/:slug" element={<AccommodationDetail />} />
           <Route path="/car-rentals/:slug"    element={<VehicleDetail />} />
+          <Route path="/community/:slug"       element={<CommunityProjectDetail />} />
           <Route path="/plan-tour"    element={<PlanTour />} />
           <Route path="/request-event" element={<RequestEvent />} />
 
@@ -167,7 +176,8 @@ export default function App() {
             <Route path="apartments" element={<Apartments />} />
             <Route path="vehicles"   element={<Vehicles />} />
             <Route path="service-requests" element={<ServiceRequests />} />
-            <Route path="media"  element={<Media />} />
+            <Route path="community-projects" element={<CommunityProjectsAdmin />} />
+            <Route path="reviews"            element={<ReviewsAdmin />} />
           </Route>
 
           {/* Fallback */}

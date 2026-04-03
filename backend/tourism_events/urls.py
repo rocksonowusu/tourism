@@ -17,6 +17,9 @@ from .views import (
     VehicleViewSet,
     VehicleMediaViewSet,
     CarRentalRequestViewSet,
+    CommunityProjectViewSet,
+    CommunityProjectMediaViewSet,
+    ReviewViewSet,
 )
 
 router = DefaultRouter()
@@ -36,6 +39,9 @@ router.register(r'accommodation-requests', AccommodationRequestViewSet, basename
 router.register(r'vehicles', VehicleViewSet, basename='vehicle')
 router.register(r'vehicle-media', VehicleMediaViewSet, basename='vehiclemedia')
 router.register(r'car-rental-requests', CarRentalRequestViewSet, basename='carrentalrequest')
+router.register(r'community-projects', CommunityProjectViewSet, basename='communityproject')
+router.register(r'community-project-media', CommunityProjectMediaViewSet, basename='communityprojectmedia')
+router.register(r'reviews', ReviewViewSet, basename='review')
 
 urlpatterns = [
     path('', include(router.urls)),
