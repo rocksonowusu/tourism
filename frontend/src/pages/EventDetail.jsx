@@ -191,6 +191,47 @@ export default function EventDetail() {
   const [lightboxIdx, setLightboxIdx] = useState(null)
   const [userLoc, setUserLoc]         = useState(null)  // { lat, lng }
 
+  // ── Booking modal state ─────────────────────────────────────────────
+  const [showBooking, setShowBooking] = useState(false)
+  const [bookingForm, setBookingForm] = useState({
+    customer_name: '', customer_email: '', customer_phone: '',
+    number_of_guests: 1, special_requests: '',
+  })
+  const [bookingSubmitting, setBookingSubmitting] = useState(false)
+  const [bookingSuccess, setBookingSuccess]       = useState(false)
+  const [bookingError, setBookingError]           = useState(null)
+
+  const handleBookingChange = (e) => {
+    const { name, value } = e.target
+    setBookingForm(prev => ({ ...prev, [name]: name === 'number_of_guests' ? Math.max(1, +value || 1) : value }))
+  }
+
+  const submitBooking = async (e) => {
+    e.preventDefault()
+    setBookingSubmitting(true)
+    setBookingError(null)
+    try {
+      await api.eventBookings.submit({ ...bookingForm, event: event.id })
+      setBookingSuccess(true)
+    } catch (err) {
+      const detail = err?.response?.data
+      const msg = typeof detail === 'string' ? detail
+        : detail?.detail ?? Object.values(detail ?? {}).flat().join(' ')
+      setBookingError(msg || 'Something went wrong. Please try again.')
+    } finally {
+      setBookingSubmitting(false)
+    }
+  }
+
+  const closeBookingModal = () => {
+    setShowBooking(false)
+    if (bookingSuccess) {
+      setBookingForm({ customer_name: '', customer_email: '', customer_phone: '', number_of_guests: 1, special_requests: '' })
+      setBookingSuccess(false)
+    }
+    setBookingError(null)
+  }
+
   // Request user's geolocation on mount
   useEffect(() => {
     if (navigator.geolocation) {
@@ -466,16 +507,14 @@ export default function EventDetail() {
                     </ul>
                   </div>
                   <div className="evd__why-book-cta-wrap">
-                    <a
-                      href={`https://wa.me/233557533568?text=${encodeURIComponent(`Hi! I'd like to book the "${event.title}" event (${fmtDate(event.date)}). Please send me more details.`)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
                       className="evd__book-btn"
+                      onClick={() => setShowBooking(true)}
                     >
                       Book This Experience
-                    </a>
+                    </button>
                     <p className="evd__book-note">
-                      <IconMessageCircle /> Or message us on WhatsApp for group discounts
+                      <IconMessageCircle /> Quick &amp; simple — takes less than a minute
                     </p>
                   </div>
                 </div>
@@ -552,6 +591,104 @@ export default function EventDetail() {
             <IconChevRight />
           </button>
           <div className="evd__lb-counter">{lightboxIdx + 1} / {images.length}</div>
+        </div>
+      )}
+
+      {/* ── Booking Modal ────────────────────────────────────────── */}
+      {showBooking && (
+        <div className="evd__modal-overlay" onClick={closeBookingModal}>
+          <div className="evd__modal" onClick={e => e.stopPropagation()}>
+            <button className="evd__modal-close" onClick={closeBookingModal}><IconX /></button>
+
+            {bookingSuccess ? (
+              /* ── Success state ─────────────────────────────────── */
+              <div className="evd__modal-success">
+                <div className="evd__modal-success-icon">
+                  <IconCheck />
+                </div>
+                <h3 className="evd__modal-success-title">Booking Submitted!</h3>
+                <p className="evd__modal-success-text">
+                  We've received your booking for <strong>{event.title}</strong>.
+                  Check your email for a confirmation — our team will reach out shortly.
+                </p>
+                <button className="evd__modal-done-btn" onClick={closeBookingModal}>
+                  Done
+                </button>
+              </div>
+            ) : (
+              /* ── Form state ───────────────────────────────────── */
+              <>
+                <div className="evd__modal-header">
+                  <p className="evd__modal-eyebrow">Book This Experience</p>
+                  <h3 className="evd__modal-title">{event.title}</h3>
+                  <p className="evd__modal-meta">
+                    {fmtDate(event.date) ?? 'Date TBA'} · {event.location}
+                  </p>
+                </div>
+
+                <form className="evd__modal-form" onSubmit={submitBooking}>
+                  <div className="evd__modal-field">
+                    <label htmlFor="bk-name">Full Name *</label>
+                    <input
+                      id="bk-name" name="customer_name" type="text" required
+                      placeholder="Kwame Mensah"
+                      value={bookingForm.customer_name}
+                      onChange={handleBookingChange}
+                    />
+                  </div>
+                  <div className="evd__modal-field">
+                    <label htmlFor="bk-email">Email *</label>
+                    <input
+                      id="bk-email" name="customer_email" type="email" required
+                      placeholder="kwame@example.com"
+                      value={bookingForm.customer_email}
+                      onChange={handleBookingChange}
+                    />
+                  </div>
+                  <div className="evd__modal-row">
+                    <div className="evd__modal-field">
+                      <label htmlFor="bk-phone">Phone *</label>
+                      <input
+                        id="bk-phone" name="customer_phone" type="tel" required
+                        placeholder="+233 55 753 3568"
+                        value={bookingForm.customer_phone}
+                        onChange={handleBookingChange}
+                      />
+                    </div>
+                    <div className="evd__modal-field">
+                      <label htmlFor="bk-guests">Guests</label>
+                      <input
+                        id="bk-guests" name="number_of_guests" type="number" min="1"
+                        value={bookingForm.number_of_guests}
+                        onChange={handleBookingChange}
+                      />
+                    </div>
+                  </div>
+                  <div className="evd__modal-field">
+                    <label htmlFor="bk-special">Special Requests <span>(optional)</span></label>
+                    <textarea
+                      id="bk-special" name="special_requests" rows="3"
+                      placeholder="Dietary needs, accessibility requirements, etc."
+                      value={bookingForm.special_requests}
+                      onChange={handleBookingChange}
+                    />
+                  </div>
+
+                  {bookingError && (
+                    <p className="evd__modal-error">{bookingError}</p>
+                  )}
+
+                  <button
+                    type="submit"
+                    className="evd__modal-submit"
+                    disabled={bookingSubmitting}
+                  >
+                    {bookingSubmitting ? 'Submitting…' : 'Confirm Booking'}
+                  </button>
+                </form>
+              </>
+            )}
+          </div>
         </div>
       )}
 

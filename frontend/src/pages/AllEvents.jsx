@@ -104,6 +104,16 @@ const SEASON_MAP = {
 const FALLBACK_IMG = 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=600&q=80'
 const PAGE_SIZE = 12
 
+const CATEGORY_LABELS = {
+  '':               'All Events',
+  'corporate':      'Corporate',
+  'family_friends': 'Family & Friends',
+  'retreat':        'Retreat',
+  'recreational':   'Recreational',
+  'cultural':       'Cultural',
+  'custom':         'Custom',
+}
+
 function formatDate(dateStr) {
   if (!dateStr) return {}
   const d = new Date(dateStr)
@@ -122,6 +132,7 @@ export default function AllEvents() {
   const [page, setPage]         = useState(1)
   const [search, setSearch]     = useState('')
   const [filter, setFilter]     = useState('')
+  const [category, setCategory] = useState('')
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -131,6 +142,7 @@ export default function AllEvents() {
       if (filter === 'upcoming') params.is_upcoming = true
       if (filter === 'past')     params.is_past     = true
       if (filter === 'featured') params.is_featured = true
+      if (category) params.category = category
       const data = await api.events.list(params)
       setEvents(data?.results ?? data ?? [])
       setTotal(data?.count ?? (data?.length ?? 0))
@@ -139,10 +151,10 @@ export default function AllEvents() {
     } finally {
       setLoading(false)
     }
-  }, [page, search, filter])
+  }, [page, search, filter, category])
 
   useEffect(() => { load() }, [load])
-  useEffect(() => { setPage(1) }, [search, filter])
+  useEffect(() => { setPage(1) }, [search, filter, category])
 
   // scroll to top on page change
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }) }, [page])
@@ -204,6 +216,30 @@ export default function AllEvents() {
             )}
           </div>
 
+          {/* Category pills */}
+          <div className="ae__categories">
+            {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
+              <button
+                key={key}
+                className={`ae__cat-pill${category === key ? ' ae__cat-pill--active' : ''}`}
+                onClick={() => setCategory(key)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
+          {/* Request an Event CTA */}
+          <div className="ae__request-banner">
+            <div className="ae__request-banner-text">
+              <h3>Want us to organise a custom event for you?</h3>
+              <p>Corporate retreats, family gatherings, recreational activities — we plan it all.</p>
+            </div>
+            <Link to="/request-event" className="ae__request-banner-btn">
+              Request an Event →
+            </Link>
+          </div>
+
           {/* Grid */}
           {loading ? (
             <div className="ae__loading">
@@ -227,7 +263,7 @@ export default function AllEvents() {
                 const season = ev.season_label && SEASON_MAP[ev.season_label]
                 const img = ev.media?.[0]?.file_url ?? FALLBACK_IMG
                 const price = ev.price != null && Number(ev.price) > 0
-                  ? `$${Number(ev.price).toFixed(2)}`
+                  ? `GH₵${Number(ev.price).toFixed(2)}`
                   : null
 
                 return (
@@ -255,6 +291,9 @@ export default function AllEvents() {
                       </div>
                       <div className="ae__card-body">
                         <h3 className="ae__card-name">{ev.title}</h3>
+                        {ev.category && CATEGORY_LABELS[ev.category] && (
+                          <span className="ae__card-category">{CATEGORY_LABELS[ev.category]}</span>
+                        )}
                         <div className="ae__card-meta">
                           {ev.location && (
                             <span className="ae__card-meta-item">

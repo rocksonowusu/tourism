@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>New Event Request</title>
+  <!--[if mso]>
+  <style type="text/css">
+    table, td, th { font-family: Arial, sans-serif !important; }
+  </style>
+  <![endif]-->
+</head>
+<body style="margin:0;padding:0;background-color:#FAF8F2;font-family:'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;-webkit-font-smoothing:antialiased;">
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#FAF8F2;">
+    <tr>
+      <td align="center" style="padding:40px 16px;">
+
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background-color:#FFFFFF;border-radius:12px;overflow:hidden;border:1px solid #F0EADB;">
+
+          <!-- Gold bar top -->
+          <tr><td style="height:4px;background:linear-gradient(90deg,#C5A028,#E5B83C,#D4AF37,#C5A028);"></td></tr>
+
+          <!-- Header -->
+          <tr>
+            <td style="padding:28px 36px 20px;text-align:center;border-bottom:1px solid #F0EADB;">
+              <img src="{{ logo_url }}" alt="1957 The Ghana Experience" width="72" height="72" style="display:block;margin:0 auto 14px;border-radius:10px;" />
+              <p style="margin:0 0 4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#C5A028;">Admin Notification</p>
+              <h1 style="margin:0;font-size:22px;font-weight:700;color:#1A1A1A;line-height:1.3;">New Event Request Received</h1>
+            </td>
+          </tr>
+
+          <!-- Request ID badge -->
+          <tr>
+            <td style="padding:20px 36px 0;text-align:center;">
+              <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
+                <tr>
+                  <td style="background:#FEF9E6;border:1px solid #F0EADB;border-radius:20px;padding:5px 16px;">
+                    <span style="font-size:11px;font-weight:700;color:#C5A028;letter-spacing:0.8px;">EVENT REQUEST #{{ request_id }}</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Event type -->
+          <tr>
+            <td style="padding:20px 36px 0;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #F0EADB;border-radius:10px;overflow:hidden;">
+                <tr>
+                  <td style="background:#FEF9E6;padding:14px 18px;border-bottom:1px solid #F0EADB;">
+                    <p style="margin:0 0 3px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#C5A028;">Event Type</p>
+                    <h2 style="margin:0;font-size:17px;font-weight:700;color:#1A1A1A;">{{ event_type }}</h2>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:14px 18px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td width="28" valign="top" style="padding:3px 0;">
+                          <span style="display:inline-block;width:22px;height:22px;background:#FEF9E6;border:1px solid #F0EADB;border-radius:6px;text-align:center;line-height:22px;font-size:11px;color:#C5A028;font-weight:700;">&#128205;</span>
+                        </td>
+                        <td style="padding:3px 0 3px 8px;">
+                          <span style="font-size:11px;color:#8A7E6B;display:block;">Preferred Location</span>
+                          <span style="font-size:13px;font-weight:600;color:#1A1A1A;">{{ location_preference }}</span>
+                        </td>
+                      </tr>
+                      <tr><td colspan="2" style="height:8px;"></td></tr>
+                      <tr>
+                        <td width="28" valign="top" style="padding:3px 0;">
+                          <span style="display:inline-block;width:22px;height:22px;background:#FEF9E6;border:1px solid #F0EADB;border-radius:6px;text-align:center;line-height:22px;font-size:11px;color:#C5A028;font-weight:700;">&#128176;</span>
+                        </td>
+                        <td style="padding:3px 0 3px 8px;">
+                          <span style="font-size:11px;color:#8A7E6B;display:block;">Budget Range</span>
+                          <span style="font-size:13px;font-weight:600;color:#1A1A1A;">{{ budget_range }}</span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Customer details -->
+          <tr>
+            <td style="padding:18px 36px 0;">
+              <p style="margin:0 0 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#C5A028;">Customer Details</p>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #F0EADB;border-radius:10px;overflow:hidden;">
+                <tr>
+                  <td style="padding:11px 16px;font-size:12px;color:#8A7E6B;border-bottom:1px solid #F0EADB;width:130px;background:#FDFCF8;">Name</td>
+                  <td style="padding:11px 16px;font-size:13px;font-weight:600;color:#1A1A1A;border-bottom:1px solid #F0EADB;">{{ customer_name }}</td>
+                </tr>
+                <tr>
+                  <td style="padding:11px 16px;font-size:12px;color:#8A7E6B;border-bottom:1px solid #F0EADB;background:#FDFCF8;">Email</td>
+                  <td style="padding:11px 16px;font-size:13px;border-bottom:1px solid #F0EADB;">
+                    <a href="mailto:{{ customer_email }}" style="color:#C5A028;font-weight:600;text-decoration:none;">{{ customer_email }}</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:11px 16px;font-size:12px;color:#8A7E6B;background:#FDFCF8;">Phone</td>
+                  <td style="padding:11px 16px;font-size:13px;">
+                    <a href="tel:{{ customer_phone }}" style="color:#C5A028;font-weight:600;text-decoration:none;">{{ customer_phone }}</a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Event details -->
+          <tr>
+            <td style="padding:18px 36px 0;">
+              <p style="margin:0 0 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#C5A028;">Event Details</p>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #F0EADB;border-radius:10px;overflow:hidden;">
+                <tr>
+                  <td style="padding:11px 16px;font-size:12px;color:#8A7E6B;border-bottom:1px solid #F0EADB;width:130px;background:#FDFCF8;">Preferred Date</td>
+                  <td style="padding:11px 16px;font-size:13px;font-weight:600;color:#1A1A1A;border-bottom:1px solid #F0EADB;">{{ preferred_date }}</td>
+                </tr>
+                <tr>
+                  <td style="padding:11px 16px;font-size:12px;color:#8A7E6B;border-bottom:1px solid #F0EADB;background:#FDFCF8;">Expected Attendees</td>
+                  <td style="padding:11px 16px;font-size:14px;font-weight:700;color:#1A1A1A;border-bottom:1px solid #F0EADB;">{{ expected_attendees }}</td>
+                </tr>
+                <tr>
+                  <td style="padding:11px 16px;font-size:12px;color:#8A7E6B;border-bottom:1px solid #F0EADB;background:#FDFCF8;">Location</td>
+                  <td style="padding:11px 16px;font-size:13px;font-weight:600;color:#1A1A1A;border-bottom:1px solid #F0EADB;">{{ location_preference }}</td>
+                </tr>
+                <tr>
+                  <td style="padding:11px 16px;font-size:12px;color:#8A7E6B;background:#FDFCF8;">Budget</td>
+                  <td style="padding:11px 16px;font-size:13px;font-weight:600;color:#1A1A1A;">{{ budget_range }}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Activities -->
+          {% if activities_interested_in %}
+          <tr>
+            <td style="padding:18px 36px 0;">
+              <p style="margin:0 0 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#C5A028;">Activities Interested In</p>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #F0EADB;border-radius:10px;overflow:hidden;">
+                <tr>
+                  <td style="padding:14px 18px;">
+                    {% for activity in activities_interested_in %}
+                    <span style="display:inline-block;background:#FEF9E6;border:1px solid #F0EADB;border-radius:16px;padding:4px 12px;margin:2px 4px 2px 0;font-size:12px;font-weight:600;color:#5A5040;">{{ activity }}</span>
+                    {% endfor %}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          {% endif %}
+
+          <!-- Special requirements -->
+          {% if special_requirements %}
+          <tr>
+            <td style="padding:18px 36px 0;">
+              <p style="margin:0 0 10px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#C5A028;">Special Requirements</p>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #F0EADB;border-radius:10px;overflow:hidden;">
+                <tr>
+                  <td style="padding:14px 18px;font-size:13px;color:#5A5040;line-height:1.6;">{{ special_requirements }}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          {% endif %}
+
+          <!-- Action buttons -->
+          <tr>
+            <td style="padding:24px 36px 0;text-align:center;">
+              <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto;">
+                <tr>
+                  <td style="padding-right:10px;">
+                    <a href="{{ admin_url }}" style="display:inline-block;background:#C5A028;color:#FFFFFF;font-size:13px;font-weight:700;text-decoration:none;padding:12px 24px;border-radius:8px;">View in Admin</a>
+                  </td>
+                  <td>
+                    <a href="https://wa.me/{{ customer_phone_clean }}" style="display:inline-block;background:#25D366;color:#FFFFFF;font-size:13px;font-weight:700;text-decoration:none;padding:12px 24px;border-radius:8px;">WhatsApp Customer</a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:28px 36px;text-align:center;border-top:1px solid #F0EADB;margin-top:20px;">
+              <p style="margin:0;font-size:11px;color:#8A7E6B;line-height:1.6;">
+                This is an automated notification from<br>
+                <strong style="color:#C5A028;">1957 The Ghana Experience LBG</strong><br>
+                <a href="mailto:{{ company_email }}" style="color:#C5A028;text-decoration:none;">{{ company_email }}</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

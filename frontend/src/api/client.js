@@ -261,6 +261,91 @@ class TourismAPIClient {
     packageOptions: ()       => this.get('/api/custom-tour-requests/package-options/'),
   }
 
+  // ── Event Requests endpoints ─────────────────────────────────────────
+
+  eventRequests = {
+    submit:           (data)     => this.post('/api/event-requests/', data),
+    list:             (params)   => this.get('/api/event-requests/', params),
+    detail:           (id)       => this.get(`/api/event-requests/${id}/`),
+    update:           (id, data) => this.patch(`/api/event-requests/${id}/`, data),
+    delete:           (id)       => this.delete(`/api/event-requests/${id}/`),
+    newCount:         ()         => this.get('/api/event-requests/new-count/'),
+    eventTypeOptions: ()         => this.get('/api/event-requests/event-type-options/'),
+  }
+
+  // ── Event Bookings endpoints ─────────────────────────────────────────
+
+  eventBookings = {
+    submit:   (data)     => this.post('/api/event-bookings/', data),
+    list:     (params)   => this.get('/api/event-bookings/', params),
+    detail:   (id)       => this.get(`/api/event-bookings/${id}/`),
+    update:   (id, data) => this.patch(`/api/event-bookings/${id}/`, data),
+    delete:   (id)       => this.delete(`/api/event-bookings/${id}/`),
+    newCount: ()         => this.get('/api/event-bookings/new-count/'),
+  }
+
+  // ── Apartments endpoints ─────────────────────────────────────────────
+
+  apartments = {
+    list:     (params)     => this.get('/api/apartments/', params),
+    detail:   (id)         => this.get(`/api/apartments/${id}/`),
+    create:   (data)       => this.post('/api/apartments/', data),
+    update:   (id, data)   => this.patch(`/api/apartments/${id}/`, data),
+    delete:   (id)         => this.delete(`/api/apartments/${id}/`),
+    bySlug:   (slug)       => this.get(`/api/apartments/by-slug/${slug}/`),
+    featured: (params)     => this.get('/api/apartments/featured/', params),
+    media:    (id)         => this.get(`/api/apartments/${id}/media/`),
+    upload:   (id, form)   => this.post(`/api/apartments/${id}/upload/`, form),
+  }
+
+  apartmentMedia = {
+    list:   (params)   => this.get('/api/apartment-media/', params),
+    delete: (id)       => this.delete(`/api/apartment-media/${id}/`),
+    update: (id, data) => this.patch(`/api/apartment-media/${id}/`, data),
+  }
+
+  // ── Accommodation Requests endpoints ─────────────────────────────────
+
+  accommodationRequests = {
+    submit:   (data)       => this.post('/api/accommodation-requests/', data),
+    list:     (params)     => this.get('/api/accommodation-requests/', params),
+    detail:   (id)         => this.get(`/api/accommodation-requests/${id}/`),
+    update:   (id, data)   => this.patch(`/api/accommodation-requests/${id}/`, data),
+    delete:   (id)         => this.delete(`/api/accommodation-requests/${id}/`),
+    newCount: ()           => this.get('/api/accommodation-requests/new-count/'),
+  }
+
+  // ── Vehicles endpoints ───────────────────────────────────────────────
+
+  vehicles = {
+    list:     (params)     => this.get('/api/vehicles/', params),
+    detail:   (id)         => this.get(`/api/vehicles/${id}/`),
+    create:   (data)       => this.post('/api/vehicles/', data),
+    update:   (id, data)   => this.patch(`/api/vehicles/${id}/`, data),
+    delete:   (id)         => this.delete(`/api/vehicles/${id}/`),
+    bySlug:   (slug)       => this.get(`/api/vehicles/by-slug/${slug}/`),
+    featured: (params)     => this.get('/api/vehicles/featured/', params),
+    media:    (id)         => this.get(`/api/vehicles/${id}/media/`),
+    upload:   (id, form)   => this.post(`/api/vehicles/${id}/upload/`, form),
+  }
+
+  vehicleMedia = {
+    list:   (params)   => this.get('/api/vehicle-media/', params),
+    delete: (id)       => this.delete(`/api/vehicle-media/${id}/`),
+    update: (id, data) => this.patch(`/api/vehicle-media/${id}/`, data),
+  }
+
+  // ── Car Rental Requests endpoints ────────────────────────────────────
+
+  carRentalRequests = {
+    submit:   (data)       => this.post('/api/car-rental-requests/', data),
+    list:     (params)     => this.get('/api/car-rental-requests/', params),
+    detail:   (id)         => this.get(`/api/car-rental-requests/${id}/`),
+    update:   (id, data)   => this.patch(`/api/car-rental-requests/${id}/`, data),
+    delete:   (id)         => this.delete(`/api/car-rental-requests/${id}/`),
+    newCount: ()           => this.get('/api/car-rental-requests/new-count/'),
+  }
+
   // ── Health ───────────────────────────────────────────────────────────
 
   health = () => this.get('/health/')

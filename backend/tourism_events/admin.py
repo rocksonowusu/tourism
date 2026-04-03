@@ -6,6 +6,12 @@ from .models import (
     Event, TouristSite, EventMedia, TouristSiteMedia, MediaType,
     Tour, TourMedia, TripRequest, TripRequestStatus,
     CustomTourRequest, CustomTourRequestStatus,
+    EventRequest, EventRequestStatus,
+    EventBooking, EventBookingStatus,
+    Apartment, ApartmentMedia,
+    AccommodationRequest, AccommodationRequestStatus,
+    Vehicle, VehicleMedia,
+    CarRentalRequest, CarRentalRequestStatus,
 )
 
 
@@ -82,6 +88,7 @@ class EventAdmin(admin.ModelAdmin):
     list_display = (
         'title',
         'location',
+        'category',
         'date',
         'is_featured',
         'tourist_site',
@@ -90,7 +97,7 @@ class EventAdmin(admin.ModelAdmin):
     )
     list_display_links = ('title',)
     list_editable = ('is_featured',)
-    list_filter = ('is_featured', 'tourist_site', 'date')
+    list_filter = ('is_featured', 'category', 'tourist_site', 'date')
     list_per_page = 25
 
     # ---- Search ----
@@ -106,6 +113,9 @@ class EventAdmin(admin.ModelAdmin):
     fieldsets = (
         ('Event Details', {
             'fields': ('title', 'description', 'tourist_site'),
+        }),
+        ('Category & Activities', {
+            'fields': ('category', 'activities', 'suitable_for'),
         }),
         ('Logistics', {
             'fields': ('location', 'date'),
@@ -481,3 +491,285 @@ class CustomTourRequestAdmin(admin.ModelAdmin):
             return mark_safe('<span style="color:#aaa;">—</span>')
         return ', '.join(labels)
     package_list_display.short_description = 'Selected Packages'
+
+
+# ---------------------------------------------------------------------------
+# EventRequestAdmin  (Phase 4)
+# ---------------------------------------------------------------------------
+
+@admin.register(EventRequest)
+class EventRequestAdmin(admin.ModelAdmin):
+    list_display = (
+        'customer_name',
+        'event_type',
+        'preferred_date',
+        'expected_attendees',
+        'status',
+        'created_at',
+    )
+    list_display_links = ('customer_name',)
+    list_editable = ('status',)
+    list_filter = ('status', 'event_type', 'preferred_date')
+    list_per_page = 25
+    search_fields = ('customer_name', 'customer_email', 'customer_phone')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at',)
+    fieldsets = (
+        ('Customer', {
+            'fields': ('customer_name', 'customer_email', 'customer_phone'),
+        }),
+        ('Event Details', {
+            'fields': ('event_type', 'preferred_date', 'expected_attendees',
+                       'location_preference', 'budget_range'),
+        }),
+        ('Activities & Requirements', {
+            'fields': ('activities_interested_in', 'special_requirements'),
+        }),
+        ('Status', {
+            'fields': ('status',),
+        }),
+        ('Timestamps', {
+            'classes': ('collapse',),
+            'fields': ('created_at',),
+        }),
+    )
+
+
+# ---------------------------------------------------------------------------
+# EventBooking admin
+# ---------------------------------------------------------------------------
+
+@admin.register(EventBooking)
+class EventBookingAdmin(admin.ModelAdmin):
+    list_display = ('customer_name', 'event', 'number_of_guests', 'status', 'created_at')
+    list_filter = ('status', 'created_at')
+    search_fields = ('customer_name', 'customer_email', 'customer_phone', 'event__title')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at',)
+    raw_id_fields = ('event',)
+    fieldsets = (
+        ('Customer', {
+            'fields': ('customer_name', 'customer_email', 'customer_phone'),
+        }),
+        ('Booking Details', {
+            'fields': ('event', 'number_of_guests', 'special_requests'),
+        }),
+        ('Status', {
+            'fields': ('status',),
+        }),
+        ('Timestamps', {
+            'classes': ('collapse',),
+            'fields': ('created_at',),
+        }),
+    )
+
+
+# ===========================================================================
+# APARTMENTS / ACCOMMODATIONS
+# ===========================================================================
+
+class ApartmentMediaInline(admin.TabularInline):
+    model = ApartmentMedia
+    extra = 1
+    fields = ('preview', 'file', 'media_type', 'caption', 'created_at')
+    readonly_fields = ('preview', 'created_at')
+    show_change_link = True
+
+    @admin.display(description='Preview')
+    def preview(self, obj):
+        if obj.file:
+            url = obj.file.url if hasattr(obj.file, 'url') else obj.file
+            if obj.media_type == MediaType.VIDEO:
+                return format_html('<video src="{}" width="120" controls></video>', url)
+            return format_html('<img src="{}" width="120" style="border-radius:4px" />', url)
+        return '-'
+
+
+@admin.register(Apartment)
+class ApartmentAdmin(admin.ModelAdmin):
+    list_display = ('title', 'property_type', 'location', 'bedrooms', 'price_per_night', 'is_available', 'is_featured', 'media_count')
+    list_filter = ('property_type', 'is_available', 'is_featured', 'location')
+    search_fields = ('title', 'location', 'address', 'description')
+    prepopulated_fields = {'slug': ('title',)}
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at', 'updated_at')
+    inlines = [ApartmentMediaInline]
+    fieldsets = (
+        (None, {
+            'fields': ('title', 'slug', 'description'),
+        }),
+        ('Location', {
+            'fields': ('location', 'address', 'latitude', 'longitude'),
+        }),
+        ('Property Details', {
+            'fields': ('property_type', 'bedrooms', 'bathrooms', 'max_guests'),
+        }),
+        ('Pricing', {
+            'fields': ('price_per_night',),
+        }),
+        ('Amenities & Rules', {
+            'fields': ('amenities', 'rules'),
+        }),
+        ('Visibility', {
+            'fields': ('is_available', 'is_featured'),
+        }),
+        ('Timestamps', {
+            'classes': ('collapse',),
+            'fields': ('created_at', 'updated_at'),
+        }),
+    )
+
+    @admin.display(description='Media')
+    def media_count(self, obj):
+        return obj.media_count
+
+
+@admin.register(ApartmentMedia)
+class ApartmentMediaAdmin(admin.ModelAdmin):
+    list_display = ('thumbnail', 'apartment', 'media_type', 'caption', 'created_at')
+    list_filter = ('media_type', 'created_at')
+    search_fields = ('caption', 'apartment__title')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at',)
+    raw_id_fields = ('apartment',)
+
+    @admin.display(description='Preview')
+    def thumbnail(self, obj):
+        if obj.file:
+            url = obj.file.url if hasattr(obj.file, 'url') else obj.file
+            if obj.media_type == MediaType.VIDEO:
+                return format_html('<video src="{}" width="80" controls></video>', url)
+            return format_html('<img src="{}" width="80" style="border-radius:4px" />', url)
+        return '-'
+
+
+# ---------------------------------------------------------------------------
+
+@admin.register(AccommodationRequest)
+class AccommodationRequestAdmin(admin.ModelAdmin):
+    list_display = ('customer_name', 'apartment', 'check_in_date', 'check_out_date', 'number_of_guests', 'status', 'created_at')
+    list_filter = ('status', 'purpose', 'created_at')
+    list_editable = ('status',)
+    search_fields = ('customer_name', 'customer_email', 'customer_phone', 'apartment__title')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at',)
+    raw_id_fields = ('apartment',)
+    fieldsets = (
+        ('Customer', {
+            'fields': ('customer_name', 'customer_email', 'customer_phone'),
+        }),
+        ('Accommodation Details', {
+            'fields': ('apartment', 'check_in_date', 'check_out_date', 'number_of_guests', 'purpose', 'message'),
+        }),
+        ('Status', {
+            'fields': ('status',),
+        }),
+        ('Timestamps', {
+            'classes': ('collapse',),
+            'fields': ('created_at',),
+        }),
+    )
+
+
+# ===========================================================================
+# VEHICLES / CAR RENTALS
+# ===========================================================================
+
+class VehicleMediaInline(admin.TabularInline):
+    model = VehicleMedia
+    extra = 1
+    fields = ('preview', 'file', 'media_type', 'caption', 'created_at')
+    readonly_fields = ('preview', 'created_at')
+    show_change_link = True
+
+    @admin.display(description='Preview')
+    def preview(self, obj):
+        if obj.file:
+            url = obj.file.url if hasattr(obj.file, 'url') else obj.file
+            if obj.media_type == MediaType.VIDEO:
+                return format_html('<video src="{}" width="120" controls></video>', url)
+            return format_html('<img src="{}" width="120" style="border-radius:4px" />', url)
+        return '-'
+
+
+@admin.register(Vehicle)
+class VehicleAdmin(admin.ModelAdmin):
+    list_display = ('name', 'vehicle_type', 'brand', 'model_year', 'seats', 'price_per_day', 'is_available', 'is_featured', 'media_count')
+    list_filter = ('vehicle_type', 'transmission', 'fuel_type', 'is_available', 'is_featured')
+    search_fields = ('name', 'brand', 'description')
+    prepopulated_fields = {'slug': ('name',)}
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at', 'updated_at')
+    inlines = [VehicleMediaInline]
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'slug', 'description'),
+        }),
+        ('Vehicle Details', {
+            'fields': ('vehicle_type', 'brand', 'model_year', 'seats', 'transmission', 'fuel_type'),
+        }),
+        ('Pricing', {
+            'fields': ('price_per_day',),
+        }),
+        ('Features', {
+            'fields': ('features',),
+        }),
+        ('Visibility', {
+            'fields': ('is_available', 'is_featured'),
+        }),
+        ('Timestamps', {
+            'classes': ('collapse',),
+            'fields': ('created_at', 'updated_at'),
+        }),
+    )
+
+    @admin.display(description='Media')
+    def media_count(self, obj):
+        return obj.media_count
+
+
+@admin.register(VehicleMedia)
+class VehicleMediaAdmin(admin.ModelAdmin):
+    list_display = ('thumbnail', 'vehicle', 'media_type', 'caption', 'created_at')
+    list_filter = ('media_type', 'created_at')
+    search_fields = ('caption', 'vehicle__name')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at',)
+    raw_id_fields = ('vehicle',)
+
+    @admin.display(description='Preview')
+    def thumbnail(self, obj):
+        if obj.file:
+            url = obj.file.url if hasattr(obj.file, 'url') else obj.file
+            if obj.media_type == MediaType.VIDEO:
+                return format_html('<video src="{}" width="80" controls></video>', url)
+            return format_html('<img src="{}" width="80" style="border-radius:4px" />', url)
+        return '-'
+
+
+# ---------------------------------------------------------------------------
+
+@admin.register(CarRentalRequest)
+class CarRentalRequestAdmin(admin.ModelAdmin):
+    list_display = ('customer_name', 'vehicle', 'pickup_date', 'return_date', 'with_driver', 'status', 'created_at')
+    list_filter = ('status', 'with_driver', 'created_at')
+    list_editable = ('status',)
+    search_fields = ('customer_name', 'customer_email', 'customer_phone', 'vehicle__name')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at',)
+    raw_id_fields = ('vehicle',)
+    fieldsets = (
+        ('Customer', {
+            'fields': ('customer_name', 'customer_email', 'customer_phone'),
+        }),
+        ('Rental Details', {
+            'fields': ('vehicle', 'pickup_date', 'return_date', 'pickup_location', 'return_location', 'with_driver', 'purpose', 'message'),
+        }),
+        ('Status', {
+            'fields': ('status',),
+        }),
+        ('Timestamps', {
+            'classes': ('collapse',),
+            'fields': ('created_at',),
+        }),
+    )

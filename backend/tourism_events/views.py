@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .models import Event, TouristSite, EventMedia, TouristSiteMedia, Tour, TourMedia, TripRequest, CustomTourRequest
+from .models import Event, TouristSite, EventMedia, TouristSiteMedia, Tour, TourMedia, TripRequest, CustomTourRequest, EventRequest, EventBooking, Apartment, ApartmentMedia, AccommodationRequest, Vehicle, VehicleMedia, CarRentalRequest
 from .serializers import (
     EventSerializer,
     EventListSerializer,
@@ -19,12 +19,25 @@ from .serializers import (
     TourMediaSerializer,
     TripRequestSerializer,
     CustomTourRequestSerializer,
+    EventRequestSerializer,
+    EventBookingSerializer,
+    ApartmentSerializer,
+    ApartmentListSerializer,
+    ApartmentMediaSerializer,
+    AccommodationRequestSerializer,
+    VehicleSerializer,
+    VehicleListSerializer,
+    VehicleMediaSerializer,
+    CarRentalRequestSerializer,
 )
 from .filters import (
     EventFilter, TouristSiteFilter, EventMediaFilter, TouristSiteMediaFilter,
     TourFilter, TourMediaFilter, TripRequestFilter, CustomTourRequestFilter,
+    EventRequestFilter,
+    ApartmentFilter, ApartmentMediaFilter, AccommodationRequestFilter,
+    VehicleFilter, VehicleMediaFilter, CarRentalRequestFilter,
 )
-from .emails import send_trip_request_emails, send_custom_tour_request_emails
+from .emails import send_trip_request_emails, send_custom_tour_request_emails, send_event_request_emails, send_event_booking_emails
 
 
 # ---------------------------------------------------------------------------
@@ -753,3 +766,397 @@ class CustomTourRequestViewSet(viewsets.ModelViewSet):
         from .models import PackageChoice
         options = [{'key': k, 'label': v} for k, v in PackageChoice.choices]
         return Response(options)
+
+
+# ---------------------------------------------------------------------------
+# EventRequestViewSet  (Phase 4)
+# ---------------------------------------------------------------------------
+
+class EventRequestViewSet(viewsets.ModelViewSet):
+    """
+    Event Request endpoints (custom event organisation requests):
+
+    POST   /api/event-requests/            – PUBLIC (no auth) — submit request
+    GET    /api/event-requests/            – ADMIN only — list all
+    GET    /api/event-requests/{id}/       – ADMIN only — retrieve single
+    PATCH  /api/event-requests/{id}/       – ADMIN only — update status
+    DELETE /api/event-requests/{id}/       – ADMIN only — delete
+
+    Custom actions
+    ──────────────
+    GET  /api/event-requests/new-count/    – ADMIN only — count of new requests
+    GET  /api/event-requests/event-type-options/ – PUBLIC — available event types
+
+    Query params (GET list)
+    ───────────────────────
+    ?status=       new|contacted|confirmed|cancelled
+    ?event_type=   corporate|family|retreat|recreational|custom
+    ?date_after=   YYYY-MM-DD
+    ?date_before=  YYYY-MM-DD
+    ?search=       customer_name, customer_email
+    ?ordering=     created_at | preferred_date | status
+    """
+
+    queryset = EventRequest.objects.all()
+    serializer_class = EventRequestSerializer
+    filter_backends  = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_class  = EventRequestFilter
+    search_fields    = ['customer_name', 'customer_email', 'customer_phone']
+    ordering_fields  = ['created_at', 'preferred_date', 'status']
+    ordering         = ['-created_at']
+
+    def get_permissions(self):
+        """POST and event-type-options are public; everything else needs admin."""
+        if self.action in ('create', 'event_type_options'):
+            return [AllowAny()]
+        return [IsAdminUser()]
+
+    def perform_create(self, serializer):
+        """Save the event request and fire off notification emails."""
+        event_request = serializer.save()
+        send_event_request_emails(event_request)
+
+    @action(detail=False, methods=['get'], url_path='new-count')
+    def new_count(self, request):
+        """Return count of requests with status='new' — used for admin badge."""
+        count = self.get_queryset().filter(status='new').count()
+        return Response({'count': count})
+
+    @action(detail=False, methods=['get'], url_path='event-type-options')
+    def event_type_options(self, request):
+        """Return available event type choices for the form."""
+        from .models import EventRequestType
+        options = [{'key': k, 'label': v} for k, v in EventRequestType.choices]
+        return Response(options)
+
+
+# ---------------------------------------------------------------------------
+# EventBookingViewSet  (quick booking from event detail page)
+# ---------------------------------------------------------------------------
+
+class EventBookingViewSet(viewsets.ModelViewSet):
+    """
+    Event Booking endpoints (simple booking from event detail page):
+
+    POST   /api/event-bookings/            – PUBLIC (no auth) — submit booking
+    GET    /api/event-bookings/            – ADMIN only — list all
+    GET    /api/event-bookings/{id}/       – ADMIN only — retrieve single
+    PATCH  /api/event-bookings/{id}/       – ADMIN only — update status
+    DELETE /api/event-bookings/{id}/       – ADMIN only — delete
+
+    Custom actions
+    ──────────────
+    GET  /api/event-bookings/new-count/    – ADMIN only — count of new bookings
+    """
+
+    queryset = EventBooking.objects.select_related('event').all()
+    serializer_class = EventBookingSerializer
+    filter_backends  = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    search_fields    = ['customer_name', 'customer_email', 'customer_phone', 'event__title']
+    ordering_fields  = ['created_at', 'status']
+    ordering         = ['-created_at']
+
+    def get_permissions(self):
+        """POST is public; everything else needs admin."""
+        if self.action == 'create':
+            return [AllowAny()]
+        return [IsAdminUser()]
+
+    def perform_create(self, serializer):
+        """Save the booking and fire off notification emails."""
+        booking = serializer.save()
+        send_event_booking_emails(booking)
+
+    @action(detail=False, methods=['get'], url_path='new-count')
+    def new_count(self, request):
+        """Return count of bookings with status='new' — used for admin badge."""
+        count = self.get_queryset().filter(status='new').count()
+        return Response({'count': count})
+
+
+# ---------------------------------------------------------------------------
+# ApartmentViewSet  (Phase 3)
+# ---------------------------------------------------------------------------
+
+class ApartmentViewSet(viewsets.ModelViewSet):
+    """
+    Full CRUD for Apartments with search, filtering, ordering, pagination.
+
+    GET    /api/apartments/                – paginated list
+    GET    /api/apartments/{id}/           – full detail with nested media
+    POST   /api/apartments/               – create (admin)
+    PATCH  /api/apartments/{id}/           – update (admin)
+    DELETE /api/apartments/{id}/           – delete (admin)
+
+    Custom actions:
+    GET  /api/apartments/featured/         – featured only
+    GET  /api/apartments/by-slug/{slug}/   – retrieve by slug
+    GET  /api/apartments/{id}/media/       – all media
+    POST /api/apartments/{id}/upload/      – upload media files
+    """
+
+    queryset = Apartment.objects.prefetch_related('media').all()
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    parser_classes     = (MultiPartParser, FormParser, JSONParser)
+    filter_backends    = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_class    = ApartmentFilter
+    search_fields      = ['title', 'description', 'location']
+    ordering_fields    = ['created_at', 'title', 'price_per_night']
+    ordering           = ['-created_at']
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ApartmentListSerializer
+        return ApartmentSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if not self.request.user.is_authenticated:
+            qs = qs.filter(is_available=True)
+        return qs
+
+    @action(detail=False, methods=['get'])
+    def featured(self, request):
+        qs = self.filter_queryset(self.get_queryset().filter(is_featured=True))
+        return self._paginated_response(qs, ApartmentListSerializer)
+
+    @action(detail=False, methods=['get'], url_path='by-slug/(?P<slug>[-\\w]+)')
+    def by_slug(self, request, slug=None):
+        apt = self.get_queryset().filter(slug=slug).first()
+        if not apt:
+            return Response({'detail': 'Not found.'}, status=status.HTTP_404_NOT_FOUND)
+        return Response(ApartmentSerializer(apt, context={'request': request}).data)
+
+    @action(detail=True, methods=['get'])
+    def media(self, request, pk=None):
+        apt = self.get_object()
+        serializer = ApartmentMediaSerializer(apt.media.all(), many=True, context={'request': request})
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'], url_path='upload',
+            parser_classes=[MultiPartParser, FormParser])
+    def upload_media(self, request, pk=None):
+        MAX_MEDIA = 10
+        apt   = self.get_object()
+        files = request.FILES.getlist('file')
+        if not files:
+            return Response({'detail': 'No files provided.'}, status=status.HTTP_400_BAD_REQUEST)
+        existing = apt.media.count()
+        if existing >= MAX_MEDIA:
+            return Response({'detail': f'Max {MAX_MEDIA} media files reached.'}, status=status.HTTP_400_BAD_REQUEST)
+        slots = MAX_MEDIA - existing
+        if len(files) > slots:
+            return Response({'detail': f'Can only upload {slots} more file(s).'}, status=status.HTTP_400_BAD_REQUEST)
+        created, errors = [], []
+        for f in files:
+            ser = ApartmentMediaSerializer(
+                data={'apartment': apt.pk, 'file': f, 'caption': request.data.get('caption', '')},
+                context={'request': request})
+            if ser.is_valid():
+                ser.save(); created.append(ser.data)
+            else:
+                errors.append({'file': f.name, 'errors': ser.errors})
+        if errors and not created:
+            return Response({'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
+        resp = {'created': created}
+        if errors: resp['errors'] = errors
+        return Response(resp, status=status.HTTP_201_CREATED)
+
+    def _paginated_response(self, qs, serializer_class):
+        page = self.paginate_queryset(qs)
+        if page is not None:
+            s = serializer_class(page, many=True, context={'request': self.request})
+            return self.get_paginated_response(s.data)
+        return Response(serializer_class(qs, many=True, context={'request': self.request}).data)
+
+
+# ---------------------------------------------------------------------------
+# ApartmentMediaViewSet
+# ---------------------------------------------------------------------------
+
+class ApartmentMediaViewSet(viewsets.ModelViewSet):
+    queryset         = ApartmentMedia.objects.select_related('apartment').all()
+    serializer_class = ApartmentMediaSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    parser_classes   = (MultiPartParser, FormParser, JSONParser)
+    filter_backends  = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_class  = ApartmentMediaFilter
+    search_fields    = ['caption', 'apartment__title']
+    ordering_fields  = ['created_at']
+    ordering         = ['-created_at']
+
+
+# ---------------------------------------------------------------------------
+# AccommodationRequestViewSet  (Phase 3)
+# ---------------------------------------------------------------------------
+
+class AccommodationRequestViewSet(viewsets.ModelViewSet):
+    """
+    POST   /api/accommodation-requests/         – PUBLIC
+    GET    /api/accommodation-requests/         – ADMIN
+    PATCH  /api/accommodation-requests/{id}/    – ADMIN
+    DELETE /api/accommodation-requests/{id}/    – ADMIN
+    GET    /api/accommodation-requests/new-count/ – ADMIN
+    """
+
+    queryset = AccommodationRequest.objects.select_related('apartment').all()
+    serializer_class = AccommodationRequestSerializer
+    filter_backends  = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_class  = AccommodationRequestFilter
+    search_fields    = ['customer_name', 'customer_email', 'customer_phone']
+    ordering_fields  = ['created_at', 'check_in_date', 'status']
+    ordering         = ['-created_at']
+
+    def get_permissions(self):
+        if self.action == 'create':
+            return [AllowAny()]
+        return [IsAdminUser()]
+
+    @action(detail=False, methods=['get'], url_path='new-count')
+    def new_count(self, request):
+        count = self.get_queryset().filter(status='new').count()
+        return Response({'count': count})
+
+
+# ---------------------------------------------------------------------------
+# VehicleViewSet  (Phase 6)
+# ---------------------------------------------------------------------------
+
+class VehicleViewSet(viewsets.ModelViewSet):
+    """
+    Full CRUD for Vehicles with search, filtering, ordering, pagination.
+
+    GET    /api/vehicles/                  – paginated list
+    GET    /api/vehicles/{id}/             – full detail
+    POST   /api/vehicles/                  – create (admin)
+    PATCH  /api/vehicles/{id}/             – update (admin)
+    DELETE /api/vehicles/{id}/             – delete (admin)
+
+    Custom actions:
+    GET  /api/vehicles/featured/           – featured only
+    GET  /api/vehicles/by-slug/{slug}/     – retrieve by slug
+    GET  /api/vehicles/{id}/media/         – all media
+    POST /api/vehicles/{id}/upload/        – upload media files
+    """
+
+    queryset = Vehicle.objects.prefetch_related('media').all()
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    parser_classes     = (MultiPartParser, FormParser, JSONParser)
+    filter_backends    = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_class    = VehicleFilter
+    search_fields      = ['name', 'description', 'brand']
+    ordering_fields    = ['created_at', 'name', 'price_per_day']
+    ordering           = ['-created_at']
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return VehicleListSerializer
+        return VehicleSerializer
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        if not self.request.user.is_authenticated:
+            qs = qs.filter(is_available=True)
+        return qs
+
+    @action(detail=False, methods=['get'])
+    def featured(self, request):
+        qs = self.filter_queryset(self.get_queryset().filter(is_featured=True))
+        return self._paginated_response(qs, VehicleListSerializer)
+
+    @action(detail=False, methods=['get'], url_path='by-slug/(?P<slug>[-\\w]+)')
+    def by_slug(self, request, slug=None):
+        veh = self.get_queryset().filter(slug=slug).first()
+        if not veh:
+            return Response({'detail': 'Not found.'}, status=status.HTTP_404_NOT_FOUND)
+        return Response(VehicleSerializer(veh, context={'request': request}).data)
+
+    @action(detail=True, methods=['get'])
+    def media(self, request, pk=None):
+        veh = self.get_object()
+        serializer = VehicleMediaSerializer(veh.media.all(), many=True, context={'request': request})
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['post'], url_path='upload',
+            parser_classes=[MultiPartParser, FormParser])
+    def upload_media(self, request, pk=None):
+        MAX_MEDIA = 10
+        veh   = self.get_object()
+        files = request.FILES.getlist('file')
+        if not files:
+            return Response({'detail': 'No files provided.'}, status=status.HTTP_400_BAD_REQUEST)
+        existing = veh.media.count()
+        if existing >= MAX_MEDIA:
+            return Response({'detail': f'Max {MAX_MEDIA} media files reached.'}, status=status.HTTP_400_BAD_REQUEST)
+        slots = MAX_MEDIA - existing
+        if len(files) > slots:
+            return Response({'detail': f'Can only upload {slots} more file(s).'}, status=status.HTTP_400_BAD_REQUEST)
+        created, errors = [], []
+        for f in files:
+            ser = VehicleMediaSerializer(
+                data={'vehicle': veh.pk, 'file': f, 'caption': request.data.get('caption', '')},
+                context={'request': request})
+            if ser.is_valid():
+                ser.save(); created.append(ser.data)
+            else:
+                errors.append({'file': f.name, 'errors': ser.errors})
+        if errors and not created:
+            return Response({'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
+        resp = {'created': created}
+        if errors: resp['errors'] = errors
+        return Response(resp, status=status.HTTP_201_CREATED)
+
+    def _paginated_response(self, qs, serializer_class):
+        page = self.paginate_queryset(qs)
+        if page is not None:
+            s = serializer_class(page, many=True, context={'request': self.request})
+            return self.get_paginated_response(s.data)
+        return Response(serializer_class(qs, many=True, context={'request': self.request}).data)
+
+
+# ---------------------------------------------------------------------------
+# VehicleMediaViewSet
+# ---------------------------------------------------------------------------
+
+class VehicleMediaViewSet(viewsets.ModelViewSet):
+    queryset         = VehicleMedia.objects.select_related('vehicle').all()
+    serializer_class = VehicleMediaSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    parser_classes   = (MultiPartParser, FormParser, JSONParser)
+    filter_backends  = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_class  = VehicleMediaFilter
+    search_fields    = ['caption', 'vehicle__name']
+    ordering_fields  = ['created_at']
+    ordering         = ['-created_at']
+
+
+# ---------------------------------------------------------------------------
+# CarRentalRequestViewSet  (Phase 6)
+# ---------------------------------------------------------------------------
+
+class CarRentalRequestViewSet(viewsets.ModelViewSet):
+    """
+    POST   /api/car-rental-requests/          – PUBLIC
+    GET    /api/car-rental-requests/          – ADMIN
+    PATCH  /api/car-rental-requests/{id}/     – ADMIN
+    DELETE /api/car-rental-requests/{id}/     – ADMIN
+    GET    /api/car-rental-requests/new-count/ – ADMIN
+    """
+
+    queryset = CarRentalRequest.objects.select_related('vehicle').all()
+    serializer_class = CarRentalRequestSerializer
+    filter_backends  = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_class  = CarRentalRequestFilter
+    search_fields    = ['customer_name', 'customer_email', 'customer_phone']
+    ordering_fields  = ['created_at', 'pickup_date', 'status']
+    ordering         = ['-created_at']
+
+    def get_permissions(self):
+        if self.action == 'create':
+            return [AllowAny()]
+        return [IsAdminUser()]
+
+    @action(detail=False, methods=['get'], url_path='new-count')
+    def new_count(self, request):
+        count = self.get_queryset().filter(status='new').count()
+        return Response({'count': count})

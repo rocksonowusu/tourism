@@ -39,6 +39,28 @@ const IconInbox = () => (
     <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>
   </svg>
 )
+const IconStar = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+  </svg>
+)
+const IconHome = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+  </svg>
+)
+const IconTruck = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+    <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+  </svg>
+)
+const IconClipboard = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+  </svg>
+)
 const IconLogout = () => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -50,10 +72,14 @@ const IconLogout = () => (
 const NAV = [
   { to: '/admin',              label: 'Dashboard',     Icon: IconGrid,     exact: true },
   { to: '/admin/events',       label: 'Events',        Icon: IconCalendar              },
-  { to: '/admin/sites',        label: 'Tourist Sites', Icon: IconMapPin                },
+  { to: '/admin/event-requests', label: 'Event Requests', Icon: IconStar               },
   { to: '/admin/tours',        label: 'Tours',         Icon: IconCompass               },
   { to: '/admin/trip-requests', label: 'Trip Requests', Icon: IconInbox                },
+  { to: '/admin/apartments',   label: 'Apartments',    Icon: IconHome                  },
+  { to: '/admin/vehicles',     label: 'Vehicles',      Icon: IconTruck                 },
+  { to: '/admin/service-requests', label: 'Service Requests', Icon: IconClipboard       },
   { to: '/admin/media',        label: 'Media',         Icon: IconImage                 },
+  { to: '/admin/sites',        label: 'Sites',         Icon: IconMapPin                },
 ]
 
 export default function Sidebar({ open, onClose }) {

@@ -993,3 +993,243 @@
     padding: 1rem;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   Booking Modal
+   ═══════════════════════════════════════════════════════════════ */
+.evd__modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(26, 21, 8, .55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: evd-fadeIn .2s ease;
+}
+
+@keyframes evd-fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.evd__modal {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 20px;
+  padding: 2rem 2rem 1.5rem;
+  box-shadow: 0 24px 60px rgba(0,0,0,.18), 0 4px 16px rgba(0,0,0,.08);
+  animation: evd-slideUp .3s ease;
+}
+
+@keyframes evd-slideUp {
+  from { opacity: 0; transform: translateY(24px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.evd__modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(0,0,0,.04);
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--ash-medium, #6B6B6B);
+  transition: background .2s, color .2s;
+}
+.evd__modal-close:hover {
+  background: rgba(0,0,0,.08);
+  color: var(--ash-deep, #1A1508);
+}
+
+/* ── Modal header ──────────────────────────────────────────────── */
+.evd__modal-header {
+  margin-bottom: 1.25rem;
+  padding-right: 2.5rem;
+}
+
+.evd__modal-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--gold-rich, #C5A028);
+  margin: 0 0 6px;
+}
+
+.evd__modal-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--ash-deep, #1A1508);
+  margin: 0 0 4px;
+  line-height: 1.3;
+}
+
+.evd__modal-meta {
+  font-size: 0.82rem;
+  color: var(--ash-medium, #6B6B6B);
+  margin: 0;
+}
+
+/* ── Form ──────────────────────────────────────────────────────── */
+.evd__modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.evd__modal-row {
+  display: grid;
+  grid-template-columns: 1.3fr 0.7fr;
+  gap: 0.75rem;
+}
+
+.evd__modal-field label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ash-deep, #1A1508);
+  margin-bottom: 4px;
+}
+
+.evd__modal-field label span {
+  font-weight: 400;
+  color: var(--ash-medium, #6B6B6B);
+}
+
+.evd__modal-field input,
+.evd__modal-field textarea {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--ash-deep, #1A1508);
+  background: var(--cream-light, #FAF8F2);
+  border: 1px solid rgba(197,160,40,.2);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+  box-sizing: border-box;
+}
+.evd__modal-field input:focus,
+.evd__modal-field textarea:focus {
+  border-color: var(--gold-rich, #C5A028);
+  box-shadow: 0 0 0 3px rgba(197,160,40,.1);
+}
+
+.evd__modal-field textarea {
+  resize: vertical;
+  min-height: 72px;
+}
+
+.evd__modal-error {
+  background: #FEF2F2;
+  color: #B91C1C;
+  font-size: 0.82rem;
+  padding: 0.6rem 0.85rem;
+  border-radius: 8px;
+  margin: 0;
+  border: 1px solid #FECACA;
+}
+
+.evd__modal-submit {
+  width: 100%;
+  padding: 0.85rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: inherit;
+  color: #fff;
+  background: var(--gold-rich, #C5A028);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background .2s, transform .15s, box-shadow .25s;
+  box-shadow: 0 4px 16px rgba(197,160,40,.3);
+  margin-top: 0.25rem;
+}
+.evd__modal-submit:hover:not(:disabled) {
+  background: #ddb730;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(197,160,40,.45);
+}
+.evd__modal-submit:disabled {
+  opacity: .65;
+  cursor: not-allowed;
+}
+
+/* ── Success state ─────────────────────────────────────────────── */
+.evd__modal-success {
+  text-align: center;
+  padding: 1.5rem 0 0.5rem;
+}
+
+.evd__modal-success-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(197,160,40,.12), rgba(229,184,60,.18));
+  border: 2px solid var(--gold-rich, #C5A028);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  color: var(--gold-rich, #C5A028);
+}
+.evd__modal-success-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.evd__modal-success-title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--ash-deep, #1A1508);
+  margin: 0 0 0.5rem;
+}
+
+.evd__modal-success-text {
+  font-size: 0.9rem;
+  color: var(--ash-medium, #6B6B6B);
+  line-height: 1.6;
+  margin: 0 0 1.25rem;
+}
+
+.evd__modal-done-btn {
+  padding: 0.7rem 2rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: inherit;
+  color: #fff;
+  background: var(--gold-rich, #C5A028);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background .2s;
+}
+.evd__modal-done-btn:hover {
+  background: #ddb730;
+}
+
+/* ── Modal responsive ──────────────────────────────────────────── */
+@media (max-width: 500px) {
+  .evd__modal {
+    padding: 1.5rem 1.25rem 1.25rem;
+    border-radius: 16px;
+  }
+  .evd__modal-row {
+    grid-template-columns: 1fr;
+  }
+}

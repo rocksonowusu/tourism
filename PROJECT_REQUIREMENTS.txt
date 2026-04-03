@@ -473,8 +473,8 @@
   ──────┼──────────────────────────────────────┼───────────┼────────────
     1   │ Light Theme Overhaul + Logo           │ HIGH      │ None
     2   │ Tour Trip Planning & Requests         │ HIGH      │ Phase 1
-    3   │ Apartment / Accommodation Listings    │ HIGH      │ Phase 1
-    4   │ Events & Experience Requests          │ HIGH      │ Phase 1
+    3   │ Events & Experience Requests          │ HIGH      │ Phase 1
+    4   │ Apartment / Accommodation Listings    │ HIGH      │ Phase 1
     5   │ Community & Charity Showcase          │ MEDIUM    │ Phase 1
     6   │ Car Rental Listings                   │ MEDIUM    │ Phase 1
     7   │ Reviews & Ratings                     │ MEDIUM    │ Phase 1

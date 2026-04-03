@@ -20,6 +20,10 @@ import AllEvents   from './pages/AllEvents'
 import AllSites    from './pages/AllSites'
 import AllTours    from './pages/AllTours'
 import TourDetail  from './pages/TourDetail'
+import AllAccommodations   from './pages/AllAccommodations'
+import AccommodationDetail from './pages/AccommodationDetail'
+import AllVehicles         from './pages/AllVehicles'
+import VehicleDetail       from './pages/VehicleDetail'
 
 // Admin
 import { AuthProvider } from './admin/context/AuthContext'
@@ -32,8 +36,13 @@ import Sites      from './admin/pages/Sites'
 import Media      from './admin/pages/Media'
 import Tours      from './admin/pages/Tours'
 import TripRequests from './admin/pages/TripRequests'
+import EventRequests from './admin/pages/EventRequests'
+import Apartments      from './admin/pages/Apartments'
+import Vehicles        from './admin/pages/Vehicles'
+import ServiceRequests from './admin/pages/ServiceRequests'
 
 import PlanTour from './pages/PlanTour'
+import RequestEvent from './pages/RequestEvent'
 
 import apiClient from './api/client'
 
@@ -109,7 +118,7 @@ function PublicSite() {
       <Hero media={heroMedia} />
       <Features />
       <ToursSection tours={tours} loading={toursLoading} />
-      <EventsSection events={events} loading={eventsLoading} />
+      <EventsSection heroMedia={heroMedia} />
       <Stories />
       <Newsletter />
       <Footer />
@@ -132,12 +141,17 @@ export default function App() {
           <Route path="/events" element={<AllEvents />} />
           <Route path="/sites"  element={<AllSites />} />
           <Route path="/tours"  element={<AllTours />} />
+          <Route path="/accommodations" element={<AllAccommodations />} />
+          <Route path="/car-rentals"    element={<AllVehicles />} />
 
           {/* Detail pages */}
           <Route path="/events/:slug" element={<EventDetail />} />
           <Route path="/sites/:slug"  element={<SiteDetail />} />
           <Route path="/tours/:slug"  element={<TourDetail />} />
+          <Route path="/accommodations/:slug" element={<AccommodationDetail />} />
+          <Route path="/car-rentals/:slug"    element={<VehicleDetail />} />
           <Route path="/plan-tour"    element={<PlanTour />} />
+          <Route path="/request-event" element={<RequestEvent />} />
 
           {/* Admin — standalone login */}
           <Route path="/admin/login" element={<Login />} />
@@ -149,6 +163,10 @@ export default function App() {
             <Route path="sites"  element={<Sites />} />
             <Route path="tours"  element={<Tours />} />
             <Route path="trip-requests" element={<TripRequests />} />
+            <Route path="event-requests" element={<EventRequests />} />
+            <Route path="apartments" element={<Apartments />} />
+            <Route path="vehicles"   element={<Vehicles />} />
+            <Route path="service-requests" element={<ServiceRequests />} />
             <Route path="media"  element={<Media />} />
           </Route>
 

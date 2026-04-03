@@ -2,6 +2,10 @@ from rest_framework import serializers
 from .models import (
     Event, TouristSite, EventMedia, TouristSiteMedia,
     Tour, TourMedia, TripRequest, CustomTourRequest, PackageChoice,
+    EventRequest, EventRequestType,
+    EventBooking,
+    Apartment, ApartmentMedia, AccommodationRequest, AccommodationPurpose,
+    Vehicle, VehicleMedia, CarRentalRequest,
 )
 
 
@@ -111,6 +115,9 @@ class EventSerializer(serializers.ModelSerializer):
             'date',
             'is_featured',
             'highlights',
+            'category',
+            'activities',
+            'suitable_for',
             'is_past',
             'is_upcoming',
             'season_label',
@@ -148,6 +155,9 @@ class EventListSerializer(serializers.ModelSerializer):
             'date',
             'is_featured',
             'highlights',
+            'category',
+            'activities',
+            'suitable_for',
             'is_past',
             'is_upcoming',
             'season_label',
@@ -380,3 +390,315 @@ class CustomTourRequestSerializer(serializers.ModelSerializer):
                 {'site_ids': 'Please select at least one site to visit.'}
             )
         return attrs
+
+
+# ---------------------------------------------------------------------------
+# Event Request serializer  (Phase 4)
+# ---------------------------------------------------------------------------
+
+class EventRequestSerializer(serializers.ModelSerializer):
+    """
+    Serializer for custom event requests.
+    - Public users POST with event type + customer details.
+    - Admin users can PATCH status.
+    """
+    event_type_display = serializers.CharField(
+        source='get_event_type_display', read_only=True)
+
+    class Meta:
+        model  = EventRequest
+        fields = (
+            'id',
+            'event_type',
+            'event_type_display',
+            'customer_name',
+            'customer_email',
+            'customer_phone',
+            'preferred_date',
+            'expected_attendees',
+            'location_preference',
+            'budget_range',
+            'activities_interested_in',
+            'special_requirements',
+            'status',
+            'created_at',
+        )
+        read_only_fields = (
+            'id', 'event_type_display', 'created_at',
+        )
+
+    def validate_expected_attendees(self, value):
+        if value < 1:
+            raise serializers.ValidationError('At least 1 attendee is required.')
+        return value
+
+    def validate_event_type(self, value):
+        valid_keys = {c[0] for c in EventRequestType.choices}
+        if value not in valid_keys:
+            raise serializers.ValidationError(
+                f'Invalid event type: {value}. '
+                f'Valid options: {", ".join(sorted(valid_keys))}'
+            )
+        return value
+
+
+# ---------------------------------------------------------------------------
+# Event Booking serializer  (quick booking from event detail page)
+# ---------------------------------------------------------------------------
+
+class EventBookingSerializer(serializers.ModelSerializer):
+    """
+    Serializer for event bookings submitted from the event detail page.
+    - Public users POST with event id + customer details.
+    - Admin users can PATCH status.
+    """
+    event_title = serializers.CharField(source='event.title', read_only=True)
+
+    class Meta:
+        model  = EventBooking
+        fields = (
+            'id',
+            'event',
+            'event_title',
+            'customer_name',
+            'customer_email',
+            'customer_phone',
+            'number_of_guests',
+            'special_requests',
+            'status',
+            'created_at',
+        )
+        read_only_fields = ('id', 'event_title', 'created_at')
+
+    def validate_number_of_guests(self, value):
+        if value < 1:
+            raise serializers.ValidationError('At least 1 guest is required.')
+        return value
+
+
+# ---------------------------------------------------------------------------
+# Apartment media serializer  (Phase 3)
+# ---------------------------------------------------------------------------
+
+class ApartmentMediaSerializer(serializers.ModelSerializer):
+    file_url   = serializers.SerializerMethodField()
+    media_type = serializers.CharField(read_only=True)
+
+    class Meta:
+        model  = ApartmentMedia
+        fields = (
+            'id', 'apartment', 'file', 'file_url',
+            'media_type', 'caption', 'created_at',
+        )
+        read_only_fields = ('id', 'media_type', 'file_url', 'created_at')
+
+    def get_file_url(self, obj):
+        return obj.file_url
+
+
+# ---------------------------------------------------------------------------
+# Apartment serializers  (Phase 3)
+# ---------------------------------------------------------------------------
+
+class ApartmentSerializer(serializers.ModelSerializer):
+    """Full serializer for detail / create / update."""
+    media       = ApartmentMediaSerializer(many=True, read_only=True)
+    media_count = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model  = Apartment
+        fields = (
+            'id',
+            'title',
+            'slug',
+            'description',
+            'location',
+            'address',
+            'latitude',
+            'longitude',
+            'property_type',
+            'bedrooms',
+            'bathrooms',
+            'max_guests',
+            'price_per_night',
+            'amenities',
+            'rules',
+            'is_available',
+            'is_featured',
+            'media_count',
+            'media',
+            'created_at',
+            'updated_at',
+        )
+        read_only_fields = ('id', 'slug', 'media_count', 'created_at', 'updated_at')
+
+
+class ApartmentListSerializer(serializers.ModelSerializer):
+    """Lightweight serializer for list endpoints."""
+    media_count = serializers.IntegerField(read_only=True)
+    media       = ApartmentMediaSerializer(many=True, read_only=True)
+
+    class Meta:
+        model  = Apartment
+        fields = (
+            'id',
+            'title',
+            'slug',
+            'location',
+            'property_type',
+            'bedrooms',
+            'bathrooms',
+            'max_guests',
+            'price_per_night',
+            'is_available',
+            'is_featured',
+            'media_count',
+            'media',
+            'created_at',
+        )
+        read_only_fields = fields
+
+
+# ---------------------------------------------------------------------------
+# Accommodation Request serializer  (Phase 3)
+# ---------------------------------------------------------------------------
+
+class AccommodationRequestSerializer(serializers.ModelSerializer):
+    apartment_title = serializers.CharField(
+        source='apartment.title', read_only=True, default=None)
+    purpose_display = serializers.CharField(
+        source='get_purpose_display', read_only=True)
+
+    class Meta:
+        model  = AccommodationRequest
+        fields = (
+            'id',
+            'apartment',
+            'apartment_title',
+            'customer_name',
+            'customer_email',
+            'customer_phone',
+            'check_in_date',
+            'check_out_date',
+            'number_of_guests',
+            'purpose',
+            'purpose_display',
+            'message',
+            'status',
+            'created_at',
+        )
+        read_only_fields = ('id', 'apartment_title', 'purpose_display', 'created_at')
+
+    def validate_number_of_guests(self, value):
+        if value < 1:
+            raise serializers.ValidationError('At least 1 guest is required.')
+        return value
+
+
+# ---------------------------------------------------------------------------
+# Vehicle media serializer  (Phase 6)
+# ---------------------------------------------------------------------------
+
+class VehicleMediaSerializer(serializers.ModelSerializer):
+    file_url   = serializers.SerializerMethodField()
+    media_type = serializers.CharField(read_only=True)
+
+    class Meta:
+        model  = VehicleMedia
+        fields = (
+            'id', 'vehicle', 'file', 'file_url',
+            'media_type', 'caption', 'created_at',
+        )
+        read_only_fields = ('id', 'media_type', 'file_url', 'created_at')
+
+    def get_file_url(self, obj):
+        return obj.file_url
+
+
+# ---------------------------------------------------------------------------
+# Vehicle serializers  (Phase 6)
+# ---------------------------------------------------------------------------
+
+class VehicleSerializer(serializers.ModelSerializer):
+    """Full serializer for detail / create / update."""
+    media       = VehicleMediaSerializer(many=True, read_only=True)
+    media_count = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model  = Vehicle
+        fields = (
+            'id',
+            'name',
+            'slug',
+            'description',
+            'vehicle_type',
+            'brand',
+            'model_year',
+            'seats',
+            'transmission',
+            'fuel_type',
+            'price_per_day',
+            'features',
+            'is_available',
+            'is_featured',
+            'media_count',
+            'media',
+            'created_at',
+            'updated_at',
+        )
+        read_only_fields = ('id', 'slug', 'media_count', 'created_at', 'updated_at')
+
+
+class VehicleListSerializer(serializers.ModelSerializer):
+    """Lightweight serializer for list endpoints."""
+    media_count = serializers.IntegerField(read_only=True)
+    media       = VehicleMediaSerializer(many=True, read_only=True)
+
+    class Meta:
+        model  = Vehicle
+        fields = (
+            'id',
+            'name',
+            'slug',
+            'vehicle_type',
+            'brand',
+            'seats',
+            'transmission',
+            'price_per_day',
+            'is_available',
+            'is_featured',
+            'media_count',
+            'media',
+            'created_at',
+        )
+        read_only_fields = fields
+
+
+# ---------------------------------------------------------------------------
+# Car Rental Request serializer  (Phase 6)
+# ---------------------------------------------------------------------------
+
+class CarRentalRequestSerializer(serializers.ModelSerializer):
+    vehicle_name = serializers.CharField(
+        source='vehicle.name', read_only=True, default=None)
+
+    class Meta:
+        model  = CarRentalRequest
+        fields = (
+            'id',
+            'vehicle',
+            'vehicle_name',
+            'customer_name',
+            'customer_email',
+            'customer_phone',
+            'pickup_date',
+            'return_date',
+            'pickup_location',
+            'return_location',
+            'with_driver',
+            'purpose',
+            'message',
+            'status',
+            'created_at',
+        )
+        read_only_fields = ('id', 'vehicle_name', 'created_at')

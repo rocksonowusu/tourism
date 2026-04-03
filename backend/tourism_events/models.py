@@ -87,6 +87,15 @@ class TouristSite(models.Model):
         return self.events.filter(date__gte=timezone.now()).count()
 
 
+class EventCategory(models.TextChoices):
+    CORPORATE     = 'corporate',      'Corporate'
+    FAMILY        = 'family_friends',  'Family & Friends'
+    RETREAT       = 'retreat',         'Retreat'
+    RECREATIONAL  = 'recreational',    'Recreational'
+    CULTURAL      = 'cultural',        'Cultural'
+    CUSTOM        = 'custom',          'Custom'
+
+
 class Event(models.Model):
     """A tourism event that may be linked to a tourist site."""
 
@@ -107,6 +116,22 @@ class Event(models.Model):
     highlights  = models.JSONField(
                       default=list, blank=True,
                       help_text='List of package highlights / inclusions shown on the detail page.')
+
+    # ── Phase-4 additions ────────────────────────────────────────────
+    category    = models.CharField(
+                      max_length=30,
+                      choices=EventCategory.choices,
+                      default=EventCategory.CULTURAL,
+                      blank=True,
+                      help_text='Category / type of event.')
+    activities  = models.JSONField(
+                      default=list, blank=True,
+                      help_text='JSON list of included activities, e.g. ["Drumming", "Dance"].')
+    suitable_for = models.CharField(
+                      max_length=255, blank=True,
+                      help_text='Target audience, e.g. "families", "corporate groups".')
+    # ── End Phase-4 additions ────────────────────────────────────────
+
     created_at  = models.DateTimeField(auto_now_add=True)
     updated_at  = models.DateTimeField(auto_now=True)
 
@@ -523,3 +548,396 @@ class CustomTourRequest(models.Model):
     def package_labels(self) -> list:
         label_map = dict(PackageChoice.choices)
         return [label_map.get(p, p) for p in (self.packages or [])]
+
+
+# ---------------------------------------------------------------------------
+# Event Request model  (Phase 4)
+# ---------------------------------------------------------------------------
+
+class EventRequestStatus(models.TextChoices):
+    NEW       = 'new',       'New'
+    CONTACTED = 'contacted', 'Contacted'
+    CONFIRMED = 'confirmed', 'Confirmed'
+    CANCELLED = 'cancelled', 'Cancelled'
+
+
+class EventRequestType(models.TextChoices):
+    CORPORATE    = 'corporate',     'Corporate'
+    FAMILY       = 'family',        'Family & Friends'
+    RETREAT      = 'retreat',       'Retreat'
+    RECREATIONAL = 'recreational',  'Recreational'
+    CUSTOM       = 'custom',        'Custom'
+
+
+class EventRequest(models.Model):
+    """
+    A customer's request to have a custom event organised for them.
+    Created publicly (no auth) and managed by admin.
+    """
+
+    event_type              = models.CharField(
+                                  max_length=30,
+                                  choices=EventRequestType.choices,
+                                  default=EventRequestType.CUSTOM,
+                              )
+    customer_name           = models.CharField(max_length=255)
+    customer_email          = models.EmailField()
+    customer_phone          = models.CharField(max_length=30)
+    preferred_date          = models.DateField(null=True, blank=True)
+    expected_attendees      = models.PositiveIntegerField(
+                                  default=1,
+                                  help_text='Estimated number of attendees.')
+    location_preference     = models.CharField(max_length=255, blank=True)
+    budget_range            = models.CharField(
+                                  max_length=100, blank=True,
+                                  help_text='E.g. "GH₵5,000 – 10,000"')
+    activities_interested_in = models.JSONField(
+                                  default=list, blank=True,
+                                  help_text='JSON list of activities the customer is interested in.')
+    special_requirements    = models.TextField(blank=True)
+    status                  = models.CharField(
+                                  max_length=20,
+                                  choices=EventRequestStatus.choices,
+                                  default=EventRequestStatus.NEW,
+                              )
+    created_at              = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Event Request'
+        verbose_name_plural = 'Event Requests'
+
+    def __str__(self):
+        return f"{self.customer_name} — {self.get_event_type_display()} ({self.get_status_display()})"
+
+
+# ---------------------------------------------------------------------------
+# Event Booking — quick booking from the event detail page
+# ---------------------------------------------------------------------------
+
+class EventBookingStatus(models.TextChoices):
+    NEW       = 'new',       'New'
+    CONFIRMED = 'confirmed', 'Confirmed'
+    CANCELLED = 'cancelled', 'Cancelled'
+
+
+class EventBooking(models.Model):
+    """
+    A simple booking / interest form submitted from the event detail page.
+    Tied to a specific Event, unlike EventRequest which is a general enquiry.
+    """
+
+    event              = models.ForeignKey(
+                             Event,
+                             on_delete=models.CASCADE,
+                             related_name='bookings',
+                         )
+    customer_name      = models.CharField(max_length=255)
+    customer_email     = models.EmailField()
+    customer_phone     = models.CharField(max_length=30)
+    number_of_guests   = models.PositiveIntegerField(
+                             default=1,
+                             help_text='Total number of guests including the booker.')
+    special_requests   = models.TextField(blank=True)
+    status             = models.CharField(
+                             max_length=20,
+                             choices=EventBookingStatus.choices,
+                             default=EventBookingStatus.NEW,
+                         )
+    created_at         = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Event Booking'
+        verbose_name_plural = 'Event Bookings'
+
+    def __str__(self):
+        return f"{self.customer_name} — {self.event.title} ({self.get_status_display()})"
+
+
+# ---------------------------------------------------------------------------
+# Apartment / Accommodation models  (Phase 3)
+# ---------------------------------------------------------------------------
+
+class PropertyType(models.TextChoices):
+    APARTMENT = 'apartment', 'Apartment'
+    HOUSE     = 'house',     'House'
+    VILLA     = 'villa',     'Villa'
+    SUITE     = 'suite',     'Suite'
+
+
+class Apartment(models.Model):
+    """A rental property listed by the company."""
+
+    title          = models.CharField(max_length=255)
+    slug           = models.SlugField(
+                         max_length=255, unique=True, blank=True,
+                         help_text='SEO-friendly URL identifier. Auto-generated from title.')
+    description    = models.TextField()
+    location       = models.CharField(max_length=255)
+    address        = models.CharField(max_length=500, blank=True)
+    latitude       = models.DecimalField(
+                         max_digits=9, decimal_places=6, null=True, blank=True)
+    longitude      = models.DecimalField(
+                         max_digits=9, decimal_places=6, null=True, blank=True)
+    property_type  = models.CharField(
+                         max_length=20,
+                         choices=PropertyType.choices,
+                         default=PropertyType.APARTMENT)
+    bedrooms       = models.PositiveIntegerField(default=1)
+    bathrooms      = models.PositiveIntegerField(default=1)
+    max_guests     = models.PositiveIntegerField(default=2)
+    price_per_night = models.DecimalField(
+                          max_digits=10, decimal_places=2, null=True, blank=True,
+                          help_text='Indicative price per night (GH₵).')
+    amenities      = models.JSONField(
+                         default=list, blank=True,
+                         help_text='List of amenities, e.g. ["WiFi", "Pool", "Parking"].')
+    rules          = models.JSONField(
+                         default=list, blank=True,
+                         help_text='House rules, e.g. ["No smoking", "No pets"].')
+    is_available   = models.BooleanField(default=True)
+    is_featured    = models.BooleanField(default=False)
+    created_at     = models.DateTimeField(auto_now_add=True)
+    updated_at     = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Apartment'
+        verbose_name_plural = 'Apartments'
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = self._unique_slug()
+        super().save(*args, **kwargs)
+
+    def _unique_slug(self) -> str:
+        base = slugify(self.title)
+        slug, n = base, 1
+        while Apartment.objects.filter(slug=slug).exclude(pk=self.pk or 0).exists():
+            slug = f'{base}-{n}'
+            n += 1
+        return slug
+
+    @property
+    def media_count(self) -> int:
+        return self.media.count()
+
+
+class ApartmentMedia(BaseMedia):
+    """Images or videos attached to an Apartment (Cloudinary: tourism/apartments/)."""
+
+    apartment = models.ForeignKey(Apartment, on_delete=models.CASCADE, related_name='media')
+    file      = CloudinaryField(
+        resource_type='auto',
+        folder='tourism/apartments',
+        validators=[validate_media_file_type, validate_media_file_size],
+    )
+
+    class Meta(BaseMedia.Meta):
+        verbose_name        = 'Apartment Media'
+        verbose_name_plural = 'Apartment Media'
+
+    def __str__(self):
+        return f"{self.get_media_type_display()} – {self.apartment.title}"
+
+
+class AccommodationRequestStatus(models.TextChoices):
+    NEW       = 'new',       'New'
+    CONTACTED = 'contacted', 'Contacted'
+    CONFIRMED = 'confirmed', 'Confirmed'
+    CANCELLED = 'cancelled', 'Cancelled'
+
+
+class AccommodationPurpose(models.TextChoices):
+    VACATION = 'vacation', 'Vacation'
+    BUSINESS = 'business', 'Business'
+    EVENT    = 'event',    'Event'
+    OTHER    = 'other',    'Other'
+
+
+class AccommodationRequest(models.Model):
+    """
+    A customer's inquiry about renting an apartment.
+    Created publicly (no auth) and managed by admin.
+    """
+
+    apartment        = models.ForeignKey(
+                           Apartment, on_delete=models.SET_NULL,
+                           null=True, blank=True,
+                           related_name='accommodation_requests',
+                           help_text='Specific apartment, or null for general inquiry.')
+    customer_name    = models.CharField(max_length=255)
+    customer_email   = models.EmailField()
+    customer_phone   = models.CharField(max_length=30)
+    check_in_date    = models.DateField(null=True, blank=True)
+    check_out_date   = models.DateField(null=True, blank=True)
+    number_of_guests = models.PositiveIntegerField(default=1)
+    purpose          = models.CharField(
+                           max_length=20,
+                           choices=AccommodationPurpose.choices,
+                           default=AccommodationPurpose.VACATION)
+    message          = models.TextField(blank=True)
+    status           = models.CharField(
+                           max_length=20,
+                           choices=AccommodationRequestStatus.choices,
+                           default=AccommodationRequestStatus.NEW)
+    created_at       = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Accommodation Request'
+        verbose_name_plural = 'Accommodation Requests'
+
+    def __str__(self):
+        apt = self.apartment.title if self.apartment else 'General Inquiry'
+        return f"{self.customer_name} — {apt} ({self.get_status_display()})"
+
+
+# ---------------------------------------------------------------------------
+# Vehicle / Car Rental models  (Phase 6)
+# ---------------------------------------------------------------------------
+
+class VehicleType(models.TextChoices):
+    SEDAN = 'sedan', 'Sedan'
+    SUV   = 'suv',   'SUV'
+    VAN   = 'van',   'Van'
+    BUS   = 'bus',   'Bus'
+    LUXURY = 'luxury', 'Luxury'
+
+
+class TransmissionType(models.TextChoices):
+    AUTOMATIC = 'automatic', 'Automatic'
+    MANUAL    = 'manual',    'Manual'
+
+
+class FuelType(models.TextChoices):
+    PETROL   = 'petrol',   'Petrol'
+    DIESEL   = 'diesel',   'Diesel'
+    ELECTRIC = 'electric', 'Electric'
+    HYBRID   = 'hybrid',   'Hybrid'
+
+
+class Vehicle(models.Model):
+    """A vehicle available for rental."""
+
+    name           = models.CharField(max_length=255)
+    slug           = models.SlugField(
+                         max_length=255, unique=True, blank=True,
+                         help_text='SEO-friendly URL identifier. Auto-generated from name.')
+    description    = models.TextField()
+    vehicle_type   = models.CharField(
+                         max_length=20,
+                         choices=VehicleType.choices,
+                         default=VehicleType.SEDAN)
+    brand          = models.CharField(max_length=100, blank=True)
+    model_year     = models.PositiveIntegerField(null=True, blank=True)
+    seats          = models.PositiveIntegerField(default=4)
+    transmission   = models.CharField(
+                         max_length=20,
+                         choices=TransmissionType.choices,
+                         default=TransmissionType.AUTOMATIC)
+    fuel_type      = models.CharField(
+                         max_length=20,
+                         choices=FuelType.choices,
+                         default=FuelType.PETROL)
+    price_per_day  = models.DecimalField(
+                         max_digits=10, decimal_places=2, null=True, blank=True,
+                         help_text='Indicative price per day (GH₵).')
+    features       = models.JSONField(
+                         default=list, blank=True,
+                         help_text='List of features, e.g. ["AC", "Bluetooth", "GPS"].')
+    is_available   = models.BooleanField(default=True)
+    is_featured    = models.BooleanField(default=False)
+    created_at     = models.DateTimeField(auto_now_add=True)
+    updated_at     = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Vehicle'
+        verbose_name_plural = 'Vehicles'
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = self._unique_slug()
+        super().save(*args, **kwargs)
+
+    def _unique_slug(self) -> str:
+        base = slugify(self.name)
+        slug, n = base, 1
+        while Vehicle.objects.filter(slug=slug).exclude(pk=self.pk or 0).exists():
+            slug = f'{base}-{n}'
+            n += 1
+        return slug
+
+    @property
+    def media_count(self) -> int:
+        return self.media.count()
+
+
+class VehicleMedia(BaseMedia):
+    """Images or videos attached to a Vehicle (Cloudinary: tourism/vehicles/)."""
+
+    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name='media')
+    file    = CloudinaryField(
+        resource_type='auto',
+        folder='tourism/vehicles',
+        validators=[validate_media_file_type, validate_media_file_size],
+    )
+
+    class Meta(BaseMedia.Meta):
+        verbose_name        = 'Vehicle Media'
+        verbose_name_plural = 'Vehicle Media'
+
+    def __str__(self):
+        return f"{self.get_media_type_display()} – {self.vehicle.name}"
+
+
+class CarRentalRequestStatus(models.TextChoices):
+    NEW       = 'new',       'New'
+    CONTACTED = 'contacted', 'Contacted'
+    CONFIRMED = 'confirmed', 'Confirmed'
+    CANCELLED = 'cancelled', 'Cancelled'
+
+
+class CarRentalRequest(models.Model):
+    """
+    A customer's inquiry about renting a vehicle.
+    Created publicly (no auth) and managed by admin.
+    """
+
+    vehicle          = models.ForeignKey(
+                           Vehicle, on_delete=models.SET_NULL,
+                           null=True, blank=True,
+                           related_name='rental_requests',
+                           help_text='Specific vehicle, or null for general inquiry.')
+    customer_name    = models.CharField(max_length=255)
+    customer_email   = models.EmailField()
+    customer_phone   = models.CharField(max_length=30)
+    pickup_date      = models.DateField(null=True, blank=True)
+    return_date      = models.DateField(null=True, blank=True)
+    pickup_location  = models.CharField(max_length=255, blank=True)
+    return_location  = models.CharField(max_length=255, blank=True)
+    with_driver      = models.BooleanField(default=False)
+    purpose          = models.CharField(max_length=255, blank=True)
+    message          = models.TextField(blank=True)
+    status           = models.CharField(
+                           max_length=20,
+                           choices=CarRentalRequestStatus.choices,
+                           default=CarRentalRequestStatus.NEW)
+    created_at       = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Car Rental Request'
+        verbose_name_plural = 'Car Rental Requests'
+
+    def __str__(self):
+        veh = self.vehicle.name if self.vehicle else 'General Inquiry'
+        return f"{self.customer_name} — {veh} ({self.get_status_display()})"

@@ -87,6 +87,11 @@ const IconInbox = () => (
     <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>
   </svg>
 )
+const IconStarOutline = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+  </svg>
+)
 
 // ── helpers ───────────────────────────────────────────────────────────────
 const fmtDate = (d) => d
@@ -119,7 +124,7 @@ export default function Dashboard() {
   useEffect(() => {
     const load = async () => {
       try {
-        const [evAll, evUp, siteAll, evMedia, siteMedia, evMediaRecent, siteMediaRecent, tourAll, tripNew] = await Promise.allSettled([
+        const [evAll, evUp, siteAll, evMedia, siteMedia, evMediaRecent, siteMediaRecent, tourAll, tripNew, eventReqNew] = await Promise.allSettled([
           api.events.list({      page_size: 8, ordering: '-created_at' }),
           api.events.upcoming({  page_size: 1 }),
           api.sites.list({       page_size: 4 }),
@@ -129,6 +134,7 @@ export default function Dashboard() {
           api.siteMedia.list({   page_size: 4, ordering: '-created_at' }),
           api.tours.list({       page_size: 1 }),
           api.tripRequests.newCount(),
+          api.eventRequests.newCount(),
         ])
 
         const evData            = evAll.value            ?? { count: 0, results: [] }
@@ -140,6 +146,7 @@ export default function Dashboard() {
         const siteMediaItems    = siteMediaRecent.value  ?? { results: [] }
         const tourData          = tourAll.value           ?? { count: 0 }
         const tripNewData       = tripNew.value           ?? { count: 0 }
+        const eventReqNewData   = eventReqNew.value        ?? { count: 0 }
 
         setStats({
           totalEvents:   evData.count,
@@ -148,6 +155,7 @@ export default function Dashboard() {
           mediaCount:    (evMediaData.count ?? 0) + (stMediaData.count ?? 0),
           totalTours:    tourData.count,
           newRequests:   tripNewData.count ?? 0,
+          newEventRequests: eventReqNewData.count ?? 0,
         })
         setRecentEvents(evData.results    ?? [])
         setFeaturedSites(siteData.results ?? [])
@@ -191,6 +199,7 @@ export default function Dashboard() {
         <StatCard label="Tourist Sites"   value={stats?.totalSites}    icon={<IconMapPin />}   color="blue"  loading={loading} />
         <StatCard label="Tours"           value={stats?.totalTours}    icon={<IconCompass />}   color="green" loading={loading} />
         <StatCard label="Trip Requests"   value={stats?.newRequests}   icon={<IconInbox />}    color="gold"  loading={loading} />
+        <StatCard label="Event Requests"  value={stats?.newEventRequests} icon={<IconStarOutline />}  color="gold"  loading={loading} />
         <StatCard label="Upcoming Events" value={stats?.upcomingCount} icon={<IconClock />}    color="green" loading={loading} />
         <StatCard label="Media Files"     value={stats?.mediaCount}    icon={<IconImage />}    color="blue"  loading={loading} />
       </section>
@@ -242,6 +251,15 @@ export default function Dashboard() {
             <span className={s.actionText}>
               <span className={s.actionTitle}>Trip Requests</span>
               <span className={s.actionSub}>View & respond to bookings</span>
+            </span>
+          </button>
+          <button className={s.actionCard} onClick={() => navigate('/admin/event-requests')}>
+            <span className={s.actionIcon} style={{ '--ac': 'rgba(197,160,40,0.22)', '--ac-fg': 'var(--gold-rich)' }}>
+              <IconStarOutline />
+            </span>
+            <span className={s.actionText}>
+              <span className={s.actionTitle}>Event Requests</span>
+              <span className={s.actionSub}>Manage event enquiries</span>
             </span>
           </button>
           <a className={s.actionCard} href="/" target="_blank" rel="noopener noreferrer">

@@ -129,6 +129,92 @@
 }
 
 /* ── Grid ────────────────────────────────────────────────────────────────── */
+
+/* ── Category Pills ──────────────────────────────────────────────────────── */
+.ae__categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.ae__cat-pill {
+  padding: 7px 16px;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 20px;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ash-medium, #6B6B6B);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.ae__cat-pill:hover {
+  border-color: var(--gold-rich, #C5A028);
+  color: var(--gold-rich, #C5A028);
+}
+.ae__cat-pill--active {
+  background: var(--gold-rich, #C5A028);
+  border-color: var(--gold-rich, #C5A028);
+  color: #fff;
+}
+.ae__cat-pill--active:hover {
+  color: #fff;
+}
+
+/* ── Request banner ──────────────────────────────────────────────────────── */
+.ae__request-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px 28px;
+  background: linear-gradient(135deg, #FEF9E6 0%, #FFF9E8 100%);
+  border: 1px solid rgba(197,160,40,0.25);
+  border-radius: 12px;
+  margin-bottom: 32px;
+}
+.ae__request-banner-text h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ash-deep, #2A2A1E);
+  margin: 0 0 4px;
+}
+.ae__request-banner-text p {
+  font-size: 13px;
+  color: var(--ash-medium, #6B6B6B);
+  margin: 0;
+}
+.ae__request-banner-btn {
+  flex-shrink: 0;
+  padding: 10px 24px;
+  background: var(--gold-rich, #C5A028);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s;
+}
+.ae__request-banner-btn:hover {
+  background: #b5911e;
+  transform: translateY(-1px);
+}
+
+/* ── Card category badge ─────────────────────────────────────────────────── */
+.ae__card-category {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--gold-rich, #C5A028);
+  background: rgba(197,160,40,0.1);
+  padding: 3px 10px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+}
+
 .ae__grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -356,6 +442,7 @@
 @media (max-width: 768px) {
   .all-events { padding: 100px 0 60px; }
   .ae__grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .ae__request-banner { flex-direction: column; text-align: center; }
 }
 
 @media (max-width: 480px) {
@@ -363,4 +450,6 @@
   .ae__search-wrap { max-width: 100%; }
   .ae__count { margin-left: 0; }
   .ae__grid { grid-template-columns: 1fr; }
+  .ae__categories { gap: 6px; }
+  .ae__cat-pill { font-size: 11px; padding: 5px 12px; }
 }
