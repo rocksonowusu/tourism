@@ -93,6 +93,7 @@ class EventCategory(models.TextChoices):
     RETREAT       = 'retreat',         'Retreat'
     RECREATIONAL  = 'recreational',    'Recreational'
     CULTURAL      = 'cultural',        'Cultural'
+    COUPLES       = 'couples',         'Couples'
     CUSTOM        = 'custom',          'Custom'
 
 
@@ -566,6 +567,7 @@ class EventRequestType(models.TextChoices):
     FAMILY       = 'family',        'Family & Friends'
     RETREAT      = 'retreat',       'Retreat'
     RECREATIONAL = 'recreational',  'Recreational'
+    COUPLES      = 'couples',       'Couples'
     CUSTOM       = 'custom',        'Custom'
 
 

@@ -220,64 +220,6 @@
 
 
 ================================================================================
-  PHASE 4 — EVENTS & EXPERIENCE REQUESTS (Enhanced)
-================================================================================
-
-  REQUIREMENT: The company organises custom events — corporate retreats,
-  family/friends gatherings, recreational activities. Customers can request
-  events to be organised for them. The public site should showcase all the
-  types of experiences they offer. Everything has media.
-
-  Tasks:
-  ────────────────────────────────────────────────────────────────────────────
-
-  BACKEND:
-  4.1  Event Categories / Types
-       • Add a category field to the Event model (or create an EventCategory
-         model): Corporate, Family & Friends, Retreat, Recreational,
-         Cultural, Custom, etc.
-       • Add fields if needed: activities (JSON list of included activities),
-         suitable_for (e.g., "families", "corporate groups").
-
-  4.2  Event Request Model
-       • Create an EventRequest model:
-         – event_type (corporate/family/retreat/recreational/custom),
-           customer_name, customer_email, customer_phone,
-           preferred_date, expected_attendees, location_preference,
-           budget_range, activities_interested_in (JSON),
-           special_requirements, status (new/contacted/confirmed/cancelled),
-           created_at.
-       • This is for CUSTOM event requests (not attending existing events).
-
-  4.3  Event Request API
-       • POST /api/event-requests/ — PUBLIC.
-       • GET/PATCH /api/event-requests/ — ADMIN only.
-
-  4.4  Email Notification
-       • Email company on new event request.
-       • Confirmation email to customer.
-
-  FRONTEND:
-  4.5  Public Site — Enhanced Events & Experiences
-       • Enhance existing events pages to show event categories/types.
-       • Add an "Experiences" or "What We Do" section on the home page
-         showcasing the different types of events/experiences offered.
-       • Add a "Request an Event" page/form where customers describe what
-         they want organised.
-       • WhatsApp button with pre-filled event request message.
-
-  4.6  Admin Portal — Event Requests Management
-       • New admin page: "Event Requests"
-       • Table with all custom event requests, filterable by type/status.
-       • View details + update status.
-
-  Deliverables:
-       • Updated Event model with categories.
-       • EventRequest model + migrations.
-       • Event request API.
-       • Enhanced public events UI with categories and request form.
-       • Admin event requests management.
-
 
 ================================================================================
   PHASE 5 — COMMUNITY & CHARITY SHOWCASE
