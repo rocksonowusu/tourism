@@ -111,6 +111,7 @@ const CATEGORY_LABELS = {
   'retreat':        'Retreat',
   'recreational':   'Recreational',
   'cultural':       'Cultural',
+  'couples':        'Couples',
   'custom':         'Custom',
 }
 

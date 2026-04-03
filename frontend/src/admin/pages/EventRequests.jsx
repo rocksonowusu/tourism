@@ -74,6 +74,7 @@ const TYPE_LABELS = {
   family:       'Family & Friends',
   retreat:      'Retreat',
   recreational: 'Recreational',
+  couples:      'Couples',
   custom:       'Custom',
 }
 
@@ -82,6 +83,7 @@ const TYPE_COLORS = {
   family:       { bg: '#EDE9FE', fg: '#6D28D9', border: 'rgba(109,40,217,0.15)' },
   retreat:      { bg: '#EDFCF0', fg: '#1A6B2C', border: '#D0F0D6' },
   recreational: { bg: '#E0F2FE', fg: '#0369A1', border: 'rgba(3,105,161,0.15)' },
+  couples:      { bg: '#FFF0F6', fg: '#C41D7F', border: 'rgba(196,29,127,0.15)' },
   custom:       { bg: '#FEF2F2', fg: '#B91C1C', border: 'rgba(185,28,28,0.15)' },
 }
 

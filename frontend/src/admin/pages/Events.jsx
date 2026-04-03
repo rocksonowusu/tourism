@@ -110,7 +110,7 @@ const MAX_MEDIA  = 5
 
 const EMPTY_FORM = {
   title: '', description: '', location: '', date: '',
-  is_featured: false, tourist_site_id: '',
+  category: '', is_featured: false, tourist_site_id: '',
   latitude: '', longitude: '', highlights: '',
 }
 
@@ -183,6 +183,7 @@ export default function Events() {
       description:    ev.description  ?? '',
       location:       ev.location     ?? '',
       date:           ev.date         ? ev.date.slice(0, 16) : '',
+      category:       ev.category     ?? '',
       is_featured:    ev.is_featured  ?? false,
       tourist_site_id: ev.tourist_site?.id ?? ev.tourist_site ?? '',
       latitude:       ev.latitude     ?? '',
@@ -272,6 +273,7 @@ export default function Events() {
         description:     form.description,
         location:        form.location,
         date:            form.date || null,
+        category:        form.category || '',
         is_featured:     form.is_featured,
         tourist_site_id: form.tourist_site_id === '' ? null : Number(form.tourist_site_id),
         latitude:        form.latitude === '' ? null : Number(form.latitude),
@@ -547,6 +549,19 @@ export default function Events() {
                 <div className={s.formGroup}>
                   <label className={s.label} htmlFor="ev-title">Title <span className={s.req}>*</span></label>
                   <input id="ev-title" className={s.input} name="title" value={form.title} onChange={handleChange} placeholder="e.g. Annual Beach Festival" autoFocus />
+                </div>
+                <div className={s.formGroup}>
+                  <label className={s.label} htmlFor="ev-cat">Category</label>
+                  <select id="ev-cat" className={s.input} name="category" value={form.category} onChange={handleChange}>
+                    <option value="">— select —</option>
+                    <option value="corporate">Corporate</option>
+                    <option value="family_friends">Family &amp; Friends</option>
+                    <option value="retreat">Retreat</option>
+                    <option value="recreational">Recreational</option>
+                    <option value="cultural">Cultural</option>
+                    <option value="couples">Couples</option>
+                    <option value="custom">Custom</option>
+                  </select>
                 </div>
                 <div className={s.formGroup}>
                   <label className={s.label} htmlFor="ev-desc">Description</label>
