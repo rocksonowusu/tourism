@@ -156,6 +156,7 @@
 .td__description {
   font-size: 0.95rem; line-height: 1.75;
   color: var(--ash-medium, #6B6B6B); white-space: pre-line;
+  text-align: justify;
 }
 
 /* Lists (highlights, inclusions, exclusions) */

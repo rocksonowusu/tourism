@@ -379,7 +379,7 @@ export default function PlanTour() {
           {step === 2 && (
             <div className="pt__card">
               <h2 className="pt__card-title">What would you like included?</h2>
-              <p className="pt__card-desc">Select the packages and add-ons for your tour. These are optional — choose what matters most to you.</p>
+              <p className="pt__card-desc">Select the packages and add-ons for your tour. These are optional, choose what matters most to you.</p>
 
               <div className="pt__packages-grid">
                 {packages.map(pkg => {

@@ -305,6 +305,7 @@
   line-height: 1.75;
   margin: 0 0 1rem;
   font-size: 0.95rem;
+  text-align: justify;
 }
 
 .evd__desc-text p:last-child {

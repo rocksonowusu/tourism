@@ -234,7 +234,7 @@ export default function AllEvents() {
           <div className="ae__request-banner">
             <div className="ae__request-banner-text">
               <h3>Want us to organise a custom event for you?</h3>
-              <p>Corporate retreats, family gatherings, recreational activities — we plan it all.</p>
+              <p>Corporate retreats, family gatherings, recreational activities. We plan it all.</p>
             </div>
             <Link to="/request-event" className="ae__request-banner-btn">
               Request an Event →

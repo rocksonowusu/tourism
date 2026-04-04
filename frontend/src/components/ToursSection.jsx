@@ -151,7 +151,7 @@ export default function ToursSection({ tours = [], loading }) {
             <p className="ts__eyebrow">Curated Experiences</p>
             <h2 className="ts__title">Our Tour Packages</h2>
             <p className="ts__subtitle">
-              Handcrafted itineraries that bring Ghana to life — from heritage trails
+              Handcrafted itineraries that bring Ghana to life, from heritage trails
               and coastal adventures to cultural immersions.
             </p>
           </div>

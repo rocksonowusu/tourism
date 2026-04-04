@@ -139,7 +139,7 @@ export default function AllSites() {
             <p className="as__eyebrow">Explore Ghana</p>
             <h1 className="as__title">All Tourist Sites</h1>
             <p className="as__subtitle">
-              From ancient castles to lush rainforests — discover the places
+              From ancient castles to lush rainforests, discover the places
               that make Ghana unforgettable.
             </p>
           </div>

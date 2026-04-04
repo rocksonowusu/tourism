@@ -111,7 +111,7 @@ export default function AllTours() {
             <p className="at__eyebrow">Plan Your Trip</p>
             <h1 className="at__title">Tour Packages</h1>
             <p className="at__subtitle">
-              Discover curated tour packages across Ghana — from cultural immersions
+              Discover curated tour packages across Ghana, from cultural immersions
               to coastal getaways and heritage trails.
             </p>
           </div>
@@ -130,7 +130,7 @@ export default function AllTours() {
               <div className="at__choice-icon"><IconRoute /></div>
               <div className="at__choice-text">
                 <h3 className="at__choice-title">Plan Your Own Tour</h3>
-                <p className="at__choice-desc">Pick your own sites, packages, and dates — we'll handle the rest.</p>
+                <p className="at__choice-desc">Pick your own sites, packages, and dates. We'll handle the rest.</p>
               </div>
               <span className="at__choice-arrow"><IconArrowRight /></span>
             </Link>

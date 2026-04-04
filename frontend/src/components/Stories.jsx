@@ -25,7 +25,7 @@ const SLIDES = [
     title: "Cape Coast Castle: Walking Through Ghana's Most Profound Historical Site",
     date: 'Mar 10, 2026',
     readTime: '6 min read',
-    excerpt: 'Built by the Swedes in 1653 and later taken over by the British, Cape Coast Castle stands as one of the most visited and emotionally significant monuments on the continent — a UNESCO World Heritage Site where the Door of No Return tells a story the world must never forget.',
+    excerpt: 'Built by the Swedes in 1653 and later taken over by the British, Cape Coast Castle stands as one of the most visited and emotionally significant monuments on the continent. A UNESCO World Heritage Site where the Door of No Return tells a story the world must never forget.',
     image: 'https://images.unsplash.com/photo-1578469645742-46cae010e5d4?w=900&q=85',
   },
   {
@@ -34,7 +34,7 @@ const SLIDES = [
     title: "Kente Weaving in Bonwire: The Story Behind Ghana's Most Iconic Cloth",
     date: 'Feb 28, 2026',
     readTime: '5 min read',
-    excerpt: 'Kente is more than cloth — it is a language. Every colour, every pattern woven on the narrow-strip looms of Bonwire carries a meaning passed down through generations of Ashanti master weavers. Come and learn the grammar of Ghana\'s most celebrated textile.',
+    excerpt: 'Kente is more than cloth. It is a language. Every colour, every pattern woven on the narrow-strip looms of Bonwire carries a meaning passed down through generations of Ashanti master weavers. Come and learn the grammar of Ghana\'s most celebrated textile.',
     image: 'https://images.unsplash.com/photo-1586348943529-beaae6c28db9?w=900&q=85',
   },
   {
@@ -43,7 +43,7 @@ const SLIDES = [
     title: 'A Guide to Ghanaian Cuisine: From Jollof Rice to Waakye and Kelewele',
     date: 'Feb 14, 2026',
     readTime: '7 min read',
-    excerpt: 'Ghanaian food is a celebration — bold spices, slow-cooked stews, and street-food culture that rivals any city on earth. Whether it\'s a steaming bowl of groundnut soup or the midnight crunch of kelewele, every bite tells a story of community and joy.',
+    excerpt: 'Ghanaian food is a celebration. Bold spices, slow-cooked stews, and street-food culture that rivals any city on earth. Whether it\'s a steaming bowl of groundnut soup or the midnight crunch of kelewele, every bite tells a story of community and joy.',
     image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=900&q=85',
   },
   {
@@ -52,7 +52,7 @@ const SLIDES = [
     title: 'Walking With Elephants: A Safari Guide to Mole National Park',
     date: 'Jan 30, 2026',
     readTime: '8 min read',
-    excerpt: "Ghana's largest wildlife refuge protects over 90 mammal species across 4,840 km² of Guinea savanna. Here, walking safaris bring you closer to elephants, buffalo, and antelope than any game vehicle ever could — an unforgettable encounter with wild Africa.",
+    excerpt: "Ghana's largest wildlife refuge protects over 90 mammal species across 4,840 km² of Guinea savanna. Here, walking safaris bring you closer to elephants, buffalo, and antelope than any game vehicle ever could, an unforgettable encounter with wild Africa.",
     image: 'https://images.unsplash.com/photo-1549366021-9f761d450615?w=900&q=85',
   },
   {

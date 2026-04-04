@@ -119,7 +119,7 @@ export default function AllAccommodations() {
             <p className="aa__eyebrow">Stay With Us</p>
             <h1 className="aa__title">Accommodations</h1>
             <p className="aa__subtitle">
-              Discover comfortable and curated stays across Ghana — from modern city
+              Discover comfortable and curated stays across Ghana, from modern city
               apartments to serene coastal villas and luxury suites.
             </p>
           </div>

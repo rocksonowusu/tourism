@@ -30,25 +30,25 @@ function Features() {
       id: 1,
       Icon: IconTour,
       title: 'Curated Tours',
-      description: 'Expertly designed itineraries across all 16 regions — from Accra city tours to northern safari expeditions and coastal heritage trails.'
+      description: 'Expertly designed itineraries across all 16 regions, from Accra city tours to northern safari expeditions and coastal heritage trails.'
     },
     {
       id: 2,
       Icon: IconCulture,
       title: 'Cultural Immersion',
-      description: 'Live the culture — join traditional festivals, learn Kente weaving in Bonwire, taste authentic Ghanaian cuisine, and dance to highlife rhythms.'
+      description: 'Live the culture. Join traditional festivals, learn Kente weaving in Bonwire, taste authentic Ghanaian cuisine, and dance to highlife rhythms.'
     },
     {
       id: 3,
       Icon: IconHeritage,
       title: 'Heritage Walks',
-      description: 'Walk through history at Cape Coast Castle, Elmina Fort, and the Kwame Nkrumah Mausoleum — guided by locals who know every story.'
+      description: 'Walk through history at Cape Coast Castle, Elmina Fort, and the Kwame Nkrumah Mausoleum, guided by locals who know every story.'
     },
     {
       id: 4,
       Icon: IconConcierge,
       title: 'Personal Concierge',
-      description: 'From airport pickup to hotel bookings and restaurant reservations — your dedicated travel concierge handles every detail so you can explore freely.'
+      description: 'From airport pickup to hotel bookings and restaurant reservations, your dedicated travel concierge handles every detail so you can explore freely.'
     }
   ]
 
@@ -61,7 +61,7 @@ function Features() {
       <div className="container">
         <div className="features-header">
           <p className="features-eyebrow">Why The Ghana Experience?</p>
-          <h2 className="features-title">We Don't Just Show You Ghana — We Let You Live It</h2>
+          <h2 className="features-title">We Don't Just Show You Ghana, We Let You Live It</h2>
           <p className="features-subtitle">
             Since 1957, we've been connecting travellers with the soul of Ghana
             through handcrafted experiences that go beyond the ordinary.

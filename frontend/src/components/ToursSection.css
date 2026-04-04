@@ -280,6 +280,7 @@
   line-height: 1.7;
   margin: 0 0 16px;
   max-width: 460px;
+  text-align: justify;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   line-clamp: 3;

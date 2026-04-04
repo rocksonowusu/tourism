@@ -199,6 +199,7 @@
   color: var(--ash-medium, #5A5A5A);
   line-height: 1.72;
   margin: 0;
+  text-align: justify;
   display: -webkit-box;
   -webkit-line-clamp: 4;
   line-clamp: 4;

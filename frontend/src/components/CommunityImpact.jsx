@@ -80,7 +80,7 @@ export default function CommunityImpact() {
             </p>
             <h2 className="community__title">Community Impact</h2>
             <p className="community__subtitle">
-              Tourism with purpose — every visit helps uplift local communities across Ghana
+              Tourism with purpose. Every visit helps uplift local communities across Ghana
             </p>
           </div>
         </div>

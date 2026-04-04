@@ -452,7 +452,7 @@ export default function EventDetail() {
                 <h2 className="evd__section-title"><IconMapPin /> Getting There</h2>
                 <p className="evd__map-subtitle">
                   {userLoc
-                    ? 'We detected your location — see the directions below!'
+                    ? 'We detected your location. See the directions below!'
                     : 'Allow location access for personalised directions from where you are.'}
                 </p>
                 <div className="evd__map-container">
@@ -494,13 +494,13 @@ export default function EventDetail() {
                       <IconSparkles /> Why Experience This With Us?
                     </h2>
                     <p className="evd__why-book-desc">
-                      Don't just attend — immerse yourself. When you book with us, we handle
+                      Don't just attend, immerse yourself. When you book with us, we handle
                       the logistics so you can focus on making memories.
                     </p>
                     <ul className="evd__why-book-perks">
                       <li><IconCheck /> <span>Hassle-free transport to & from the venue</span></li>
                       <li><IconCheck /> <span>Local expert guide who knows every hidden gem</span></li>
-                      <li><IconCheck /> <span>Guaranteed best-value pricing — no hidden fees</span></li>
+                      <li><IconCheck /> <span>Guaranteed best-value pricing, no hidden fees</span></li>
                       <li><IconCheck /> <span>Small groups for a personal, authentic experience</span></li>
                       <li><IconCheck /> <span>Discounts for children, infants &amp; persons with disabilities</span></li>
                       <li><IconStar /> <span>4.9 average rating from 200+ happy travellers</span></li>
@@ -514,7 +514,7 @@ export default function EventDetail() {
                       Book This Experience
                     </button>
                     <p className="evd__book-note">
-                      <IconMessageCircle /> Quick &amp; simple — takes less than a minute
+                      <IconMessageCircle /> Quick &amp; simple, takes less than a minute
                     </p>
                   </div>
                 </div>
@@ -609,7 +609,7 @@ export default function EventDetail() {
                 <h3 className="evd__modal-success-title">Booking Submitted!</h3>
                 <p className="evd__modal-success-text">
                   We've received your booking for <strong>{event.title}</strong>.
-                  Check your email for a confirmation — our team will reach out shortly.
+                  Check your email for a confirmation. Our team will reach out shortly.
                 </p>
                 <button className="evd__modal-done-btn" onClick={closeBookingModal}>
                   Done

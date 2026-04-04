@@ -93,7 +93,7 @@ export default function Hero({ media = [] }) {
 
         {/* Left: text */}
         <div className="hero__text fade-in">
-          <p className="hero__eyebrow">🇬🇭 1957 — The Ghana Experience</p>
+          <p className="hero__eyebrow">🇬🇭 1957 The Ghana Experience</p>
           <h1 className="hero__title">
             Your Journey<br />
             Through <em className="hero__highlight">Ghana</em><br />
@@ -101,7 +101,7 @@ export default function Hero({ media = [] }) {
           </h1>
           <p className="hero__sub">
             We craft unforgettable tours, cultural immersions, and heritage
-            experiences across Ghana — from the bustling streets of Accra to
+            experiences across Ghana, from the bustling streets of Accra to
             the ancient castles of the coast and the wildlife of the northern
             savannahs. Let us show you the real Ghana.
           </p>

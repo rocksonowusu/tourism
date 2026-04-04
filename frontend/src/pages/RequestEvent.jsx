@@ -52,7 +52,7 @@ const EVENT_TYPES = [
   { key: 'family',       label: 'Family & Friends', desc: 'Reunions, birthday parties, get-togethers' },
   { key: 'retreat',      label: 'Retreat',          desc: 'Wellness, spiritual, creative retreats' },
   { key: 'recreational', label: 'Recreational',     desc: 'Adventure, sports, outdoor fun' },
-  { key: 'custom',       label: 'Custom',           desc: 'Something unique — tell us your idea!' },
+  { key: 'custom',       label: 'Custom',           desc: 'Something unique, tell us your idea!' },
 ]
 
 const ACTIVITY_OPTIONS = [

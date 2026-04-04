@@ -116,7 +116,7 @@ export default function AllVehicles() {
             <p className="av__eyebrow">Drive With Us</p>
             <h1 className="av__title">Car Rentals</h1>
             <p className="av__subtitle">
-              Explore our fleet of well-maintained vehicles available for hire —
+              Explore our fleet of well-maintained vehicles available for hire,
               from comfortable sedans to spacious SUVs and luxury rides.
             </p>
           </div>

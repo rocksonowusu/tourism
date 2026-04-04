@@ -60,35 +60,35 @@ const EXPERIENCE_TYPES = [
     key: 'family_friends',
     Icon: IconHeart,
     title: 'Family & Friends',
-    description: 'Reunions, birthday celebrations, and group getaways — create unforgettable memories with the people who matter most.',
+    description: 'Reunions, birthday celebrations, and group getaways. Create unforgettable memories with the people who matter most.',
     examples: ['Family Reunions', 'Birthday Celebrations'],
   },
   {
     key: 'retreat',
     Icon: IconSun,
     title: 'Retreats',
-    description: 'Wellness, spiritual, and creative retreats — disconnect from the noise and reconnect with yourself in serene Ghanaian landscapes.',
+    description: 'Wellness, spiritual, and creative retreats. Disconnect from the noise and reconnect with yourself in serene Ghanaian landscapes.',
     examples: ['Wellness Retreats', 'Creative Getaways'],
   },
   {
     key: 'recreational',
     Icon: IconActivity,
     title: 'Recreational',
-    description: 'Adventure, sports, and outdoor activities — from beach volleyball on Ada Foah to hiking in the Volta Region\'s misty mountains.',
+    description: 'Adventure, sports, and outdoor activities, from beach volleyball on Ada Foah to hiking in the Volta Region\'s misty mountains.',
     examples: ['Adventure Outings', 'Beach & Water Sports'],
   },
   {
     key: 'cultural',
     Icon: IconMusic,
     title: 'Cultural Experiences',
-    description: 'Festivals, traditional ceremonies, and heritage immersions — live the vibrant culture of Ghana through authentic local experiences.',
+    description: 'Festivals, traditional ceremonies, and heritage immersions. Live the vibrant culture of Ghana through authentic local experiences.',
     examples: ['Festival Experiences', 'Heritage Immersions'],
   },
   {
     key: 'custom',
     Icon: IconStar,
     title: 'Custom Events',
-    description: 'Have something unique in mind? Tell us your vision and we\'ll bring it to life — from intimate dinners to grand celebrations.',
+    description: 'Have something unique in mind? Tell us your vision and we\'ll bring it to life, from intimate dinners to grand celebrations.',
     examples: ['Bespoke Celebrations', 'Themed Gatherings'],
   },
 ]
@@ -144,14 +144,14 @@ export default function EventsSection({ heroMedia = [] }) {
       <div className="container">
 
         {/* ═══════════════════════════════════════════════════════════
-            PART 1 — Experience Types Showcase
+            PART 1: Experience Types Showcase
             ═══════════════════════════════════════════════════════════ */}
         <div className="ev__header sr" ref={headerRef}>
           <div>
             <p className="ev__eyebrow">Events &amp; Experiences</p>
             <h2 className="ev__title">What We Organise</h2>
             <p className="ev__showcase-subtitle">
-              From corporate retreats to cultural immersions — we craft every kind
+              From corporate retreats to cultural immersions, we craft every kind
               of experience to make your time in Ghana unforgettable.
             </p>
           </div>

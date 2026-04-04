@@ -48,7 +48,7 @@ export default function Newsletter() {
           </h2>
           <p className="newsletter__sub">
             Be the first to know about new tours, exclusive festival
-            invitations, travel tips, and curated Ghana experience guides —
+            invitations, travel tips, and curated Ghana experience guides,
             delivered straight to your inbox.&nbsp;
             <a href="/" className="newsletter__privacy">Privacy Policy.</a>
           </p>

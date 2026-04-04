@@ -76,7 +76,7 @@ export default function Footer() {
               {settings?.company_name || 'The Ghana Experience'}
             </a>
             <p className="footer__tagline">
-              {settings?.about_text || '1957 The Ghana Experience LBG — Connecting the world to Ghana through curated tours, cultural immersions, and unforgettable heritage experiences across all 16 regions.'}
+              {settings?.about_text || '1957 The Ghana Experience LBG. Connecting the world to Ghana through curated tours, cultural immersions, and unforgettable heritage experiences across all 16 regions.'}
             </p>
             <div className="footer__social">
               {SOCIAL_MAP.map(({ key, Icon, label }) => {
