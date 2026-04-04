@@ -88,8 +88,8 @@
   margin-bottom: 28px;
 }
 .brandLogo {
-  width: 54px;
-  height: 54px;
+  width: 100px;
+  height: 100px;
   border-radius: 10px;
   object-fit: contain;
   flex-shrink: 0;
@@ -101,6 +101,13 @@
   line-height: 1.2;
 }
 .brandName span { color: var(--gold-rich, #C5A028); font-weight: 700; }
+.brandYear {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--gold-rich, #C5A028);
+}
 .brandSub {
   font-size: 11px;
   color: var(--ash-medium);

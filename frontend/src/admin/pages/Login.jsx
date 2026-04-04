@@ -52,7 +52,7 @@ export default function Login() {
         <div className={styles.brand}>
           <img src="/assets/Logo.PNG" alt="The Ghana Experience" className={styles.brandLogo} />
           <div>
-            <div className={styles.brandName}>The Ghana<span> Experience</span></div>
+            <div className={styles.brandName}><span className={styles.brandYear}>1957</span> The Ghana<span> Experience</span></div>
             <div className={styles.brandSub}>Admin Portal</div>
           </div>
         </div>
