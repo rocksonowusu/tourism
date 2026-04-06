@@ -97,6 +97,9 @@ export default function PlanTour() {
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted]   = useState(false)
   const [error, setError]           = useState('')
+  const [fieldErrors, setFieldErrors] = useState({})
+
+  const today = new Date().toISOString().split('T')[0]
 
   // ── Load data ──────────────────────────────────────────────────────────
   useEffect(() => {
@@ -139,6 +142,32 @@ export default function PlanTour() {
   const handleContactChange = (e) => {
     const { name, value } = e.target
     setContact(prev => ({ ...prev, [name]: value }))
+
+    // Live date validation
+    const newErrors = { ...fieldErrors }
+    if (name === 'preferred_start_date') {
+      if (value && value < today) {
+        newErrors.preferred_start_date = 'Start date cannot be in the past.'
+      } else {
+        delete newErrors.preferred_start_date
+      }
+      // Re-check end date against new start date
+      if (contact.preferred_end_date && value && contact.preferred_end_date < value) {
+        newErrors.preferred_end_date = 'End date cannot be before the start date.'
+      } else if (contact.preferred_end_date && contact.preferred_end_date >= today) {
+        delete newErrors.preferred_end_date
+      }
+    }
+    if (name === 'preferred_end_date') {
+      if (value && value < today) {
+        newErrors.preferred_end_date = 'End date cannot be in the past.'
+      } else if (value && contact.preferred_start_date && value < contact.preferred_start_date) {
+        newErrors.preferred_end_date = 'End date cannot be before the start date.'
+      } else {
+        delete newErrors.preferred_end_date
+      }
+    }
+    setFieldErrors(newErrors)
   }
 
   const selectedSiteObjects = useMemo(
@@ -194,6 +223,22 @@ export default function PlanTour() {
       if (!contact.customer_email.trim()) { setError('Email address is required.'); return false }
       if (!contact.customer_phone.trim()) { setError('Phone number is required.'); return false }
       if (!contact.preferred_start_date) { setError('Preferred start date is required.'); return false }
+
+      const errors = {}
+      if (contact.preferred_start_date && contact.preferred_start_date < today) {
+        errors.preferred_start_date = 'Start date cannot be in the past.'
+      }
+      if (contact.preferred_end_date && contact.preferred_end_date < today) {
+        errors.preferred_end_date = 'End date cannot be in the past.'
+      } else if (contact.preferred_end_date && contact.preferred_start_date && contact.preferred_end_date < contact.preferred_start_date) {
+        errors.preferred_end_date = 'End date cannot be before the start date.'
+      }
+      if (Object.keys(errors).length > 0) {
+        setFieldErrors(errors)
+        setError(Object.values(errors)[0])
+        return false
+      }
+      setFieldErrors({})
     }
     return true
   }
@@ -493,11 +538,17 @@ export default function PlanTour() {
                 <div className="pt__form-row">
                   <div className="pt__form-group">
                     <label className="pt__label" htmlFor="pt-start">Preferred Start Date *</label>
-                    <input id="pt-start" className="pt__input" type="date" name="preferred_start_date" value={contact.preferred_start_date} onChange={handleContactChange} />
+                    <input id="pt-start" className={`pt__input${fieldErrors.preferred_start_date ? ' pt__input--error' : ''}`} type="date" name="preferred_start_date" value={contact.preferred_start_date} onChange={handleContactChange} min={today} />
+                    {fieldErrors.preferred_start_date && (
+                      <span className="pt__field-error">{fieldErrors.preferred_start_date}</span>
+                    )}
                   </div>
                   <div className="pt__form-group">
                     <label className="pt__label" htmlFor="pt-end">End Date <span className="pt__optional">(optional)</span></label>
-                    <input id="pt-end" className="pt__input" type="date" name="preferred_end_date" value={contact.preferred_end_date} onChange={handleContactChange} />
+                    <input id="pt-end" className={`pt__input${fieldErrors.preferred_end_date ? ' pt__input--error' : ''}`} type="date" name="preferred_end_date" value={contact.preferred_end_date} onChange={handleContactChange} min={contact.preferred_start_date || today} />
+                    {fieldErrors.preferred_end_date && (
+                      <span className="pt__field-error">{fieldErrors.preferred_end_date}</span>
+                    )}
                   </div>
                 </div>
                 <div className="pt__form-group">

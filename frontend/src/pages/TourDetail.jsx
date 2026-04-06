@@ -102,6 +102,7 @@ export default function TourDetail() {
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted]   = useState(false)
   const [formError, setFormError]   = useState(null)
+  const [fieldErrors, setFieldErrors] = useState({})
 
   // ── Fetch tour ──────────────────────────────────────────────────────
   useEffect(() => {
@@ -121,17 +122,36 @@ export default function TourDetail() {
   }, [slug])
 
   // ── Form helpers ────────────────────────────────────────────────────
+  const today = new Date().toISOString().split('T')[0]
+
   const handleChange = (e) => {
     const { name, value, type } = e.target
-    setForm(prev => ({
-      ...prev,
-      [name]: type === 'number' ? Math.max(0, parseInt(value) || 0) : value,
-    }))
+    const newValue = type === 'number' ? Math.max(0, parseInt(value) || 0) : value
+    setForm(prev => ({ ...prev, [name]: newValue }))
+
+    // Live date validation
+    if (name === 'preferred_date' && value && value < today) {
+      setFieldErrors(prev => ({ ...prev, preferred_date: 'Preferred date cannot be in the past.' }))
+    } else if (name === 'preferred_date') {
+      setFieldErrors(prev => { const { preferred_date, ...rest } = prev; return rest })
+    }
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setFormError(null)
+
+    // Validate dates before submit
+    const errors = {}
+    if (form.preferred_date && form.preferred_date < today) {
+      errors.preferred_date = 'Preferred date cannot be in the past.'
+    }
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors)
+      return
+    }
+    setFieldErrors({})
+
     setSubmitting(true)
     try {
       await api.tripRequests.submit({
@@ -370,10 +390,15 @@ export default function TourDetail() {
                       <div className="td__form-group">
                         <label className="td__form-label">Preferred Date *</label>
                         <input
-                          className="td__form-input" type="date" name="preferred_date"
+                          className={`td__form-input${fieldErrors.preferred_date ? ' td__form-input--error' : ''}`}
+                          type="date" name="preferred_date"
                           value={form.preferred_date} onChange={handleChange}
+                          min={today}
                           required
                         />
+                        {fieldErrors.preferred_date && (
+                          <span className="td__form-field-error">{fieldErrors.preferred_date}</span>
+                        )}
                       </div>
 
                       {/* Traveller counts */}

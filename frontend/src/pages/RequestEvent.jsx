@@ -88,10 +88,20 @@ export default function RequestEvent() {
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted]   = useState(false)
   const [error, setError]           = useState('')
+  const [fieldErrors, setFieldErrors] = useState({})
+
+  const today = new Date().toISOString().split('T')[0]
 
   const handleChange = (e) => {
     const { name, value } = e.target
     setForm(prev => ({ ...prev, [name]: value }))
+
+    // Live date validation
+    if (name === 'preferred_date' && value && value < today) {
+      setFieldErrors(prev => ({ ...prev, preferred_date: 'Preferred date cannot be in the past.' }))
+    } else if (name === 'preferred_date') {
+      setFieldErrors(prev => { const { preferred_date, ...rest } = prev; return rest })
+    }
   }
 
   const toggleActivity = (activity) => {
@@ -110,6 +120,7 @@ export default function RequestEvent() {
     if (!form.customer_email.trim()) return 'Please enter your email.'
     if (!form.customer_phone.trim()) return 'Please enter your phone number.'
     if (form.expected_attendees < 1) return 'At least 1 attendee is required.'
+    if (form.preferred_date && form.preferred_date < today) return 'Preferred date cannot be in the past.'
     return ''
   }
 
@@ -117,6 +128,17 @@ export default function RequestEvent() {
     e.preventDefault()
     const err = validate()
     if (err) { setError(err); return }
+
+    // Check date field errors
+    const errors = {}
+    if (form.preferred_date && form.preferred_date < today) {
+      errors.preferred_date = 'Preferred date cannot be in the past.'
+    }
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors)
+      return
+    }
+    setFieldErrors({})
     setError('')
     setSubmitting(true)
     try {
@@ -265,7 +287,12 @@ export default function RequestEvent() {
                 <div className="re__field">
                   <label htmlFor="preferred_date">Preferred Date</label>
                   <input id="preferred_date" name="preferred_date" type="date"
-                    value={form.preferred_date} onChange={handleChange} />
+                    className={fieldErrors.preferred_date ? 're__input--error' : ''}
+                    value={form.preferred_date} onChange={handleChange}
+                    min={today} />
+                  {fieldErrors.preferred_date && (
+                    <span className="re__field-error">{fieldErrors.preferred_date}</span>
+                  )}
                 </div>
                 <div className="re__field">
                   <label htmlFor="location_preference">Preferred Location</label>

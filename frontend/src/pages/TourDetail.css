@@ -239,6 +239,16 @@
 .td__form-error {
   font-size: 0.75rem; color: #dc2626; margin-top: 0.25rem;
 }
+.td__form-input--error {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 3px rgba(220,38,38,0.12) !important;
+}
+.td__form-field-error {
+  display: block;
+  font-size: 0.75rem;
+  color: #dc2626;
+  margin-top: 0.25rem;
+}
 
 /* Price summary inside form — REMOVED (pricing discussed privately) */
 /* Discount note */
