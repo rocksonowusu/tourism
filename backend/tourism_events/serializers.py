@@ -1,3 +1,6 @@
+from datetime import date
+
+from django.utils import timezone
 from rest_framework import serializers
 from .models import (
     Event, TouristSite, EventMedia, TouristSiteMedia,
@@ -312,6 +315,11 @@ class TripRequestSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('At least 1 adult is required.')
         return value
 
+    def validate_preferred_date(self, value):
+        if value and value < date.today():
+            raise serializers.ValidationError('Preferred date cannot be in the past.')
+        return value
+
     def validate(self, attrs):
         # On create, ensure tour is active
         tour = attrs.get('tour')
@@ -387,11 +395,28 @@ class CustomTourRequestSerializer(serializers.ModelSerializer):
                 )
         return value
 
+    def validate_preferred_start_date(self, value):
+        if value and value < date.today():
+            raise serializers.ValidationError('Start date cannot be in the past.')
+        return value
+
+    def validate_preferred_end_date(self, value):
+        if value and value < date.today():
+            raise serializers.ValidationError('End date cannot be in the past.')
+        return value
+
     def validate(self, attrs):
         sites = attrs.get('sites', [])
         if self.instance is None and not sites:
             raise serializers.ValidationError(
                 {'site_ids': 'Please select at least one site to visit.'}
+            )
+
+        start = attrs.get('preferred_start_date')
+        end = attrs.get('preferred_end_date')
+        if start and end and end < start:
+            raise serializers.ValidationError(
+                {'preferred_end_date': 'End date cannot be before the start date.'}
             )
         return attrs
 
@@ -443,6 +468,11 @@ class EventRequestSerializer(serializers.ModelSerializer):
                 f'Invalid event type: {value}. '
                 f'Valid options: {", ".join(sorted(valid_keys))}'
             )
+        return value
+
+    def validate_preferred_date(self, value):
+        if value and value < date.today():
+            raise serializers.ValidationError('Preferred date cannot be in the past.')
         return value
 
 
@@ -598,6 +628,25 @@ class AccommodationRequestSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('At least 1 guest is required.')
         return value
 
+    def validate_check_in_date(self, value):
+        if value and value < date.today():
+            raise serializers.ValidationError('Check-in date cannot be in the past.')
+        return value
+
+    def validate_check_out_date(self, value):
+        if value and value < date.today():
+            raise serializers.ValidationError('Check-out date cannot be in the past.')
+        return value
+
+    def validate(self, attrs):
+        check_in = attrs.get('check_in_date')
+        check_out = attrs.get('check_out_date')
+        if check_in and check_out and check_out < check_in:
+            raise serializers.ValidationError(
+                {'check_out_date': 'Check-out date cannot be before the check-in date.'}
+            )
+        return attrs
+
 
 # ---------------------------------------------------------------------------
 # Vehicle media serializer  (Phase 6)
@@ -706,6 +755,25 @@ class CarRentalRequestSerializer(serializers.ModelSerializer):
             'created_at',
         )
         read_only_fields = ('id', 'vehicle_name', 'created_at')
+
+    def validate_pickup_date(self, value):
+        if value and value < date.today():
+            raise serializers.ValidationError('Pickup date cannot be in the past.')
+        return value
+
+    def validate_return_date(self, value):
+        if value and value < date.today():
+            raise serializers.ValidationError('Return date cannot be in the past.')
+        return value
+
+    def validate(self, attrs):
+        pickup = attrs.get('pickup_date')
+        ret = attrs.get('return_date')
+        if pickup and ret and ret < pickup:
+            raise serializers.ValidationError(
+                {'return_date': 'Return date cannot be before the pickup date.'}
+            )
+        return attrs
 
 
 # ============================================================================
