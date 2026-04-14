@@ -24,53 +24,47 @@ const FALLBACK_MOSAIC = [
 const SLIDE_DURATION = 5000
 const FADE_DURATION  = 900
 
-export default function Hero({ media = [] }) {
-  // Always use curated fallback images for bg slideshow and mosaic panel
-  // (uploaded media will only be used once proper per-section uploads are configured)
-  const slides = FALLBACK_SLIDES
-  const mosaic  = FALLBACK_MOSAIC
+export default function Hero({ heroSlides = [], heroMosaicImages = [] }) {
+  // Use API-provided images with fallbacks
+  const slides = heroSlides && heroSlides.length > 0 ? heroSlides : FALLBACK_SLIDES
+  const mosaic = heroMosaicImages && heroMosaicImages.length > 0 ? heroMosaicImages : FALLBACK_MOSAIC
 
   const [current,  setCurrent]  = useState(0)
-  const [next,     setNext]     = useState(null)
-  const [fading,   setFading]   = useState(false)
   const videoRefs  = useRef({})
   const timerRef   = useRef(null)
 
   useEffect(() => {
-    timerRef.current = setTimeout(advance, SLIDE_DURATION)
-    return () => clearTimeout(timerRef.current)
-  }, [current, slides.length])
-
-  function advance() {
-    const nextIdx = (current + 1) % slides.length
-    setNext(nextIdx); setFading(true)
-    setTimeout(() => { setCurrent(nextIdx); setNext(null); setFading(false) }, FADE_DURATION)
-  }
+    if (slides.length <= 1) return
+    timerRef.current = setInterval(() => {
+      setCurrent(prev => (prev + 1) % slides.length)
+    }, SLIDE_DURATION)
+    return () => clearInterval(timerRef.current)
+  }, [slides.length])
 
   function goTo(i) {
     if (i === current) return
-    clearTimeout(timerRef.current)
-    setNext(i); setFading(true)
-    setTimeout(() => { setCurrent(i); setNext(null); setFading(false) }, FADE_DURATION)
+    clearInterval(timerRef.current)
+    setCurrent(i)
+    // Restart timer after manual navigation
+    timerRef.current = setInterval(() => {
+      setCurrent(prev => (prev + 1) % slides.length)
+    }, SLIDE_DURATION)
   }
 
-  function renderSlide(slide, idx, role) {
-    const cls = [
-      'hero__slide',
-      role === 'active' ? 'hero__slide--active' : '',
-      role === 'next' && fading ? 'hero__slide--in' : '',
-    ].filter(Boolean).join(' ')
+  function renderSlide(slide, idx) {
+    const isActive = idx === current
+    const cls = `hero__slide ${isActive ? 'hero__slide--active' : ''}`
 
     if (slide.type === 'video') {
       return (
-        <video key={`${idx}-${role}`} className={cls}
+        <video key={idx} className={cls}
           src={slide.url} autoPlay muted loop playsInline
           ref={el => { if (el) videoRefs.current[idx] = el }}
         />
       )
     }
     return (
-      <img key={`${idx}-${role}`} className={cls}
+      <img key={idx} className={cls}
         src={slide.url} alt={`Ghana slide ${idx + 1}`}
         loading={idx === 0 ? 'eager' : 'lazy'}
       />
@@ -82,8 +76,7 @@ export default function Hero({ media = [] }) {
 
       {/* ── Full-bleed background slideshow ──────────────────────── */}
       <div className="hero__bg" aria-hidden="true">
-        {renderSlide(slides[current], current, 'active')}
-        {next !== null && renderSlide(slides[next], next, 'next')}
+        {slides.map((slide, idx) => renderSlide(slide, idx))}
         <div className="hero__overlay hero__overlay--gradient" />
         <div className="hero__overlay hero__overlay--vignette" />
       </div>
@@ -127,10 +120,9 @@ export default function Hero({ media = [] }) {
           </div>
         </div>
 
-        {/* Right: floating mosaic panel */}
-        <div className="hero__mosaic fade-in" style={{ animationDelay: '.2s' }} aria-hidden="true">
+        {/* Right: floating mosaic panel - COMMENTED OUT FOR TESTING */}
+        {/* <div className="hero__mosaic fade-in" style={{ animationDelay: '.2s' }} aria-hidden="true">
           <div className="hero__mosaic-grid">
-            {/* All 4 cells — static fixed images */}
             {mosaic.map((img, i) => (
               <div key={i} className={`hero__mosaic-cell hero__mosaic-cell--${i + 1}`}>
                 <img src={img.url} alt={img.alt} loading={i === 0 ? 'eager' : 'lazy'} />
@@ -138,10 +130,8 @@ export default function Hero({ media = [] }) {
             ))}
           </div>
 
-          {/* Gold accent ring */}
           <div className="hero__mosaic-ring" aria-hidden="true" />
 
-          {/* Floating badge */}
           <div className="hero__badge">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
@@ -151,7 +141,7 @@ export default function Hero({ media = [] }) {
               <span className="hero__badge-bot">Tours · Culture · Heritage</span>
             </div>
           </div>
-        </div>
+        </div> */}
 
       </div>
 

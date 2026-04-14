@@ -26,24 +26,13 @@
   height: 100%;
   object-fit: cover;
   opacity: 0;
-  transform: scale(1.06);
-  transition: none;
-  will-change: opacity, transform;
+  transition: opacity 1.4s ease;
+  will-change: opacity;
   display: block;
 }
 
 .hero__slide--active {
   opacity: 1;
-  transform: scale(1);
-  transition: opacity 0.9s ease, transform 6s ease-out;
-  z-index: 1;
-}
-
-.hero__slide--in {
-  opacity: 1;
-  transform: scale(1.03);
-  transition: opacity 0.9s ease, transform 6s ease-out;
-  z-index: 2;
 }
 
 /* ── Overlays ────────────────────────────────────────────────────────────── */

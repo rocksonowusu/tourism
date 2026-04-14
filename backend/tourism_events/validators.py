@@ -1,5 +1,6 @@
 import os
 from django.core.exceptions import ValidationError
+from .image_compression import compress_image, is_image_file
 
 
 # ---------------------------------------------------------------------------
@@ -37,8 +38,13 @@ ALLOWED_EXTENSIONS = ALLOWED_IMAGE_EXTENSIONS | ALLOWED_VIDEO_EXTENSIONS
 # Size limit
 # ---------------------------------------------------------------------------
 
+# Maximum upload size before compression (allow up to 50 MB to compress)
 MAX_FILE_SIZE_MB = 50
 MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024  # 50 MB
+
+# Maximum size after compression (images must be <= 4 MB)
+MAX_COMPRESSED_IMAGE_SIZE_MB = 4
+MAX_COMPRESSED_IMAGE_SIZE_BYTES = MAX_COMPRESSED_IMAGE_SIZE_MB * 1024 * 1024
 
 
 # ---------------------------------------------------------------------------
@@ -109,3 +115,55 @@ def detect_media_type(file) -> str:
         return 'image'
 
     return 'image'  # safe fallback
+
+
+# ---------------------------------------------------------------------------
+# Image Compression Function
+# ---------------------------------------------------------------------------
+
+def compress_image_file(file):
+    """
+    Compress an image file to ensure it does not exceed 4 MB.
+
+    This function:
+    1. Checks if the file is an image based on content type
+    2. If it's an image, compresses it to 4 MB or less
+    3. Returns the compressed file (or original if already compressed)
+    4. Raises ValidationError if compression fails
+
+    Args:
+        file: Django UploadedFile object
+
+    Returns:
+        Django UploadedFile: Compressed image file (if image) or original file (if video)
+
+    Raises:
+        ValidationError: If image cannot be compressed to 4 MB
+    """
+    # Skip if no file
+    if not file:
+        return file
+    
+    # Determine if this is an image or video based on content type
+    media_type = detect_media_type(file)
+
+    # Only compress images; videos are handled by external validation
+    if media_type == 'image':
+        # Reset file pointer before compression
+        if hasattr(file, 'seek'):
+            try:
+                file.seek(0)
+            except Exception:
+                pass
+
+        try:
+            compressed = compress_image(file, target_size_bytes=MAX_COMPRESSED_IMAGE_SIZE_BYTES)
+            return compressed
+        except ValidationError:
+            # Re-raise compression errors
+            raise
+        except Exception as e:
+            raise ValidationError(f'Image compression failed: {str(e)}')
+
+    # For videos, return as-is (they have separate size validation)
+    return file

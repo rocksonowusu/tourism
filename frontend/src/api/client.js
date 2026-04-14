@@ -398,6 +398,32 @@ class TourismAPIClient {
     delete:      (id)       => this.delete(`/api/notifications/${id}/`),
   }
 
+  // ── Public Site Images endpoints ─────────────────────────────────────
+
+  heroBackground = {
+    list:   (params)     => this.get('/api/hero-backgrounds/', params),
+    detail: (id)         => this.get(`/api/hero-backgrounds/${id}/`),
+    create: (data)       => this.post('/api/hero-backgrounds/', data),
+    update: (id, data)   => this.patch(`/api/hero-backgrounds/${id}/`, data),
+    delete: (id)         => this.delete(`/api/hero-backgrounds/${id}/`),
+  }
+
+  heroMosaic = {
+    list:   (params)     => this.get('/api/hero-mosaic/', params),
+    detail: (id)         => this.get(`/api/hero-mosaic/${id}/`),
+    create: (data)       => this.post('/api/hero-mosaic/', data),
+    update: (id, data)   => this.patch(`/api/hero-mosaic/${id}/`, data),
+    delete: (id)         => this.delete(`/api/hero-mosaic/${id}/`),
+  }
+
+  eventsSectionBackground = {
+    list:   (params)     => this.get('/api/events-section-backgrounds/', params),
+    detail: (id)         => this.get(`/api/events-section-backgrounds/${id}/`),
+    create: (data)       => this.post('/api/events-section-backgrounds/', data),
+    update: (id, data)   => this.patch(`/api/events-section-backgrounds/${id}/`, data),
+    delete: (id)         => this.delete(`/api/events-section-backgrounds/${id}/`),
+  }
+
   // ── Health ───────────────────────────────────────────────────────────
 
   health = () => this.get('/health/')

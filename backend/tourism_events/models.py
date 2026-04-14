@@ -1,3 +1,4 @@
+import logging
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
@@ -7,7 +8,10 @@ from .validators import (
     validate_media_file_type,
     validate_media_file_size,
     detect_media_type,
+    compress_image_file,
 )
+
+logger = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
@@ -265,8 +269,30 @@ class BaseMedia(models.Model):
 
     def save(self, *args, **kwargs):
         raw = self.file
+        
+        # Detect media type before compression
         if hasattr(raw, 'content_type') or hasattr(raw, 'name'):
             self.media_type = detect_media_type(raw)
+        
+        # Compress image files before saving to Cloudinary
+        if self.file and (self.media_type == MediaType.IMAGE or not self.media_type):
+            try:
+                # Reset file pointer and compress
+                if hasattr(self.file, 'seek'):
+                    self.file.seek(0)
+                original_size = getattr(self.file, 'size', 0)
+                self.file = compress_image_file(self.file)
+                compressed_size = getattr(self.file, 'size', 0)
+                if original_size > 0:
+                    logger.info(
+                        f"Image compressed: {original_size / (1024*1024):.2f}MB → "
+                        f"{compressed_size / (1024*1024):.2f}MB "
+                        f"({100 * (1 - compressed_size/original_size):.1f}% reduction)"
+                    )
+            except Exception as e:
+                # Log compression error but don't fail - let validators handle it
+                logger.warning(f"Image compression failed: {str(e)}")
+        
         super().save(*args, **kwargs)
 
     @property
@@ -1116,6 +1142,161 @@ class SiteSettings(models.Model):
         """Return the singleton row, creating one with defaults if needed."""
         obj, _ = cls.objects.get_or_create(pk=1)
         return obj
+
+
+# ============================================================================
+# HERO SECTION IMAGES — Public Site Hero Background Slideshow
+# ============================================================================
+
+class HeroBackground(models.Model):
+    """
+    Stores images for the hero section background slideshow (full-bleed).
+    Admin can upload multiple images that cycle automatically.
+    """
+
+    title       = models.CharField(max_length=255, blank=True, help_text='Image description/title')
+    image       = CloudinaryField(
+                      resource_type='auto',
+                      folder='tourism/hero-backgrounds',
+                      validators=[validate_media_file_type, validate_media_file_size],
+                      help_text='Image for hero background slideshow'
+                  )
+    order       = models.PositiveIntegerField(
+                      default=0,
+                      help_text='Display order (0-indexed). Lower numbers appear first.'
+                  )
+    is_active   = models.BooleanField(default=True, help_text='Disable to hide from rotation')
+    created_at  = models.DateTimeField(auto_now_add=True)
+    updated_at  = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Hero Background Image'
+        verbose_name_plural = 'Hero Background Images'
+        ordering = ['order', 'created_at']
+
+    def __str__(self):
+        return f"Hero BG #{self.order + 1}" if not self.title else self.title
+
+    def save(self, *args, **kwargs):
+        # Compress image before saving
+        if self.image and not isinstance(self.image, str):
+            try:
+                if hasattr(self.image, 'seek'):
+                    self.image.seek(0)
+                self.image = compress_image_file(self.image)
+            except Exception as e:
+                logger.warning(f"Image compression failed in HeroBackground: {str(e)}")
+        super().save(*args, **kwargs)
+
+    @property
+    def image_url(self) -> str | None:
+        return self.image.url if self.image else None
+
+
+# ============================================================================
+# HERO MOSAIC IMAGES — Right panel in hero section
+# ============================================================================
+
+class HeroMosaic(models.Model):
+    """
+    Stores images for the hero mosaic panel (right side).
+    Supports up to 3 images that are arranged in a grid pattern.
+    """
+
+    POSITION_CHOICES = [
+        ('cell1', 'Cell 1 - Left column, full height (tall)'),
+        ('cell2', 'Cell 2 - Top right'),
+        ('cell3', 'Cell 3 - Bottom right (tall)'),
+    ]
+
+    position    = models.CharField(
+                      max_length=10,
+                      choices=POSITION_CHOICES,
+                      help_text='Grid position for this image'
+                  )
+    image       = CloudinaryField(
+                      resource_type='auto',
+                      folder='tourism/hero-mosaic',
+                      validators=[validate_media_file_type, validate_media_file_size],
+                      help_text='Image for hero mosaic panel'
+                  )
+    alt_text    = models.CharField(max_length=255, blank=True, help_text='Alt text for accessibility')
+    is_active   = models.BooleanField(default=True)
+    created_at  = models.DateTimeField(auto_now_add=True)
+    updated_at  = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Hero Mosaic Image'
+        verbose_name_plural = 'Hero Mosaic Images'
+        unique_together = ['position']  # Only one image per cell
+        ordering = ['position']
+
+    def __str__(self):
+        return f"Mosaic - {self.get_position_display()}"
+
+    def save(self, *args, **kwargs):
+        # Compress image before saving
+        if self.image and not isinstance(self.image, str):
+            try:
+                if hasattr(self.image, 'seek'):
+                    self.image.seek(0)
+                self.image = compress_image_file(self.image)
+            except Exception as e:
+                logger.warning(f"Image compression failed in HeroMosaic: {str(e)}")
+        super().save(*args, **kwargs)
+
+    @property
+    def image_url(self) -> str | None:
+        return self.image.url if self.image else None
+
+
+# ============================================================================
+# EVENTS SECTION BACKGROUND — Cycling backgrounds for events section
+# ============================================================================
+
+class EventsSectionBackground(models.Model):
+    """
+    Stores images that cycle in the Events section background.
+    Admin can upload multiple images that rotate automatically.
+    """
+
+    title       = models.CharField(max_length=255, blank=True, help_text='Image description/title')
+    image       = CloudinaryField(
+                      resource_type='auto',
+                      folder='tourism/events-section-bg',
+                      validators=[validate_media_file_type, validate_media_file_size],
+                      help_text='Image for events section background cycling'
+                  )
+    order       = models.PositiveIntegerField(
+                      default=0,
+                      help_text='Display order (0-indexed). Lower numbers appear first.'
+                  )
+    is_active   = models.BooleanField(default=True, help_text='Disable to hide from rotation')
+    created_at  = models.DateTimeField(auto_now_add=True)
+    updated_at  = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Events Section Background Image'
+        verbose_name_plural = 'Events Section Background Images'
+        ordering = ['order', 'created_at']
+
+    def __str__(self):
+        return f"Events BG #{self.order + 1}" if not self.title else self.title
+
+    def save(self, *args, **kwargs):
+        # Compress image before saving
+        if self.image and not isinstance(self.image, str):
+            try:
+                if hasattr(self.image, 'seek'):
+                    self.image.seek(0)
+                self.image = compress_image_file(self.image)
+            except Exception as e:
+                logger.warning(f"Image compression failed in EventsSectionBackground: {str(e)}")
+        super().save(*args, **kwargs)
+
+    @property
+    def image_url(self) -> str | None:
+        return self.image.url if self.image else None
 
 
 # ============================================================================

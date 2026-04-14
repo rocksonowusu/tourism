@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import './EventsSection.css'
 import PaintStrokes from './PaintStrokes'
@@ -96,18 +96,12 @@ const EXPERIENCE_TYPES = [
 const FALLBACK_BG = 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1600&q=75'
 const CYCLE_INTERVAL = 6000 // 6 seconds per image
 
-export default function EventsSection({ heroMedia = [] }) {
+export default function EventsSection({ eventBgImages = [] }) {
   const headerRef      = useScrollReveal({ threshold: 0.1 })
   const showcaseRef    = useScrollReveal({ threshold: 0.06, stagger: true })
 
-  // ── Build image list from all uploaded media (site, event, tour) ─────
-  const bgImages = useMemo(() => {
-    const urls = heroMedia
-      .filter(m => m.type === 'image')
-      .map(m => m.url)
-      .filter(Boolean)
-    return urls.length > 0 ? urls : [FALLBACK_BG]
-  }, [heroMedia])
+  // ── Use API-provided images with fallback ─────────────────────────────
+  const bgImages = eventBgImages && eventBgImages.length > 0 ? eventBgImages : [FALLBACK_BG]
 
   // ── Cycle through images ─────────────────────────────────────────────
   const [activeIdx, setActiveIdx] = useState(0)

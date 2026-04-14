@@ -48,6 +48,7 @@ import CommunityProjectsAdmin from './admin/pages/CommunityProjects'
 import ReviewsAdmin            from './admin/pages/Reviews'
 import SettingsAdmin           from './admin/pages/Settings'
 import NotificationsAdmin      from './admin/pages/Notifications'
+import SiteImages              from './admin/pages/SiteImages'
 
 import PlanTour from './pages/PlanTour'
 import RequestEvent from './pages/RequestEvent'
@@ -67,14 +68,18 @@ function GlobalWhatsApp() {
 function PublicSite() {
   const [tours, setTours] = useState([])
   const [events, setEvents] = useState([])
-  const [heroMedia, setHeroMedia] = useState([])
+  const [heroSlides, setHeroSlides] = useState([])
+  const [heroMosaicImages, setHeroMosaicImages] = useState([])
+  const [eventBgImages, setEventBgImages] = useState([])
   const [toursLoading, setToursLoading] = useState(false)
   const [eventsLoading, setEventsLoading] = useState(false)
 
   useEffect(() => {
     fetchTours()
     fetchEvents()
-    fetchHeroMedia()
+    fetchHeroImages()
+    fetchHeroMosaicImages()
+    fetchEventBgImages()
   }, [])
 
   const fetchTours = async () => {
@@ -108,33 +113,67 @@ function PublicSite() {
     }
   }
 
-  const fetchHeroMedia = async () => {
+  const fetchHeroImages = async () => {
     try {
-      // Gather all media for the hero background
-      const [siteRes, evRes, tourRes] = await Promise.allSettled([
-        apiClient.siteMedia.list({ page_size: 50 }),
-        apiClient.eventMedia.list({ page_size: 50 }),
-        apiClient.tourMedia.list({ page_size: 50 }),
-      ])
-      const siteItems  = (siteRes.value?.results  ?? siteRes.value  ?? [])
-      const eventItems = (evRes.value?.results    ?? evRes.value    ?? [])
-      const tourItems  = (tourRes.value?.results  ?? tourRes.value  ?? [])
-      const combined   = [...tourItems, ...siteItems, ...eventItems]
-        .filter(m => m.file_url)
-        .map(m => ({ url: m.file_url, type: m.media_type ?? 'image' }))
-      setHeroMedia(combined)
-    } catch {
-      setHeroMedia([])
+      const data = await apiClient.heroBackground.list({ page_size: 50 })
+      const images = data?.results ?? data ?? []
+      console.log('Hero Background API Response:', { data, images })
+      // Convert to slideshow format: { url, type }
+      const slides = images.map(img => ({
+        url: img.image_url,
+        type: 'image'
+      }))
+      console.log('Converted Hero Slides:', slides)
+      setHeroSlides(slides)
+    } catch (err) {
+      console.error('Error fetching hero images:', err)
+      setHeroSlides([])
+    }
+  }
+
+  const fetchHeroMosaicImages = async () => {
+    try {
+      const data = await apiClient.heroMosaic.list({ page_size: 50 })
+      const images = data?.results ?? data ?? []
+      // Sort by position and convert to mosaic format: { url, alt }
+      const mosaic = images
+        .sort((a, b) => {
+          const posMap = { 'cell1': 1, 'cell2': 2, 'cell3': 3 }
+          return (posMap[a.position] || 0) - (posMap[b.position] || 0)
+        })
+        .map(img => ({
+          url: img.image_url,
+          alt: img.alt_text || 'Ghana experience'
+        }))
+      console.log('Hero Mosaic Images:', mosaic)
+      setHeroMosaicImages(mosaic)
+    } catch (err) {
+      console.error('Error fetching hero mosaic images:', err)
+      setHeroMosaicImages([])
+    }
+  }
+
+  const fetchEventBgImages = async () => {
+    try {
+      const data = await apiClient.eventsSectionBackground.list({ page_size: 50 })
+      const images = data?.results ?? data ?? []
+      // Extract image URLs for cycling background
+      const urls = images.map(img => img.image_url)
+      console.log('Event Background Images:', urls)
+      setEventBgImages(urls)
+    } catch (err) {
+      console.error('Error fetching event background images:', err)
+      setEventBgImages([])
     }
   }
 
   return (
     <div className="app">
       <Header />
-      <Hero media={heroMedia} />
+      <Hero heroSlides={heroSlides} heroMosaicImages={heroMosaicImages} />
       <Features />
       <ToursSection tours={tours} loading={toursLoading} />
-      <EventsSection heroMedia={heroMedia} />
+      <EventsSection eventBgImages={eventBgImages} />
       <CommunityImpact />
       <ReviewsSection />
       <Newsletter />
@@ -187,6 +226,11 @@ export default function App() {
             <Route path="apartments" element={<Apartments />} />
             <Route path="vehicles"   element={<Vehicles />} />
             <Route path="service-requests" element={<ServiceRequests />} />
+            <Route path="community-projects" element={<CommunityProjectsAdmin />} />
+            <Route path="reviews"            element={<ReviewsAdmin />} />
+            <Route path="site-images"        element={<SiteImages />} />
+            <Route path="settings"           element={<SettingsAdmin />} />
+            <Route path="notifications"      element={<NotificationsAdmin />} />
             <Route path="community-projects" element={<CommunityProjectsAdmin />} />
             <Route path="reviews"            element={<ReviewsAdmin />} />
             <Route path="settings"           element={<SettingsAdmin />} />

@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .models import Event, TouristSite, EventMedia, TouristSiteMedia, Tour, TourMedia, TripRequest, CustomTourRequest, EventRequest, EventBooking, Apartment, ApartmentMedia, AccommodationRequest, Vehicle, VehicleMedia, CarRentalRequest, CommunityProject, CommunityProjectMedia, Review, SiteSettings, Notification
+from .models import Event, TouristSite, EventMedia, TouristSiteMedia, Tour, TourMedia, TripRequest, CustomTourRequest, EventRequest, EventBooking, Apartment, ApartmentMedia, AccommodationRequest, Vehicle, VehicleMedia, CarRentalRequest, CommunityProject, CommunityProjectMedia, Review, SiteSettings, Notification, HeroBackground, HeroMosaic, EventsSectionBackground
 from .serializers import (
     EventSerializer,
     EventListSerializer,
@@ -35,6 +35,9 @@ from .serializers import (
     ReviewSerializer,
     SiteSettingsSerializer,
     NotificationSerializer,
+    HeroBackgroundSerializer,
+    HeroMosaicSerializer,
+    EventsSectionBackgroundSerializer,
 )
 from .filters import (
     EventFilter, TouristSiteFilter, EventMediaFilter, TouristSiteMediaFilter,
@@ -46,15 +49,7 @@ from .filters import (
     ReviewFilter,
 )
 from .emails import send_trip_request_emails, send_custom_tour_request_emails, send_event_request_emails, send_event_booking_emails
-
-
-# ---------------------------------------------------------------------------
-# Custom pagination (optional per-view override)
-# ---------------------------------------------------------------------------
-
-class StandardPagination:
-    """Applied globally via settings.DEFAULT_PAGINATION_CLASS; referenced here for clarity."""
-    page_size = 10
+from tourism_backend.pagination import StandardPagination
 
 
 # ---------------------------------------------------------------------------
@@ -1419,3 +1414,63 @@ class NotificationViewSet(viewsets.ModelViewSet):
     def mark_all_read(self, request):
         updated = Notification.objects.filter(is_read=False).update(is_read=True)
         return Response({'updated': updated})
+
+
+class HeroBackgroundViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for hero section background images.
+    - Public (unauthenticated): Read-only access to active images
+    - Authenticated admins: Full CRUD access, see all images
+    """
+    serializer_class = HeroBackgroundSerializer
+    pagination_class = StandardPagination
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+
+    def get_queryset(self):
+        """For public (unauthenticated GET), filter to active only. For admin (authenticated), show all."""
+        if self.request.user and self.request.user.is_authenticated:
+            # Authenticated users (admins) see all images
+            return HeroBackground.objects.all().order_by('order')
+        # Public (unauthenticated) only sees active images
+        return HeroBackground.objects.filter(is_active=True).order_by('order')
+
+
+class HeroMosaicViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for hero section mosaic panel images.
+    - Public (unauthenticated): Read-only access to active images
+    - Authenticated admins: Full CRUD access, see all images
+    """
+    serializer_class = HeroMosaicSerializer
+    pagination_class = StandardPagination
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+
+    def get_queryset(self):
+        """For public (unauthenticated GET), filter to active only. For admin (authenticated), show all."""
+        if self.request.user and self.request.user.is_authenticated:
+            # Authenticated users (admins) see all images
+            return HeroMosaic.objects.all().order_by('position')
+        # Public (unauthenticated) only sees active images
+        return HeroMosaic.objects.filter(is_active=True).order_by('position')
+
+
+class EventsSectionBackgroundViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for events section background cycling images.
+    - Public (unauthenticated): Read-only access to active images
+    - Authenticated admins: Full CRUD access, see all images
+    """
+    serializer_class = EventsSectionBackgroundSerializer
+    pagination_class = StandardPagination
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+
+    def get_queryset(self):
+        """For public (unauthenticated GET), filter to active only. For admin (authenticated), show all."""
+        if self.request.user and self.request.user.is_authenticated:
+            # Authenticated users (admins) see all images
+            return EventsSectionBackground.objects.all().order_by('order')
+        # Public (unauthenticated) only sees active images
+        return EventsSectionBackground.objects.filter(is_active=True).order_by('order')

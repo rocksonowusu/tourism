@@ -13,7 +13,9 @@ from .models import (
     Review,
     SiteSettings,
     Notification,
+    HeroBackground, HeroMosaic, EventsSectionBackground,
 )
+from .validators import compress_image_file
 
 
 # ---------------------------------------------------------------------------
@@ -35,6 +37,13 @@ class EventMediaSerializer(serializers.ModelSerializer):
     def get_file_url(self, obj):
         return obj.file_url
 
+    def validate_file(self, file):
+        """
+        Compress image files to ensure they don't exceed 4 MB before saving.
+        """
+        compressed = compress_image_file(file)
+        return compressed
+
 
 class TouristSiteMediaSerializer(serializers.ModelSerializer):
     file_url   = serializers.SerializerMethodField()
@@ -50,6 +59,13 @@ class TouristSiteMediaSerializer(serializers.ModelSerializer):
 
     def get_file_url(self, obj):
         return obj.file_url
+
+    def validate_file(self, file):
+        """
+        Compress image files to ensure they don't exceed 4 MB before saving.
+        """
+        compressed = compress_image_file(file)
+        return compressed
 
 
 # ---------------------------------------------------------------------------
@@ -215,6 +231,13 @@ class TourMediaSerializer(serializers.ModelSerializer):
 
     def get_file_url(self, obj):
         return obj.file_url
+
+    def validate_file(self, file):
+        """
+        Compress image files to ensure they don't exceed 4 MB before saving.
+        """
+        compressed = compress_image_file(file)
+        return compressed
 
 
 # ---------------------------------------------------------------------------
@@ -529,6 +552,13 @@ class ApartmentMediaSerializer(serializers.ModelSerializer):
     def get_file_url(self, obj):
         return obj.file_url
 
+    def validate_file(self, file):
+        """
+        Compress image files to ensure they don't exceed 4 MB before saving.
+        """
+        compressed = compress_image_file(file)
+        return compressed
+
 
 # ---------------------------------------------------------------------------
 # Apartment serializers  (Phase 3)
@@ -667,6 +697,13 @@ class VehicleMediaSerializer(serializers.ModelSerializer):
     def get_file_url(self, obj):
         return obj.file_url
 
+    def validate_file(self, file):
+        """
+        Compress image files to ensure they don't exceed 4 MB before saving.
+        """
+        compressed = compress_image_file(file)
+        return compressed
+
 
 # ---------------------------------------------------------------------------
 # Vehicle serializers  (Phase 6)
@@ -795,6 +832,13 @@ class CommunityProjectMediaSerializer(serializers.ModelSerializer):
     def get_file_url(self, obj):
         return obj.file_url
 
+    def validate_file(self, file):
+        """
+        Compress image files to ensure they don't exceed 4 MB before saving.
+        """
+        compressed = compress_image_file(file)
+        return compressed
+
 
 class CommunityProjectSerializer(serializers.ModelSerializer):
     """Full detail serializer with nested media."""
@@ -898,3 +942,70 @@ class NotificationSerializer(serializers.ModelSerializer):
             'created_at',
         )
         read_only_fields = ('id', 'notification_type', 'title', 'message', 'link', 'created_at')
+
+
+# ============================================================================
+# PUBLIC SITE IMAGES — Hero, Mosaic, Events Section Background
+# ============================================================================
+
+class HeroBackgroundSerializer(serializers.ModelSerializer):
+    """Serializer for hero section background slideshow images."""
+
+    image_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = HeroBackground
+        fields = ('id', 'title', 'image', 'image_url', 'order', 'is_active', 'created_at')
+        read_only_fields = ('id', 'image_url', 'created_at')
+
+    def get_image_url(self, obj):
+        return obj.image_url
+
+
+class HeroMosaicSerializer(serializers.ModelSerializer):
+    """Serializer for hero mosaic panel images."""
+
+    image_url = serializers.SerializerMethodField()
+    position_label = serializers.SerializerMethodField()
+
+    class Meta:
+        model = HeroMosaic
+        fields = ('id', 'position', 'position_label', 'image', 'image_url', 'alt_text', 'is_active', 'created_at')
+        read_only_fields = ('id', 'image_url', 'position_label', 'created_at')
+
+    def get_image_url(self, obj):
+        return obj.image_url
+
+    def get_position_label(self, obj):
+        return dict(obj._meta.get_field('position').choices).get(obj.position, obj.position)
+    
+    def validate_position(self, value):
+        """Allow the same position for the current instance during updates."""
+        # Get the current instance if updating
+        instance = self.instance
+        
+        # Check if another object has this position
+        queryset = HeroMosaic.objects.filter(position=value)
+        
+        # Exclude the current instance if updating
+        if instance:
+            queryset = queryset.exclude(id=instance.id)
+        
+        if queryset.exists():
+            raise serializers.ValidationError("This position is already taken.")
+        
+        return value
+
+
+class EventsSectionBackgroundSerializer(serializers.ModelSerializer):
+    """Serializer for events section background cycling images."""
+
+    image_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = EventsSectionBackground
+        fields = ('id', 'title', 'image', 'image_url', 'order', 'is_active', 'created_at')
+        read_only_fields = ('id', 'image_url', 'created_at')
+
+    def get_image_url(self, obj):
+        return obj.image_url

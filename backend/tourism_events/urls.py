@@ -22,6 +22,9 @@ from .views import (
     ReviewViewSet,
     SiteSettingsViewSet,
     NotificationViewSet,
+    HeroBackgroundViewSet,
+    HeroMosaicViewSet,
+    EventsSectionBackgroundViewSet,
 )
 
 router = DefaultRouter()
@@ -45,6 +48,9 @@ router.register(r'community-projects', CommunityProjectViewSet, basename='commun
 router.register(r'community-project-media', CommunityProjectMediaViewSet, basename='communityprojectmedia')
 router.register(r'reviews', ReviewViewSet, basename='review')
 router.register(r'notifications', NotificationViewSet, basename='notification')
+router.register(r'hero-backgrounds', HeroBackgroundViewSet, basename='herobackground')
+router.register(r'hero-mosaic', HeroMosaicViewSet, basename='heromosaic')
+router.register(r'events-section-backgrounds', EventsSectionBackgroundViewSet, basename='eventssectionbackground')
 
 # Singleton view for site settings
 site_settings_detail = SiteSettingsViewSet.as_view({
