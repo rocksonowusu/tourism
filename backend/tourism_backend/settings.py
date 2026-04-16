@@ -17,7 +17,9 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 
-load_dotenv()
+#project_home = 'home/GhanaExperience/tourism/backend'
+#load_dotenv(os.path.join(project_home, '.env'))  # Load .env from project root
+load_dotenv() #gotta remove this
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,6 +39,7 @@ ALLOWED_HOSTS = [
     'tourism-j3nz.onrender.com',
     'localhost',
     '127.0.0.1',
+    #'GhanaExperience.pythonanywhere.com',
 ]
 
 
