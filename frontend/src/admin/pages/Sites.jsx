@@ -101,6 +101,8 @@ export default function Sites() {
   const [mediaFiles,      setMediaFiles]      = useState([])   // File objects to upload
   const [existingMedia,   setExistingMedia]    = useState([])   // already uploaded media
   const [mediaUploading,  setMediaUploading]   = useState(false)
+  const [uploadProgress,  setUploadProgress]   = useState(0)
+  const [uploadMessage,   setUploadMessage]    = useState('')
 
   // ── Data ──────────────────────────────────────────────────────────────
   const load = useCallback(async () => {
@@ -194,10 +196,35 @@ export default function Sites() {
       // Upload new media files if any
       if (mediaFiles.length > 0 && siteId) {
         setMediaUploading(true)
-        const fd = new FormData()
-        mediaFiles.forEach(f => fd.append('file', f))
+        setUploadProgress(0)
+        setUploadMessage(`Uploading ${mediaFiles.length} file${mediaFiles.length > 1 ? 's' : ''}...`)
+        let successCount = 0
+        let failCount = 0
         try {
-          await api.sites.upload(siteId, fd)
+          // Upload files one by one with progress
+          for (let i = 0; i < mediaFiles.length; i++) {
+            const file = mediaFiles[i]
+            const fd = new FormData()
+            fd.append('file', file)
+            try {
+              await api.sites.upload(siteId, fd)
+              successCount++
+              const progress = Math.round(((i + 1) / mediaFiles.length) * 100)
+              setUploadProgress(progress)
+              setUploadMessage(`Uploaded ${successCount} of ${mediaFiles.length} file${mediaFiles.length > 1 ? 's' : ''}...`)
+            } catch (err) {
+              failCount++
+            }
+          }
+          // Show result
+          if (successCount > 0) {
+            const msg = failCount > 0
+              ? `${successCount} file${successCount > 1 ? 's' : ''} uploaded, ${failCount} failed`
+              : `${successCount} file${successCount > 1 ? 's' : ''} uploaded successfully`
+            addToast({ message: msg, type: failCount > 0 ? 'warning' : 'success' })
+          } else {
+            addToast({ message: 'Media upload failed', type: 'warning' })
+          }
         } catch (uploadErr) {
           addToast({
             message: uploadErr?.data?.detail ?? `Site saved but media upload failed: ${uploadErr?.message}`,
@@ -205,6 +232,8 @@ export default function Sites() {
           })
         }
         setMediaUploading(false)
+        setUploadProgress(0)
+        setUploadMessage('')
       }
 
       addToast({ message: modal === 'create' ? 'Site created.' : 'Site updated.', type: 'success' })
@@ -374,6 +403,17 @@ export default function Sites() {
             <span className={s.mediaDividerText}>Media ({existingMedia.length + mediaFiles.length} / {MAX_MEDIA})</span>
           </div>
 
+          {/* Upload progress indicator */}
+          {mediaUploading && uploadProgress > 0 && (
+            <div className={s.uploadProgressCard}>
+              <div className={s.progressBar}>
+                <div className={s.progressFill} style={{ width: `${uploadProgress}%` }}></div>
+              </div>
+              <p className={s.uploadStatus}>{uploadMessage}</p>
+              <p className={s.uploadPercent}>{uploadProgress}%</p>
+            </div>
+          )}
+
           {/* Existing media thumbnails (edit mode) */}
           {existingMedia.length > 0 && (
             <div className={s.previewGrid}>
@@ -387,6 +427,7 @@ export default function Sites() {
                     type="button"
                     className={s.previewRemove}
                     onClick={() => deleteExistingMedia(m.id)}
+                    disabled={mediaUploading}
                     title="Delete media"
                     aria-label="Delete media"
                   >
@@ -411,6 +452,7 @@ export default function Sites() {
                     type="button"
                     className={s.previewRemove}
                     onClick={() => removeNewFile(idx)}
+                    disabled={mediaUploading}
                     title="Remove file"
                     aria-label={`Remove ${file.name}`}
                   >
@@ -422,7 +464,7 @@ export default function Sites() {
           )}
 
           {/* Drop zone */}
-          {availableSlots - mediaFiles.length > 0 && (
+          {availableSlots - mediaFiles.length > 0 && !mediaUploading && (
             <div className={s.fileWrap}>
               <input
                 type="file"

@@ -97,6 +97,8 @@ export default function CommunityProjects() {
   const [showMedia, setShowMedia]     = useState(null)
   const [mediaFiles, setMediaFiles]   = useState([])
   const [uploading, setUploading]     = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [uploadMessage, setUploadMessage] = useState('')
 
   const toast = useToast()
 
@@ -174,16 +176,48 @@ export default function CommunityProjects() {
     const files = Array.from(e.target.files)
     if (!files.length) return
     setUploading(true)
+    setUploadProgress(0)
+    setUploadMessage(`Starting upload of ${files.length} file${files.length > 1 ? 's' : ''}...`)
+    let successCount = 0
+    let failCount = 0
     try {
-      const form = new FormData()
-      files.forEach(f => form.append('file', f))
-      await api.communityProjects.upload(showMedia.id, form)
-      toast.success('Media uploaded')
+      // Upload files one by one with progress updates
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i]
+        const form = new FormData()
+        form.append('file', file)
+        try {
+          await api.communityProjects.upload(showMedia.id, form)
+          successCount++
+          const progress = Math.round(((i + 1) / files.length) * 100)
+          setUploadProgress(progress)
+          setUploadMessage(`Uploaded ${successCount} of ${files.length} file${files.length > 1 ? 's' : ''}...`)
+        } catch (err) {
+          failCount++
+          setUploadMessage(`Uploaded ${successCount}/${files.length} • ${failCount} failed`)
+        }
+      }
+      // Refresh media list
       const res = await api.communityProjects.media(showMedia.id)
       setMediaFiles(res)
       load()
-    } catch { toast.error('Upload failed') }
-    finally { setUploading(false) }
+      // Show final toast
+      if (successCount > 0) {
+        const msg = failCount > 0 
+          ? `${successCount} file${successCount > 1 ? 's' : ''} uploaded, ${failCount} failed`
+          : `${successCount} file${successCount > 1 ? 's' : ''} uploaded successfully`
+        toast.success(msg)
+      } else {
+        toast.error('Upload failed')
+      }
+    } catch (err) {
+      toast.error('Upload failed: ' + (err?.message ?? 'Unknown error'))
+    }
+    finally {
+      setUploading(false)
+      setUploadProgress(0)
+      setUploadMessage('')
+    }
   }
   async function deleteMedia(id) {
     try {
@@ -358,16 +392,34 @@ export default function CommunityProjects() {
               ) : (
                 <img src={m.file_url || m.file} alt={m.caption} className={s.mediaThumb} />
               )}
-              <button className={s.mediaDelete} onClick={() => deleteMedia(m.id)}><IconX /></button>
+              <button className={s.mediaDelete} onClick={() => deleteMedia(m.id)} disabled={uploading}><IconX /></button>
             </div>
           ))}
         </div>
         {mediaFiles.length < MAX_MEDIA && (
           <div className={s.uploadArea}>
-            <label className={s.uploadLabel}>
-              <IconUpload /> {uploading ? 'Uploading…' : 'Upload Media'}
-              <input type="file" multiple accept="image/*,video/*" onChange={handleUpload} hidden disabled={uploading} />
-            </label>
+            {uploading ? (
+              <div className={s.uploadProgress}>
+                <div className={s.progressBar}>
+                  <div className={s.progressFill} style={{ width: `${uploadProgress}%` }}></div>
+                </div>
+                <p className={s.uploadStatus}>{uploadMessage}</p>
+                <p className={s.uploadPercent}>{uploadProgress}%</p>
+              </div>
+            ) : (
+              <label className={s.uploadLabel}>
+                <IconUpload /> Upload Media
+                <input type="file" multiple accept="image/*,video/*" onChange={handleUpload} hidden disabled={uploading} />
+              </label>
+            )}
+            {mediaFiles.length > 0 && (
+              <p className={s.slotInfo}>{mediaFiles.length} of {MAX_MEDIA} files • {MAX_MEDIA - mediaFiles.length} slot{MAX_MEDIA - mediaFiles.length !== 1 ? 's' : ''} remaining</p>
+            )}
+          </div>
+        )}
+        {mediaFiles.length >= MAX_MEDIA && (
+          <div className={s.maxReached}>
+            <p>Maximum {MAX_MEDIA} files reached. Delete some to upload more.</p>
           </div>
         )}
       </Modal>

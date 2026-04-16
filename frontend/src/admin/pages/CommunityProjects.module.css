@@ -157,7 +157,7 @@
 .mediaDelete:hover { background: rgba(220,38,38,0.9); }
 
 .uploadArea {
-  padding: var(--space-3) 0; text-align: center;
+  padding: var(--space-4) 0; text-align: center;
 }
 .uploadLabel {
   display: inline-flex; align-items: center; gap: 6px;
@@ -168,4 +168,61 @@
 }
 .uploadLabel:hover {
   border-color: var(--gold-soft); color: var(--gold-rich);
+}
+
+/* ── Upload progress ──────────────────────────────────────────────────── */
+.uploadProgress {
+  display: flex; flex-direction: column; gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--ash-soft);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+.progressBar {
+  height: 8px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold-rich), var(--gold-warm));
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 8px rgba(229, 184, 60, 0.4);
+}
+.uploadStatus {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--ash-deep);
+  font-weight: 500;
+  text-align: center;
+}
+.uploadPercent {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--ash-medium);
+  text-align: center;
+}
+.slotInfo {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--ash-medium);
+  text-align: center;
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-border);
+}
+
+/* ── Max reached state ───────────────────────────────────────────────── */
+.maxReached {
+  padding: var(--space-4);
+  background: rgba(251, 146, 60, 0.08);
+  border: 1px solid rgba(251, 146, 60, 0.2);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+.maxReached p {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--ash-deep);
 }
