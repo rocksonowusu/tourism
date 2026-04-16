@@ -173,24 +173,42 @@ export default function Tours() {
 
   const openEdit = async (tour) => {
     setEditing(tour)
-    setForm({
-      title:           tour.title           ?? '',
-      description:     tour.description     ?? '',
-      location:        tour.location        ?? '',
-      duration:        tour.duration         ?? '',
-      max_group_size:  tour.max_group_size   ?? '',
-      is_active:       tour.is_active        ?? true,
-      is_featured:     tour.is_featured      ?? false,
-      highlights:      Array.isArray(tour.highlights) ? tour.highlights.join('\n') : '',
-      inclusions:      Array.isArray(tour.inclusions) ? tour.inclusions.join('\n') : '',
-      exclusions:      Array.isArray(tour.exclusions) ? tour.exclusions.join('\n') : '',
-      itinerary:       Array.isArray(tour.itinerary) ? tour.itinerary.join('\n') : '',
-    })
     setFormErr(''); setMediaFiles([]); setStep(1); setSlideDir('next')
+    
+    // Fetch full tour details (list endpoint doesn't include all fields)
     try {
       const detail = await api.tours.detail(tour.id)
+      setForm({
+        title:           detail.title           ?? '',
+        description:     detail.description     ?? '',
+        location:        detail.location        ?? '',
+        duration:        detail.duration         ?? '',
+        max_group_size:  detail.max_group_size   ?? '',
+        is_active:       detail.is_active        ?? true,
+        is_featured:     detail.is_featured      ?? false,
+        highlights:      Array.isArray(detail.highlights) ? detail.highlights.join('\n') : '',
+        inclusions:      Array.isArray(detail.inclusions) ? detail.inclusions.join('\n') : '',
+        exclusions:      Array.isArray(detail.exclusions) ? detail.exclusions.join('\n') : '',
+        itinerary:       Array.isArray(detail.itinerary) ? detail.itinerary.join('\n') : '',
+      })
       setExistingMedia(detail?.media ?? [])
-    } catch { setExistingMedia([]) }
+    } catch (e) {
+      // Fallback to list data if detail fetch fails
+      setForm({
+        title:           tour.title           ?? '',
+        description:     tour.description     ?? '',
+        location:        tour.location        ?? '',
+        duration:        tour.duration         ?? '',
+        max_group_size:  tour.max_group_size   ?? '',
+        is_active:       tour.is_active        ?? true,
+        is_featured:     tour.is_featured      ?? false,
+        highlights:      Array.isArray(tour.highlights) ? tour.highlights.join('\n') : '',
+        inclusions:      Array.isArray(tour.inclusions) ? tour.inclusions.join('\n') : '',
+        exclusions:      Array.isArray(tour.exclusions) ? tour.exclusions.join('\n') : '',
+        itinerary:       Array.isArray(tour.itinerary) ? tour.itinerary.join('\n') : '',
+      })
+      setExistingMedia([])
+    }
     setModal('edit')
   }
 

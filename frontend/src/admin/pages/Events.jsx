@@ -178,22 +178,36 @@ export default function Events() {
   }
   const openEdit = async (ev) => {
     setEditing(ev)
-    setForm({
-      title:          ev.title        ?? '',
-      description:    ev.description  ?? '',
-      location:       ev.location     ?? '',
-      date:           ev.date         ? ev.date.slice(0, 16) : '',
-      category:       ev.category     ?? '',
-      is_featured:    ev.is_featured  ?? false,
-      tourist_site_id: ev.tourist_site?.id ?? ev.tourist_site ?? '',
-      highlights:     Array.isArray(ev.highlights) ? ev.highlights.join('\n') : '',
-    })
     setFormErr(''); setMediaFiles([]); setStep(1); setSlideDir('next')
-    // Fetch existing media
+    
+    // Fetch full event details (list endpoint doesn't include all fields like description)
     try {
       const detail = await api.events.detail(ev.id)
+      setForm({
+        title:          detail.title        ?? '',
+        description:    detail.description  ?? '',
+        location:       detail.location     ?? '',
+        date:           detail.date         ? detail.date.slice(0, 16) : '',
+        category:       detail.category     ?? '',
+        is_featured:    detail.is_featured  ?? false,
+        tourist_site_id: detail.tourist_site?.id ?? detail.tourist_site ?? '',
+        highlights:     Array.isArray(detail.highlights) ? detail.highlights.join('\n') : '',
+      })
       setExistingMedia(detail?.media ?? [])
-    } catch { setExistingMedia([]) }
+    } catch (e) {
+      // Fallback to list data if detail fetch fails
+      setForm({
+        title:          ev.title        ?? '',
+        description:    ev.description  ?? '',
+        location:       ev.location     ?? '',
+        date:           ev.date         ? ev.date.slice(0, 16) : '',
+        category:       ev.category     ?? '',
+        is_featured:    ev.is_featured  ?? false,
+        tourist_site_id: ev.tourist_site?.id ?? ev.tourist_site ?? '',
+        highlights:     Array.isArray(ev.highlights) ? ev.highlights.join('\n') : '',
+      })
+      setExistingMedia([])
+    }
     setModal('edit')
   }
   const openDelete = (ev) => { setEditing(ev); setModal('delete') }

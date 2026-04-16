@@ -172,26 +172,46 @@ export default function Apartments() {
 
   const openEdit = async (item) => {
     setEditing(item)
-    setForm({
-      title:          item.title          ?? '',
-      description:    item.description    ?? '',
-      location:       item.location       ?? '',
-      address:        item.address        ?? '',
-      property_type:  item.property_type  ?? 'apartment',
-      bedrooms:       item.bedrooms       ?? '',
-      bathrooms:      item.bathrooms      ?? '',
-      max_guests:     item.max_guests     ?? '',
-      price_per_night: item.price_per_night ?? '',
-      amenities:      Array.isArray(item.amenities) ? item.amenities.join('\n') : '',
-      rules:          Array.isArray(item.rules) ? item.rules.join('\n') : '',
-      is_available:   item.is_available   ?? true,
-      is_featured:    item.is_featured    ?? false,
-    })
     setFormErr(''); setMediaFiles([]); setStep(1); setSlideDir('next')
+    
+    // Fetch full apartment details (list endpoint doesn't include all fields)
     try {
       const detail = await api.apartments.detail(item.id)
+      setForm({
+        title:          detail.title          ?? '',
+        description:    detail.description    ?? '',
+        location:       detail.location       ?? '',
+        address:        detail.address        ?? '',
+        property_type:  detail.property_type  ?? 'apartment',
+        bedrooms:       detail.bedrooms       ?? '',
+        bathrooms:      detail.bathrooms      ?? '',
+        max_guests:     detail.max_guests     ?? '',
+        price_per_night: detail.price_per_night ?? '',
+        amenities:      Array.isArray(detail.amenities) ? detail.amenities.join('\n') : '',
+        rules:          Array.isArray(detail.rules) ? detail.rules.join('\n') : '',
+        is_available:   detail.is_available   ?? true,
+        is_featured:    detail.is_featured    ?? false,
+      })
       setExistingMedia(detail?.media ?? [])
-    } catch { setExistingMedia([]) }
+    } catch (e) {
+      // Fallback to list data if detail fetch fails
+      setForm({
+        title:          item.title          ?? '',
+        description:    item.description    ?? '',
+        location:       item.location       ?? '',
+        address:        item.address        ?? '',
+        property_type:  item.property_type  ?? 'apartment',
+        bedrooms:       item.bedrooms       ?? '',
+        bathrooms:      item.bathrooms      ?? '',
+        max_guests:     item.max_guests     ?? '',
+        price_per_night: item.price_per_night ?? '',
+        amenities:      Array.isArray(item.amenities) ? item.amenities.join('\n') : '',
+        rules:          Array.isArray(item.rules) ? item.rules.join('\n') : '',
+        is_available:   item.is_available   ?? true,
+        is_featured:    item.is_featured    ?? false,
+      })
+      setExistingMedia([])
+    }
     setModal('edit')
   }
 

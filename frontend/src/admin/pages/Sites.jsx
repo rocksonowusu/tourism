@@ -123,13 +123,18 @@ export default function Sites() {
   const openCreate = () => { setEditing(null); setForm(EMPTY_FORM); setFormErr(''); setMediaFiles([]); setExistingMedia([]); setModal('create') }
   const openEdit   = async (st) => {
     setEditing(st)
-    setForm({ name: st.name ?? '', description: st.description ?? '', location: st.location ?? '', is_featured: st.is_featured ?? false })
     setFormErr(''); setMediaFiles([])
-    // Fetch existing media for this site
+    
+    // Fetch full site details (list endpoint doesn't include all fields like description)
     try {
       const detail = await api.sites.detail(st.id)
+      setForm({ name: detail.name ?? '', description: detail.description ?? '', location: detail.location ?? '', is_featured: detail.is_featured ?? false })
       setExistingMedia(detail?.media ?? [])
-    } catch { setExistingMedia([]) }
+    } catch (e) {
+      // Fallback to list data if detail fetch fails
+      setForm({ name: st.name ?? '', description: st.description ?? '', location: st.location ?? '', is_featured: st.is_featured ?? false })
+      setExistingMedia([])
+    }
     setModal('edit')
   }
   const openDelete = (st) => { setEditing(st); setFormErr(''); setModal('delete') }

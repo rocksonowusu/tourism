@@ -186,25 +186,44 @@ export default function Vehicles() {
 
   const openEdit = async (item) => {
     setEditing(item)
-    setForm({
-      name:         item.name         ?? '',
-      description:  item.description  ?? '',
-      vehicle_type: item.vehicle_type ?? 'sedan',
-      brand:        item.brand        ?? '',
-      model_year:   item.model_year   ?? '',
-      seats:        item.seats        ?? '',
-      transmission: item.transmission ?? 'automatic',
-      fuel_type:    item.fuel_type    ?? 'petrol',
-      price_per_day: item.price_per_day ?? '',
-      features:     Array.isArray(item.features) ? item.features.join('\n') : '',
-      is_available: item.is_available ?? true,
-      is_featured:  item.is_featured  ?? false,
-    })
     setFormErr(''); setMediaFiles([]); setStep(1); setSlideDir('next')
+    
+    // Fetch full vehicle details (list endpoint doesn't include all fields)
     try {
       const detail = await api.vehicles.detail(item.id)
+      setForm({
+        name:         detail.name         ?? '',
+        description:  detail.description  ?? '',
+        vehicle_type: detail.vehicle_type ?? 'sedan',
+        brand:        detail.brand        ?? '',
+        model_year:   detail.model_year   ?? '',
+        seats:        detail.seats        ?? '',
+        transmission: detail.transmission ?? 'automatic',
+        fuel_type:    detail.fuel_type    ?? 'petrol',
+        price_per_day: detail.price_per_day ?? '',
+        features:     Array.isArray(detail.features) ? detail.features.join('\n') : '',
+        is_available: detail.is_available ?? true,
+        is_featured:  detail.is_featured  ?? false,
+      })
       setExistingMedia(detail?.media ?? [])
-    } catch { setExistingMedia([]) }
+    } catch (e) {
+      // Fallback to list data if detail fetch fails
+      setForm({
+        name:         item.name         ?? '',
+        description:  item.description  ?? '',
+        vehicle_type: item.vehicle_type ?? 'sedan',
+        brand:        item.brand        ?? '',
+        model_year:   item.model_year   ?? '',
+        seats:        item.seats        ?? '',
+        transmission: item.transmission ?? 'automatic',
+        fuel_type:    item.fuel_type    ?? 'petrol',
+        price_per_day: item.price_per_day ?? '',
+        features:     Array.isArray(item.features) ? item.features.join('\n') : '',
+        is_available: item.is_available ?? true,
+        is_featured:  item.is_featured  ?? false,
+      })
+      setExistingMedia([])
+    }
     setModal('edit')
   }
 
