@@ -438,6 +438,41 @@
 .deleteMsg   { font-size: var(--text-sm); font-weight: 500; color: var(--ash-deep); margin: 0; }
 .deleteHint  { font-size: var(--text-sm); color: var(--ash-medium); margin: 0; line-height: 1.5; }
 
+/* ── Upload progress card ────────────────────────────────────────────── */
+.uploadProgressCard {
+  display: flex; flex-direction: column; gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--ash-soft);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+.progressBar {
+  height: 8px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold-rich), var(--gold-warm));
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 8px rgba(229, 184, 60, 0.4);
+}
+.uploadStatus {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--ash-deep);
+  font-weight: 500;
+  text-align: center;
+}
+.uploadPercent {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--ash-medium);
+  text-align: center;
+}
+
 /* ── Responsive ──────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .tableWrap { -webkit-overflow-scrolling: touch; }
