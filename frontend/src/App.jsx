@@ -9,6 +9,7 @@ import Hero           from './components/Hero'
 import Features       from './components/Features'
 import ToursSection   from './components/ToursSection'
 import EventsSection  from './components/EventsSection'
+import EventAdModal   from './components/EventAdModal'
 import CommunityImpact from './components/CommunityImpact'
 import ReviewsSection  from './components/ReviewsSection'
 import Newsletter      from './components/Newsletter'
@@ -170,6 +171,7 @@ function PublicSite() {
   return (
     <div className="app">
       <Header />
+      <EventAdModal />
       <Hero heroSlides={heroSlides} heroMosaicImages={heroMosaicImages} />
       <Features />
       <ToursSection tours={tours} loading={toursLoading} />
