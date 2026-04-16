@@ -137,14 +137,25 @@ export default function EventAdModal() {
     }
   }, [items.length, open])
 
-  // ── Auto-show modal after 5 seconds on mount ───────────────────────
+  // ── Auto-show modal after 2 seconds on mount ───────────────────────
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchUpcomingItems()
       setOpen(true)
-    }, 5000)
+    }, 2000)
 
     return () => clearTimeout(timer)
+  }, [fetchUpcomingItems])
+
+  // ── Listen for media uploads and refresh ───────────────────────────
+  useEffect(() => {
+    const handleMediaUploaded = () => {
+      // Refresh the items when new media is uploaded
+      fetchUpcomingItems()
+    }
+
+    window.addEventListener('mediaUploaded', handleMediaUploaded)
+    return () => window.removeEventListener('mediaUploaded', handleMediaUploaded)
   }, [fetchUpcomingItems])
 
   // ── Setup auto-switch when modal opens or items change ──────────────

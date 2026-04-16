@@ -170,20 +170,71 @@ export default function Media() {
       return
     }
 
-    const form = new FormData()
-    uploadFiles.forEach(f => form.append('file', f))
-    if (uploadCapt) form.append('caption', uploadCapt)
+    setUploading(true)
+    setUploadErr('')
+    
+    // Upload files with retry logic
+    const maxRetries = 3
+    let successCount = 0
+    let lastError = null
 
-    setUploading(true); setUploadErr('')
-    try {
-      const fn = tab === 'events' ? api.events.upload : api.sites.upload
-      await fn(Number(parentId), form)
-      addToast({ message: `${uploadFiles.length} file(s) uploaded successfully.`, type: 'success' })
-      setUploadModal(false)
-      load()
-    } catch (e) {
-      setUploadErr(e?.data?.detail ?? e?.message ?? 'Upload failed.')
-    } finally { setUploading(false) }
+    for (let i = 0; i < uploadFiles.length; i++) {
+      const file = uploadFiles[i]
+      let retryCount = 0
+      let uploaded = false
+
+      while (retryCount < maxRetries && !uploaded) {
+        try {
+          const form = new FormData()
+          form.append('file', file)
+          if (uploadCapt) form.append('caption', uploadCapt)
+
+          const fn = tab === 'events' ? api.events.upload : api.sites.upload
+          await fn(Number(parentId), form)
+          
+          successCount++
+          uploaded = true
+        } catch (e) {
+          lastError = e
+          retryCount++
+          
+          if (retryCount < maxRetries) {
+            // Wait before retrying (exponential backoff: 500ms, 1s, 2s)
+            await new Promise(resolve => setTimeout(resolve, 500 * Math.pow(2, retryCount - 1)))
+          }
+        }
+      }
+
+      if (!uploaded && lastError) {
+        setUploadErr(
+          `Failed to upload ${file.name} after ${maxRetries} attempts. ` +
+          `(${lastError?.data?.detail ?? lastError?.message ?? 'Unknown error'})`
+        )
+      }
+    }
+
+    setUploading(false)
+
+    if (successCount > 0) {
+      const plural = successCount > 1 ? 's' : ''
+      const failStr = successCount < uploadFiles.length ? ` (${uploadFiles.length - successCount} failed)` : ''
+      addToast({ 
+        message: `${successCount} file${plural} uploaded successfully${failStr}.`, 
+        type: successCount === uploadFiles.length ? 'success' : 'warning' 
+      })
+      
+      if (successCount === uploadFiles.length) {
+        setUploadModal(false)
+        load()
+        // Trigger EventAdModal refresh by dispatching custom event
+        window.dispatchEvent(new Event('mediaUploaded'))
+      } else {
+        // Reload to show updated state even with some failures
+        setTimeout(() => load(), 1000)
+      }
+    } else if (!lastError) {
+      setUploadErr('No files were uploaded.')
+    }
   }
 
   const handleDelete = async () => {

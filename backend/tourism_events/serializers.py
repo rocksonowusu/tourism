@@ -157,13 +157,13 @@ class EventSerializer(serializers.ModelSerializer):
 
 class EventListSerializer(serializers.ModelSerializer):
     """
-    Lightweight serializer for list endpoints — omits nested media
-    to keep list responses fast. Clients fetch full media via detail URL.
+    Serializer for list endpoints — includes nested media for ad modal display.
     """
     tourist_site = TouristSiteMinimalSerializer(read_only=True)
     is_past      = serializers.BooleanField(read_only=True)
     is_upcoming  = serializers.BooleanField(read_only=True)
     media_count  = serializers.IntegerField(read_only=True)
+    media        = EventMediaSerializer(many=True, read_only=True)
     season_label = serializers.CharField(read_only=True)
 
     class Meta:
@@ -186,6 +186,7 @@ class EventListSerializer(serializers.ModelSerializer):
             'season_label',
             'tourist_site',
             'media_count',
+            'media',
             'created_at',
         )
         read_only_fields = fields
