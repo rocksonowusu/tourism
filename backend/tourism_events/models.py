@@ -268,32 +268,46 @@ class BaseMedia(models.Model):
         ordering = ['-created_at']
 
     def save(self, *args, **kwargs):
+        import time
         raw = self.file
+        start_time = time.time()
         
         # Detect media type before compression
         if hasattr(raw, 'content_type') or hasattr(raw, 'name'):
             self.media_type = detect_media_type(raw)
         
         # Compress image files before saving to Cloudinary
+        # Only compress images that are likely too large (> 2MB)
         if self.file and (self.media_type == MediaType.IMAGE or not self.media_type):
             try:
                 # Reset file pointer and compress
                 if hasattr(self.file, 'seek'):
                     self.file.seek(0)
                 original_size = getattr(self.file, 'size', 0)
-                self.file = compress_image_file(self.file)
-                compressed_size = getattr(self.file, 'size', 0)
-                if original_size > 0:
+                
+                # Skip compression for small files (likely already optimized)
+                if original_size > 2 * 1024 * 1024:  # > 2MB
+                    compress_start = time.time()
+                    self.file = compress_image_file(self.file)
+                    compress_time = time.time() - compress_start
+                    compressed_size = getattr(self.file, 'size', 0)
                     logger.info(
-                        f"Image compressed: {original_size / (1024*1024):.2f}MB → "
+                        f"Image compressed in {compress_time:.2f}s: {original_size / (1024*1024):.2f}MB → "
                         f"{compressed_size / (1024*1024):.2f}MB "
-                        f"({100 * (1 - compressed_size/original_size):.1f}% reduction)"
+                        f"({100 * (1 - compressed_size/original_size) if original_size > 0 else 0:.1f}% reduction)"
                     )
+                else:
+                    logger.debug(f"Skipped compression for {original_size / (1024*1024):.2f}MB image (< 2MB)")
             except Exception as e:
                 # Log compression error but don't fail - let validators handle it
                 logger.warning(f"Image compression failed: {str(e)}")
         
+        upload_start = time.time()
         super().save(*args, **kwargs)
+        upload_time = time.time() - upload_start
+        total_time = time.time() - start_time
+        
+        logger.info(f"Media save completed in {total_time:.2f}s (upload: {upload_time:.2f}s)")
 
     @property
     def file_url(self) -> str | None:
@@ -305,10 +319,7 @@ class BaseMedia(models.Model):
 
     @property
     def is_video(self) -> bool:
-        return self.media_type == MediaType.VIDEO
-
-
-# ---------------------------------------------------------------------------
+        return self.media_type == MediaType.VIDEO# ---------------------------------------------------------------------------
 # Concrete media models
 # ---------------------------------------------------------------------------
 

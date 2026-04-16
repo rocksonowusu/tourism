@@ -5,6 +5,9 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser, A
 from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django_filters.rest_framework import DjangoFilterBackend
+import logging
+
+logger = logging.getLogger('tourism_events.uploads')
 
 from .models import Event, TouristSite, EventMedia, TouristSiteMedia, Tour, TourMedia, TripRequest, CustomTourRequest, EventRequest, EventBooking, Apartment, ApartmentMedia, AccommodationRequest, Vehicle, VehicleMedia, CarRentalRequest, CommunityProject, CommunityProjectMedia, Review, SiteSettings, Notification, HeroBackground, HeroMosaic, EventsSectionBackground
 from .serializers import (
@@ -167,6 +170,10 @@ class EventViewSet(viewsets.ModelViewSet):
           file     – one or more files  (required, max 5 at a time)
           caption  – shared caption text (optional)
         """
+        import time
+        upload_start = time.time()
+        logger.info(f"Event upload started for event {pk}")
+        
         MAX_MEDIA = 5
         event = self.get_object()
         files = request.FILES.getlist('file')
@@ -201,7 +208,10 @@ class EventViewSet(viewsets.ModelViewSet):
 
         created = []
         errors  = []
-        for f in files:
+        for idx, f in enumerate(files, 1):
+            file_start = time.time()
+            logger.info(f"Processing file {idx}/{len(files)}: {f.name} ({f.size} bytes)")
+            
             serializer = EventMediaSerializer(
                 data={'event': event.pk, 'file': f, 'caption': request.data.get('caption', '')},
                 context={'request': request},
@@ -209,8 +219,11 @@ class EventViewSet(viewsets.ModelViewSet):
             if serializer.is_valid():
                 serializer.save()
                 created.append(serializer.data)
+                file_time = time.time() - file_start
+                logger.info(f"File {idx} saved in {file_time:.2f}s")
             else:
                 errors.append({'file': f.name, 'errors': serializer.errors})
+                logger.warning(f"File {idx} validation failed: {serializer.errors}")
 
         if errors and not created:
             return Response({'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
@@ -218,6 +231,9 @@ class EventViewSet(viewsets.ModelViewSet):
         response_data = {'created': created}
         if errors:
             response_data['errors'] = errors
+        
+        total_time = time.time() - upload_start
+        logger.info(f"Event upload completed in {total_time:.2f}s ({len(created)} files)")
         return Response(response_data, status=status.HTTP_201_CREATED)
 
     # ------------------------------------------------------------------ #
@@ -559,6 +575,10 @@ class TourViewSet(viewsets.ModelViewSet):
         """
         Upload one or more image/video files for a tour (max 10 total per tour).
         """
+        import time
+        upload_start = time.time()
+        logger.info(f"Tour upload started for tour {pk}")
+        
         MAX_MEDIA = 10
         tour  = self.get_object()
         files = request.FILES.getlist('file')
@@ -593,7 +613,10 @@ class TourViewSet(viewsets.ModelViewSet):
 
         created = []
         errors  = []
-        for f in files:
+        for idx, f in enumerate(files, 1):
+            file_start = time.time()
+            logger.info(f"Processing file {idx}/{len(files)}: {f.name} ({f.size} bytes)")
+            
             serializer = TourMediaSerializer(
                 data={'tour': tour.pk, 'file': f, 'caption': request.data.get('caption', '')},
                 context={'request': request},
@@ -601,8 +624,11 @@ class TourViewSet(viewsets.ModelViewSet):
             if serializer.is_valid():
                 serializer.save()
                 created.append(serializer.data)
+                file_time = time.time() - file_start
+                logger.info(f"File {idx} saved in {file_time:.2f}s")
             else:
                 errors.append({'file': f.name, 'errors': serializer.errors})
+                logger.warning(f"File {idx} validation failed: {serializer.errors}")
 
         if errors and not created:
             return Response({'errors': errors}, status=status.HTTP_400_BAD_REQUEST)
@@ -610,6 +636,9 @@ class TourViewSet(viewsets.ModelViewSet):
         response_data = {'created': created}
         if errors:
             response_data['errors'] = errors
+        
+        total_time = time.time() - upload_start
+        logger.info(f"Tour upload completed in {total_time:.2f}s ({len(created)} files)")
         return Response(response_data, status=status.HTTP_201_CREATED)
 
     # ------------------------------------------------------------------ #

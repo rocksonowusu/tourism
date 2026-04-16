@@ -10,6 +10,7 @@
 
 const BASE_URL = import.meta.env.VITE_API_URL ?? ''
 const TIMEOUT  = Number(import.meta.env.VITE_API_TIMEOUT ?? 30_000)
+const UPLOAD_TIMEOUT = Math.max(TIMEOUT * 3, 180_000)  // 3x normal timeout, min 3 minutes for large files
 
 // ── Token helpers ────────────────────────────────────────────────────────
 
@@ -46,6 +47,10 @@ class TourismAPIClient {
   async #fetch(endpoint, options = {}, retry = true) {
     const url        = `${BASE_URL}${endpoint}`
     const isFormData = options.body instanceof FormData
+    
+    // Use longer timeout for upload endpoints
+    const isUpload = endpoint.includes('/upload/')
+    const timeout = isUpload ? UPLOAD_TIMEOUT : TIMEOUT
 
     const headers = {
       ...(!isFormData && { 'Content-Type': 'application/json' }),
@@ -56,7 +61,7 @@ class TourismAPIClient {
     if (access) headers['Authorization'] = `Bearer ${access}`
 
     const ctrl   = new AbortController()
-    const tid    = setTimeout(() => ctrl.abort(), TIMEOUT)
+    const tid    = setTimeout(() => ctrl.abort(), timeout)
 
     let response
     try {
