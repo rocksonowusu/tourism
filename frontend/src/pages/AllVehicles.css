@@ -142,9 +142,122 @@
 .av__page-info { font-size: 13px; color: rgba(0,0,0,0.5); }
 
 /* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .all-vehicles { 
+    padding: 100px 0 60px; 
+  }
+  .av__grid { 
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
+    gap: 20px; 
+  }
+}
+
 @media (max-width: 768px) {
-  .all-vehicles { padding: 100px 0 60px; }
-  .av__controls { gap: 8px; }
-  .av__search-wrap { max-width: none; flex: 1 1 100%; }
-  .av__grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+  .all-vehicles { 
+    padding: 80px 0 50px; 
+  }
+  
+  .av__header {
+    margin-bottom: 28px;
+  }
+  
+  .av__title {
+    font-size: clamp(22px, 2.5vw, 32px);
+  }
+  
+  .av__controls { 
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  
+  .av__search-wrap { 
+    max-width: 100%;
+    flex: 1 1 100%;
+  }
+  
+  .av__grid { 
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+}
+
+@media (max-width: 600px) {
+  .all-vehicles { 
+    padding: 70px 0 40px; 
+  }
+  
+  .av__header {
+    margin-bottom: 20px;
+  }
+  
+  .av__title {
+    font-size: clamp(20px, 2vw, 28px);
+    margin-bottom: 12px;
+  }
+  
+  .av__controls {
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .av__search-wrap {
+    width: 100%;
+  }
+  
+  .av__search {
+    font-size: 13px;
+    padding: 10px 12px 10px 34px;
+  }
+  
+  .av__grid { 
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  
+  .av__card-img {
+    height: 200px;
+  }
+  
+  .av__card-content {
+    padding: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .all-vehicles { 
+    padding: 60px 0 36px; 
+  }
+  
+  .av__title {
+    font-size: clamp(18px, 1.8vw, 24px);
+    margin-bottom: 10px;
+  }
+  
+  .av__controls { 
+    flex-direction: column; 
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .av__search-wrap { 
+    width: 100%;
+  }
+  
+  .av__grid { 
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  
+  .av__card-img {
+    height: 180px;
+  }
+  
+  .av__card-content {
+    padding: 12px;
+  }
 }

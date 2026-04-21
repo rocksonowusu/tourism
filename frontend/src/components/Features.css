@@ -92,12 +92,102 @@
 
 @media (max-width: 768px) {
   .features {
-    padding: 64px 0;
+    padding: 56px 0;
   }
   .features-title {
-    font-size: 24px;
+    font-size: clamp(20px, 2.5vw, 30px);
   }
   .features-grid {
     grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .feature-card {
+    padding: 28px 24px;
+  }
+  .feature-title {
+    font-size: 16px;
+  }
+  .feature-description {
+    font-size: 13px;
+  }
+  .features-header {
+    margin-bottom: 40px;
+  }
+}
+
+@media (max-width: 600px) {
+  .features {
+    padding: 48px 0;
+  }
+  .features-eyebrow {
+    font-size: 10px;
+  }
+  .features-title {
+    font-size: clamp(18px, 2vw, 26px);
+    margin-bottom: 12px;
+  }
+  .features-subtitle {
+    font-size: 13px;
+  }
+  .feature-card {
+    padding: 24px 20px;
+    border-radius: 14px;
+  }
+  .feature-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+    font-size: 24px;
+  }
+  .feature-title {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  .feature-description {
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .features-header {
+    margin-bottom: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .features {
+    padding: 40px 0;
+  }
+  .features-header {
+    margin-bottom: 28px;
+  }
+  .features-eyebrow {
+    margin-bottom: 8px;
+  }
+  .features-title {
+    font-size: clamp(16px, 1.8vw, 22px);
+    margin-bottom: 10px;
+  }
+  .features-subtitle {
+    font-size: 12px;
+  }
+  .features-grid {
+    gap: 14px;
+  }
+  .feature-card {
+    padding: 20px 16px;
+    text-align: center;
+  }
+  .feature-icon {
+    width: 44px;
+    height: 44px;
+    margin: 0 auto 12px;
+    border-radius: 12px;
+  }
+  .feature-title {
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  .feature-description {
+    font-size: 11px;
+    text-align: justify;
   }
 }

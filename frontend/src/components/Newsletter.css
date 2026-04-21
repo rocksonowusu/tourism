@@ -119,24 +119,111 @@
 
 /* ── Responsive ──────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .newsletter { padding: 80px 0 88px; }
-  .newsletter__title br { display: none; }
+  .newsletter { 
+    padding: 64px 0 72px; 
+  }
+  .newsletter__title br { 
+    display: none; 
+  }
+  .newsletter__title {
+    font-size: clamp(24px, 2.5vw, 32px);
+  }
+  .newsletter__sub {
+    font-size: 14px;
+  }
+  .newsletter__form {
+    flex-direction: row;
+    gap: 8px;
+  }
+  .newsletter__input {
+    padding: 11px 16px;
+    font-size: 13px;
+  }
+  .newsletter__btn {
+    padding: 11px 18px;
+    font-size: 12px;
+  }
 }
 
-@media (max-width: 560px) {
-  .newsletter { padding: 64px 0 72px; }
-  .newsletter__form { flex-direction: column; border-radius: var(--radius-xl); }
-  .newsletter__input { border-radius: var(--radius-xl); }
-  .newsletter__btn { border-radius: var(--radius-xl); padding: 13px 24px; }
-  .newsletter__modal { padding: 28px 20px; }
-  .newsletter__modal-actions { flex-direction: column; }
-  .newsletter__modal-btn { width: 100%; }
+@media (max-width: 600px) {
+  .newsletter { 
+    padding: 56px 0 64px; 
+  }
+  .newsletter__form { 
+    flex-direction: column; 
+    border-radius: var(--radius-xl);
+    gap: 10px;
+  }
+  .newsletter__input { 
+    border-radius: var(--radius-xl);
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+  .newsletter__btn { 
+    border-radius: var(--radius-xl); 
+    padding: 12px 20px;
+    font-size: 13px;
+  }
+  .newsletter__modal { 
+    padding: 24px 18px;
+    max-width: 90%;
+  }
+  .newsletter__modal-title {
+    font-size: 18px;
+  }
+  .newsletter__modal-desc {
+    font-size: 13px;
+  }
+  .newsletter__modal-actions { 
+    flex-direction: column;
+    gap: 10px;
+  }
+  .newsletter__modal-btn { 
+    width: 100%;
+    padding: 10px 16px;
+    font-size: 13px;
+  }
 }
 
-@media (max-width: 400px) {
-  .newsletter { padding: 52px 0 60px; }
-  .newsletter__inner { gap: 28px; }
-  .newsletter__sub { font-size: 13px; }
+@media (max-width: 480px) {
+  .newsletter { 
+    padding: 48px 0 56px; 
+  }
+  .newsletter__inner { 
+    gap: 24px;
+  }
+  .newsletter__title {
+    font-size: clamp(20px, 2vw, 26px);
+  }
+  .newsletter__sub { 
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .newsletter__form {
+    flex-direction: column;
+  }
+  .newsletter__input { 
+    padding: 11px 14px;
+    font-size: 13px;
+  }
+  .newsletter__btn { 
+    padding: 11px 14px;
+    font-size: 12px;
+  }
+  .newsletter__modal { 
+    padding: 20px 16px;
+    max-width: 95%;
+  }
+  .newsletter__modal-title {
+    font-size: 16px;
+  }
+  .newsletter__modal-desc {
+    font-size: 12px;
+  }
+  .newsletter__modal-btn { 
+    padding: 9px 14px;
+    font-size: 12px;
+  }
 }
 
 /* ── Consent Modal ───────────────────────────────────────────────────────── */

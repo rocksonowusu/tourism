@@ -142,9 +142,122 @@
 .aa__page-info { font-size: 13px; color: rgba(0,0,0,0.5); }
 
 /* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .all-accommodations { 
+    padding: 100px 0 60px; 
+  }
+  .aa__grid { 
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
+    gap: 20px; 
+  }
+}
+
 @media (max-width: 768px) {
-  .all-accommodations { padding: 100px 0 60px; }
-  .aa__controls { gap: 8px; }
-  .aa__search-wrap { max-width: none; flex: 1 1 100%; }
-  .aa__grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+  .all-accommodations { 
+    padding: 80px 0 50px; 
+  }
+  
+  .aa__header {
+    margin-bottom: 28px;
+  }
+  
+  .aa__title {
+    font-size: clamp(22px, 2.5vw, 32px);
+  }
+  
+  .aa__controls { 
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  
+  .aa__search-wrap { 
+    max-width: 100%;
+    flex: 1 1 100%;
+  }
+  
+  .aa__grid { 
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+}
+
+@media (max-width: 600px) {
+  .all-accommodations { 
+    padding: 70px 0 40px; 
+  }
+  
+  .aa__header {
+    margin-bottom: 20px;
+  }
+  
+  .aa__title {
+    font-size: clamp(20px, 2vw, 28px);
+    margin-bottom: 12px;
+  }
+  
+  .aa__controls {
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .aa__search-wrap {
+    width: 100%;
+  }
+  
+  .aa__search {
+    font-size: 13px;
+    padding: 10px 12px 10px 34px;
+  }
+  
+  .aa__grid { 
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  
+  .aa__card-img {
+    height: 200px;
+  }
+  
+  .aa__card-content {
+    padding: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .all-accommodations { 
+    padding: 60px 0 36px; 
+  }
+  
+  .aa__title {
+    font-size: clamp(18px, 1.8vw, 24px);
+    margin-bottom: 10px;
+  }
+  
+  .aa__controls { 
+    flex-direction: column; 
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .aa__search-wrap { 
+    width: 100%;
+  }
+  
+  .aa__grid { 
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  
+  .aa__card-img {
+    height: 180px;
+  }
+  
+  .aa__card-content {
+    padding: 12px;
+  }
 }

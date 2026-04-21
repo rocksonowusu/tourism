@@ -339,14 +339,133 @@
 }
 
 /* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .all-sites { 
+    padding: 100px 0 60px; 
+  }
+  .as__grid { 
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+    gap: 20px; 
+  }
+}
+
 @media (max-width: 768px) {
-  .all-sites { padding: 100px 0 60px; }
-  .as__grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+  .all-sites { 
+    padding: 80px 0 50px; 
+  }
+  
+  .as__header {
+    margin-bottom: 28px;
+  }
+  
+  .as__title {
+    font-size: clamp(22px, 2.5vw, 32px);
+  }
+  
+  .as__controls {
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  
+  .as__search-wrap {
+    max-width: 100%;
+  }
+  
+  .as__grid { 
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+}
+
+@media (max-width: 600px) {
+  .all-sites { 
+    padding: 70px 0 40px; 
+  }
+  
+  .as__header {
+    margin-bottom: 20px;
+  }
+  
+  .as__title {
+    font-size: clamp(20px, 2vw, 28px);
+    margin-bottom: 12px;
+  }
+  
+  .as__controls {
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .as__search-wrap {
+    width: 100%;
+  }
+  
+  .as__search {
+    font-size: 13px;
+    padding: 10px 12px 10px 34px;
+  }
+  
+  .as__count { 
+    font-size: 11px;
+    margin-left: 0;
+  }
+  
+  .as__grid { 
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  
+  .as__card-img {
+    height: 200px;
+  }
+  
+  .as__card-content {
+    padding: 14px;
+  }
 }
 
 @media (max-width: 480px) {
-  .as__controls { flex-direction: column; align-items: stretch; }
-  .as__search-wrap { max-width: 100%; }
-  .as__count { margin-left: 0; }
-  .as__grid { grid-template-columns: 1fr; }
+  .all-sites { 
+    padding: 60px 0 36px; 
+  }
+  
+  .as__title {
+    font-size: clamp(18px, 1.8vw, 24px);
+    margin-bottom: 10px;
+  }
+  
+  .as__controls { 
+    flex-direction: column; 
+    align-items: stretch;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .as__search-wrap { 
+    max-width: 100%;
+    width: 100%;
+  }
+  
+  .as__count { 
+    margin-left: 0;
+    font-size: 10px;
+  }
+  
+  .as__grid { 
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  
+  .as__card-img {
+    height: 180px;
+  }
+  
+  .as__card-content {
+    padding: 12px;
+  }
 }

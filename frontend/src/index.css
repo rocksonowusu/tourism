@@ -218,3 +218,196 @@ a { text-decoration: none; color: inherit; }
   opacity: 1;
   transform: translateX(0);
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Mobile Enhancements (Global)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Improved touch targets on mobile */
+@media (max-width: 768px) {
+  button,
+  a[role="button"],
+  .btn-primary,
+  .btn-secondary,
+  .btn-outline-gold {
+    min-height: 44px;
+    padding: 10px 16px;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+    min-height: 44px;
+    padding: 10px 12px;
+  }
+}
+
+/* Responsive containers and spacing */
+@media (max-width: 600px) {
+  .container {
+    padding: 0 16px;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 12px;
+  }
+  
+  /* Reduce animation complexity on slower devices */
+  * {
+    animation-duration: 0.4s !important;
+    transition-duration: 0.2s !important;
+  }
+}
+
+/* Improve readability on mobile */
+@media (max-width: 600px) {
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
+    word-break: break-word;
+  }
+  
+  p {
+    line-height: 1.65;
+    word-break: break-word;
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-outline-gold {
+    width: 100%;
+    margin: 4px 0;
+  }
+}
+
+/* Image optimization for mobile */
+@media (max-width: 768px) {
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+}
+
+/* Improved form styling for mobile */
+@media (max-width: 600px) {
+  form {
+    margin-bottom: 20px;
+  }
+
+  form input,
+  form select,
+  form textarea {
+    width: 100%;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+  }
+
+  form button {
+    width: 100%;
+    margin-top: 8px;
+  }
+}
+
+/* Navigation optimization */
+@media (max-width: 768px) {
+  nav {
+    margin-bottom: 16px;
+  }
+
+  nav a,
+  nav button {
+    padding: 12px 16px;
+    display: block;
+    font-size: 14px;
+  }
+}
+
+/* Section padding adjustments */
+@media (max-width: 768px) {
+  section {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  section {
+    padding-top: clamp(32px, 5vw, 48px);
+    padding-bottom: clamp(32px, 5vw, 48px);
+  }
+}
+
+/* Grid responsive fallback */
+@media (max-width: 768px) {
+  .grid,
+  [display="grid"] {
+    grid-auto-flow: row;
+    gap: 16px;
+  }
+}
+
+/* Flexbox improvements */
+@media (max-width: 600px) {
+  .flex,
+  [display="flex"] {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+/* Typography scale adjustments */
+@media (max-width: 600px) {
+  :root {
+    --text-xs:   10px;
+    --text-sm:   12px;
+    --text-base: 14px;
+    --text-md:   15px;
+    --text-lg:   18px;
+    --text-xl:   22px;
+    --text-2xl:  28px;
+    --text-3xl:  36px;
+    --text-4xl:  48px;
+  }
+}
+
+/* Spacing scale adjustments */
+@media (max-width: 600px) {
+  :root {
+    --space-1: 3px;
+    --space-2: 6px;
+    --space-3: 10px;
+    --space-4: 14px;
+    --space-5: 20px;
+    --space-6: 28px;
+    --space-7: 40px;
+    --space-8: 56px;
+  }
+}
+
+/* Modal and overlay improvements */
+@media (max-width: 600px) {
+  [role="dialog"],
+  .modal,
+  .overlay {
+    max-width: 95%;
+    padding: 16px;
+    border-radius: 12px;
+  }
+}
+
+/* Prevent horizontal scroll */
+@media (max-width: 600px) {
+  * {
+    max-width: 100%;
+  }
+
+  body,
+  html {
+    overflow-x: hidden;
+  }
+}
