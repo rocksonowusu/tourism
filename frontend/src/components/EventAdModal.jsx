@@ -79,20 +79,17 @@ export default function EventAdModal() {
   const [currentIdx, setCurrentIdx] = useState(0)
   const autoSwitchTimerRef = useRef(null)
 
-  // ── Fetch upcoming events AND tours (1-2 months away) ───────────────
+  // ── Fetch upcoming events AND tours (next 60 days) ───────────────────
   const fetchUpcomingItems = useCallback(async () => {
     setLoading(true)
     try {
-      // Get today's date and calculate date range (30-60 days from now)
+      // Get today's date and calculate date range (next 60 days)
       const today = new Date()
-      const thirtyDaysLater = new Date(today)
-      thirtyDaysLater.setDate(thirtyDaysLater.getDate() + 30)
-      
       const sixtyDaysLater = new Date(today)
       sixtyDaysLater.setDate(sixtyDaysLater.getDate() + 60)
 
       // Format dates for API query (YYYY-MM-DD)
-      const dateAfter = thirtyDaysLater.toISOString().split('T')[0]
+      const dateAfter = today.toISOString().split('T')[0]
       const dateBefore = sixtyDaysLater.toISOString().split('T')[0]
 
       // Fetch both events and tours
