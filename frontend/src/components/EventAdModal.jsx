@@ -83,27 +83,39 @@ export default function EventAdModal() {
   const fetchUpcomingItems = useCallback(async () => {
     setLoading(true)
     try {
+      console.log('[EventAdModal] Fetching events and tours...')
+      
       // Fetch both events and tours
       const [eventsData, toursData] = await Promise.all([
         api.events.list({
           page_size: 10,
           ordering: '-created_at'
-        }).catch(() => ({ results: [] })),
+        }).catch(err => {
+          console.error('[EventAdModal] Events fetch error:', err.message || err)
+          return { results: [] }
+        }),
         api.tours.list({
           page_size: 10,
           is_active: true,
           ordering: '-created_at'
-        }).catch(() => ({ results: [] }))
+        }).catch(err => {
+          console.error('[EventAdModal] Tours fetch error:', err.message || err)
+          return { results: [] }
+        })
       ])
+
+      console.log('[EventAdModal] Events response:', eventsData?.results?.length || 0, 'events')
+      console.log('[EventAdModal] Tours response:', toursData?.results?.length || 0, 'tours')
 
       const events = (eventsData?.results ?? eventsData ?? []).map(e => ({ ...e, type: 'event' }))
       const tours = (toursData?.results ?? toursData ?? []).map(t => ({ ...t, type: 'tour' }))
 
       // Combine and show max 8 items
       const combined = [...events, ...tours]
+      console.log('[EventAdModal] Total items:', combined.length)
       setItems(combined.slice(0, 8))
     } catch (err) {
-      console.error('Failed to fetch upcoming items:', err)
+      console.error('[EventAdModal] Failed to fetch upcoming items:', err.message || err)
       setItems([])
     } finally {
       setLoading(false)
@@ -126,6 +138,7 @@ export default function EventAdModal() {
   // ── Auto-show modal after 2 seconds on mount ───────────────────────
   useEffect(() => {
     const timer = setTimeout(() => {
+      console.log('[EventAdModal] Auto-opening after 2 seconds')
       fetchUpcomingItems()
       setOpen(true)
     }, 2000)
@@ -213,8 +226,13 @@ export default function EventAdModal() {
   }
 
   if (!open || loading || items.length === 0) {
+    if (open && !loading && items.length === 0) {
+      console.log('[EventAdModal] Open but no items to display')
+    }
     return null
   }
+
+  console.log('[EventAdModal] Rendering modal with', items.length, 'items')
 
   const currentItem = items[currentIdx]
   const imageUrl = getFeaturedImage(currentItem)
