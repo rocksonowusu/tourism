@@ -79,26 +79,15 @@ export default function EventAdModal() {
   const [currentIdx, setCurrentIdx] = useState(0)
   const autoSwitchTimerRef = useRef(null)
 
-  // ── Fetch upcoming events AND tours (next 60 days) ───────────────────
+  // ── Fetch upcoming events AND tours (no date filter for now) ────────
   const fetchUpcomingItems = useCallback(async () => {
     setLoading(true)
     try {
-      // Get today's date and calculate date range (next 60 days)
-      const today = new Date()
-      const sixtyDaysLater = new Date(today)
-      sixtyDaysLater.setDate(sixtyDaysLater.getDate() + 60)
-
-      // Format dates for API query (YYYY-MM-DD)
-      const dateAfter = today.toISOString().split('T')[0]
-      const dateBefore = sixtyDaysLater.toISOString().split('T')[0]
-
       // Fetch both events and tours
       const [eventsData, toursData] = await Promise.all([
         api.events.list({
           page_size: 10,
-          date_after: dateAfter,
-          date_before: dateBefore,
-          ordering: 'date'
+          ordering: '-created_at'
         }).catch(() => ({ results: [] })),
         api.tours.list({
           page_size: 10,
@@ -110,9 +99,9 @@ export default function EventAdModal() {
       const events = (eventsData?.results ?? eventsData ?? []).map(e => ({ ...e, type: 'event' }))
       const tours = (toursData?.results ?? toursData ?? []).map(t => ({ ...t, type: 'tour' }))
 
-      // Combine and shuffle to show variety
+      // Combine and show max 8 items
       const combined = [...events, ...tours]
-      setItems(combined.slice(0, 8)) // Show max 8 items
+      setItems(combined.slice(0, 8))
     } catch (err) {
       console.error('Failed to fetch upcoming items:', err)
       setItems([])
