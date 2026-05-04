@@ -1,0 +1,45 @@
+{
+  "name": "1957 The Ghana Experience",
+  "short_name": "Ghana Experience",
+  "description": "Explore the best tourism experiences in Ghana",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#4a90e2",
+  "icons": [
+    {
+      "src": "/assets/Logo.PNG",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/Logo.PNG",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/Logo.PNG",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/Logo.PNG",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["travel", "tourism"],
+  "screenshots": [
+    {
+      "src": "/assets/Logo.PNG",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
