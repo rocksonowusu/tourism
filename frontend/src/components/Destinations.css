@@ -277,4 +277,15 @@
   .dest__card-img { height: 200px; }
   .dest__tabs { gap: 4px; }
   .dest__tab { padding: 5px 12px; font-size: 12px; }
+  
+  .dest__dots {
+    gap: 3px;
+  }
+  .dest__dot {
+    width: 4px;
+    height: 4px;
+  }
+  .dest__dot--active {
+    transform: scale(1.15);
+  }
 }

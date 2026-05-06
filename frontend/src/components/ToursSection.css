@@ -207,19 +207,23 @@
   overflow: hidden;
   position: relative;
   z-index: 1;
-  /* Fallback for browsers that don't support SVG clip-path */
   border-radius: 50%;
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.15),
     0 0 0 5px rgba(212,175,55,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .ts__circle-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   display: block;
   transition: transform 0.5s ease;
+  flex-shrink: 0;
 }
 .ts__circle:hover .ts__circle-img {
   transform: scale(1.08);

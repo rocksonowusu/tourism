@@ -198,7 +198,6 @@ export default function ToursSection({ tours = [], loading }) {
                   className={`ts__item ${isRight ? 'ts__item--right' : ''}`}
                 >
                   <div className="ts__circle-wrap">
-                    <RoughCircleClip id={clipId} />
                     {/* Outer rough gold ring (painted feel) */}
                     <svg className="ts__ring-outer" viewBox="0 0 200 200" fill="none">
                       <path d="M100 4 C124 2,156 10,176 28 C192 44,198 68,196 92 C194 118,190 144,174 164 C156 184,132 196,100 194 C68 192,44 186,26 168 C10 150,4 126,6 100 C8 74,14 48,30 30 C48 12,76 4,100 4Z"
@@ -206,7 +205,7 @@ export default function ToursSection({ tours = [], loading }) {
                         strokeDasharray="8 4 12 6" strokeLinecap="round" />
                     </svg>
                     <BrushRing />
-                    <div className="ts__circle" style={{ clipPath: `url(#${clipId})` }}>
+                    <div className="ts__circle">
                       <img
                         src={tour.image}
                         alt={tour.title}

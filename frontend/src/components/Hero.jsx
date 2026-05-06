@@ -115,7 +115,7 @@ export default function Hero({ heroSlides = [], heroMosaicImages = [] }) {
             <div className="hero__stat-divider" />
             <div className="hero__stat">
               <span className="hero__stat-num">Since</span>
-              <span className="hero__stat-label">1957</span>
+              <span className="hero__stat-label">2019</span>
             </div>
           </div>
         </div>
