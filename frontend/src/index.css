@@ -220,8 +220,22 @@ a { text-decoration: none; color: inherit; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   Mobile Enhancements (Global)
+   Dot Navigation Protection (Mobile)
+   Ensures dots don't get distorted by global mobile rules
    ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* Protect all dot containers from global flex/width constraints */
+  [class*="__dots"],
+  [class*="__indicators"],
+  [class*="__dot"],
+  [class*="__dot-btn"],
+  [class*="__carousel-dots"] {
+    max-width: none !important;
+    flex-direction: row !important;
+    display: flex !important;
+  }
+}
 
 /* Improved touch targets on mobile */
 @media (max-width: 768px) {
@@ -353,8 +367,8 @@ a { text-decoration: none; color: inherit; }
 
 /* Flexbox improvements */
 @media (max-width: 600px) {
-  .flex,
-  [display="flex"] {
+  .flex:not([class*="__dots"]):not([class*="__indicators"]):not([class*="__dot"]),
+  [display="flex"]:not([class*="__dots"]):not([class*="__indicators"]):not([class*="__dot"]) {
     flex-direction: column;
     gap: 12px;
   }
@@ -402,7 +416,7 @@ a { text-decoration: none; color: inherit; }
 
 /* Prevent horizontal scroll */
 @media (max-width: 600px) {
-  * {
+  *:not([class*="__dots"]):not([class*="__indicators"]):not([class*="__dot"]):not([class*="__dot-btn"]) {
     max-width: 100%;
   }
 
