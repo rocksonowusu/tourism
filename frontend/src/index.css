@@ -228,12 +228,44 @@ a { text-decoration: none; color: inherit; }
   /* Protect all dot containers from global flex/width constraints */
   [class*="__dots"],
   [class*="__indicators"],
-  [class*="__dot"],
-  [class*="__dot-btn"],
   [class*="__carousel-dots"] {
     max-width: none !important;
+    width: auto !important;
     flex-direction: row !important;
     display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+  
+  /* Protect individual dot buttons/elements */
+  [class*="__dot"],
+  [class*="__dot-btn"],
+  [class*="__indicator"] {
+    max-width: none !important;
+    width: auto !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Extra protection for very small screens */
+  [class*="__dots"],
+  [class*="__indicators"],
+  [class*="__carousel-dots"] {
+    max-width: 100% !important;
+    width: auto !important;
+    flex-wrap: nowrap !important;
+    gap: 2px !important;
+  }
+  
+  [class*="__dot"],
+  [class*="__dot-btn"],
+  [class*="__indicator"] {
+    max-width: none !important;
+    width: auto !important;
+    min-width: auto !important;
+    flex-shrink: 0 !important;
   }
 }
 

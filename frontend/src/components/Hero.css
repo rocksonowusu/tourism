@@ -419,8 +419,9 @@
   .hero__dots { 
     bottom: 40px;
     gap: 3px;
-    max-width: 85vw;
-    flex-wrap: wrap;
+    max-width: none;
+    width: auto;
+    flex-wrap: nowrap;
     justify-content: center;
   }
   .hero__dot {
@@ -483,8 +484,9 @@
   .hero__dots {
     bottom: 32px;
     gap: 2px;
-    max-width: 80vw;
-    flex-wrap: wrap;
+    max-width: none;
+    width: auto;
+    flex-wrap: nowrap;
     justify-content: center;
   }
   .hero__dot {
