@@ -418,14 +418,17 @@
   }
   .hero__dots { 
     bottom: 40px;
-    gap: 4px;
+    gap: 3px;
+    max-width: 85vw;
+    flex-wrap: wrap;
+    justify-content: center;
   }
   .hero__dot {
-    width: 4px;
-    height: 4px;
+    width: 5px;
+    height: 5px;
   }
   .hero__dot--active {
-    transform: scale(1.2);
+    transform: scale(1.25);
   }
   .hero__counter { 
     bottom: 40px;
@@ -476,5 +479,16 @@
   }
   .hero__counter { 
     display: none;
+  }
+  .hero__dots {
+    bottom: 32px;
+    gap: 2px;
+    max-width: 80vw;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .hero__dot {
+    width: 4px;
+    height: 4px;
   }
 }
