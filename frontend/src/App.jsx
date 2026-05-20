@@ -70,7 +70,6 @@ function PublicSite() {
   const [tours, setTours] = useState([])
   const [events, setEvents] = useState([])
   const [heroSlides, setHeroSlides] = useState([])
-  const [heroMosaicImages, setHeroMosaicImages] = useState([])
   const [eventBgImages, setEventBgImages] = useState([])
   const [toursLoading, setToursLoading] = useState(false)
   const [eventsLoading, setEventsLoading] = useState(false)
@@ -79,18 +78,17 @@ function PublicSite() {
     fetchTours()
     fetchEvents()
     fetchHeroImages()
-    fetchHeroMosaicImages()
     fetchEventBgImages()
   }, [])
 
   const fetchTours = async () => {
     try {
       setToursLoading(true)
-      const data = await apiClient.tours.featured({ page_size: 6 })
+      const data = await apiClient.tours.featured({ page_size: 3 })
       const results = data?.results ?? data ?? []
       // If no featured tours, fallback to all active tours
       if (results.length === 0) {
-        const allData = await apiClient.tours.list({ page_size: 6 })
+        const allData = await apiClient.tours.list({ page_size: 3 })
         setTours(allData?.results ?? allData ?? [])
       } else {
         setTours(results)
@@ -132,28 +130,6 @@ function PublicSite() {
     }
   }
 
-  const fetchHeroMosaicImages = async () => {
-    try {
-      const data = await apiClient.heroMosaic.list({ page_size: 50 })
-      const images = data?.results ?? data ?? []
-      // Sort by position and convert to mosaic format: { url, alt }
-      const mosaic = images
-        .sort((a, b) => {
-          const posMap = { 'cell1': 1, 'cell2': 2, 'cell3': 3 }
-          return (posMap[a.position] || 0) - (posMap[b.position] || 0)
-        })
-        .map(img => ({
-          url: img.image_url,
-          alt: img.alt_text || 'Ghana experience'
-        }))
-      console.log('Hero Mosaic Images:', mosaic)
-      setHeroMosaicImages(mosaic)
-    } catch (err) {
-      console.error('Error fetching hero mosaic images:', err)
-      setHeroMosaicImages([])
-    }
-  }
-
   const fetchEventBgImages = async () => {
     try {
       const data = await apiClient.eventsSectionBackground.list({ page_size: 50 })
@@ -172,7 +148,7 @@ function PublicSite() {
     <div className="app">
       <Header />
       <EventAdModal />
-      <Hero heroSlides={heroSlides} heroMosaicImages={heroMosaicImages} />
+      <Hero heroSlides={heroSlides} />
       <Features />
       <ToursSection tours={tours} loading={toursLoading} />
       <EventsSection eventBgImages={eventBgImages} />

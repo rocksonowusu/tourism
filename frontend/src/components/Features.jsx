@@ -1,6 +1,7 @@
 import React from 'react'
 import './Features.css'
 import PaintStrokes from './PaintStrokes'
+import { useScrollReveal } from '../hooks/useScrollReveal'
 
 const IconTour = () => (
   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -25,6 +26,9 @@ const IconConcierge = () => (
 )
 
 function Features() {
+  const headerRef = useScrollReveal({ threshold: 0.1 })
+  const gridRef   = useScrollReveal({ threshold: 0.06, stagger: true })
+
   const features = [
     {
       id: 1,
@@ -59,7 +63,7 @@ function Features() {
         { variant: 'splash', position: 'bl', width: 240, opacity: 0.35 },
       ]} />
       <div className="container">
-        <div className="features-header">
+        <div className="features-header sr" ref={headerRef}>
           <p className="features-eyebrow">Why The Ghana Experience?</p>
           <h2 className="features-title">We Don't Just Show You Ghana, We Let You Live It</h2>
           <p className="features-subtitle">
@@ -68,12 +72,11 @@ function Features() {
           </p>
         </div>
 
-        <div className="features-grid">
-          {features.map((feature, index) => (
-            <div 
-              key={feature.id} 
-              className="feature-card fade-in"
-              style={{ animationDelay: `${index * 0.1}s` }}
+        <div className="features-grid sr" ref={gridRef}>
+          {features.map((feature) => (
+            <div
+              key={feature.id}
+              className="feature-card sr--child"
             >
               <div className="feature-icon"><feature.Icon /></div>
               <h3 className="feature-title">{feature.title}</h3>

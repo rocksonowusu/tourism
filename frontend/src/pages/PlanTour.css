@@ -26,6 +26,8 @@
 /* ── Hero ──────────────────────────────────────────────────────────────── */
 .pt__hero {
   background: linear-gradient(135deg, #1A1A1A 0%, #2D2518 40%, #3D3020 100%);
+  background-size: cover;
+  background-position: center;
   padding: 100px 24px 48px;
   text-align: center;
 }

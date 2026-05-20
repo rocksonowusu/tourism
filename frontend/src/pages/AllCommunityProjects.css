@@ -5,6 +5,8 @@
 .page-community__hero {
   padding: 140px 0 60px;
   background: linear-gradient(135deg, #1A1508 0%, #2C2510 50%, #1A1508 100%);
+  background-size: cover;
+  background-position: center;
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -14,8 +16,8 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 70% 60% at 20% 50%, rgba(197, 160, 40, 0.1) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 50% at 80% 30%, rgba(197, 160, 40, 0.06) 0%, transparent 55%);
+    radial-gradient(ellipse 70% 60% at 20% 50%, rgba(197,160,40,.09) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 80% 30%, rgba(197,160,40,.06) 0%, transparent 55%);
   pointer-events: none;
 }
 .page-community__eyebrow {

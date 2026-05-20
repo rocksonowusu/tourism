@@ -11,23 +11,13 @@ const FALLBACK_SLIDES = [
   { url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1400&q=85', type: 'image' },
 ]
 
-// Fallback mosaic photos (right panel) — 3 cells:
-// Index 0 → cell--1 (left col, spans all 3 rows — tall)
-// Index 1 → cell--2 (right col, row 1 — short top)
-// Index 2 → cell--3 (right col, rows 2-3 — tall bottom)
-const FALLBACK_MOSAIC = [
-  { url: 'http://res.cloudinary.com/dy8me66pj/image/upload/v1774488639/tourism/tourist_sites/vtubwgj6b5oc9qt72czr.jpg', alt: 'Wli Waterfalls' },
-  { url: 'https://images.unsplash.com/photo-1586348943529-beaae6c28db9?w=600&q=80', alt: 'Accra' },
-  { url: 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=600&q=80', alt: 'African sunset' },
-]
 
 const SLIDE_DURATION = 5000
 const FADE_DURATION  = 900
 
-export default function Hero({ heroSlides = [], heroMosaicImages = [] }) {
+export default function Hero({ heroSlides = [] }) {
   // Use API-provided images with fallbacks
   const slides = heroSlides && heroSlides.length > 0 ? heroSlides : FALLBACK_SLIDES
-  const mosaic = heroMosaicImages && heroMosaicImages.length > 0 ? heroMosaicImages : FALLBACK_MOSAIC
 
   const [current,  setCurrent]  = useState(0)
   const videoRefs  = useRef({})
@@ -119,29 +109,6 @@ export default function Hero({ heroSlides = [], heroMosaicImages = [] }) {
             </div>
           </div>
         </div>
-
-        {/* Right: floating mosaic panel - COMMENTED OUT FOR TESTING */}
-        {/* <div className="hero__mosaic fade-in" style={{ animationDelay: '.2s' }} aria-hidden="true">
-          <div className="hero__mosaic-grid">
-            {mosaic.map((img, i) => (
-              <div key={i} className={`hero__mosaic-cell hero__mosaic-cell--${i + 1}`}>
-                <img src={img.url} alt={img.alt} loading={i === 0 ? 'eager' : 'lazy'} />
-              </div>
-            ))}
-          </div>
-
-          <div className="hero__mosaic-ring" aria-hidden="true" />
-
-          <div className="hero__badge">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-            </svg>
-            <div>
-              <span className="hero__badge-top">Curated Experiences</span>
-              <span className="hero__badge-bot">Tours · Culture · Heritage</span>
-            </div>
-          </div>
-        </div> */}
 
       </div>
 

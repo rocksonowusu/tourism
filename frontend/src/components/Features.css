@@ -87,7 +87,6 @@
   font-size: 13.5px;
   color: var(--ash-medium, #6B6B6B);
   line-height: 1.7;
-  text-align: justify;
 }
 
 @media (max-width: 768px) {
@@ -188,6 +187,5 @@
   }
   .feature-description {
     font-size: 11px;
-    text-align: justify;
   }
 }

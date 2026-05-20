@@ -198,7 +198,7 @@ export default function ToursSection({ tours = [], loading }) {
                   className={`ts__item ${isRight ? 'ts__item--right' : ''}`}
                 >
                   <div className="ts__circle-wrap">
-                    {/* Outer rough gold ring (painted feel) */}
+                    {/* Outer rough gold ring — counter-rotates slowly */}
                     <svg className="ts__ring-outer" viewBox="0 0 200 200" fill="none">
                       <path d="M100 4 C124 2,156 10,176 28 C192 44,198 68,196 92 C194 118,190 144,174 164 C156 184,132 196,100 194 C68 192,44 186,26 168 C10 150,4 126,6 100 C8 74,14 48,30 30 C48 12,76 4,100 4Z"
                         stroke="#D4AF37" strokeWidth="3" fill="none" opacity="0.35"
@@ -212,6 +212,12 @@ export default function ToursSection({ tours = [], loading }) {
                         className="ts__circle-img"
                         onError={e => { e.target.src = FALLBACK_IMG }}
                       />
+                    </div>
+                    {/* Orbiting sparkle dots */}
+                    <div className="ts__orbiters" aria-hidden="true">
+                      <span className="ts__orbiter ts__orbiter--1" />
+                      <span className="ts__orbiter ts__orbiter--2" />
+                      <span className="ts__orbiter ts__orbiter--3" />
                     </div>
                     {tour.isFeatured && (
                       <span className="ts__badge">&#9733; Featured</span>

@@ -66,6 +66,7 @@ export default function AllTours() {
   const [page, setPage]         = useState(1)
   const [search, setSearch]     = useState('')
   const [filter, setFilter]     = useState('')
+  const [heroBgUrl, setHeroBgUrl] = useState('')
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -87,34 +88,45 @@ export default function AllTours() {
   useEffect(() => { setPage(1) }, [search, filter])
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }) }, [page])
 
+  useEffect(() => {
+    const url = tours[0]?.media?.[0]?.file_url
+    if (url) setHeroBgUrl(url)
+  }, [tours])
+
   const totalPages = Math.ceil(total / PAGE_SIZE)
 
   return (
     <div className="app">
       <Header />
       <section className="all-tours">
-        <PaintStrokes items={[
-          { variant: 'a', position: 'tr', width: 360, opacity: 0.5 },
-          { variant: 'b', position: 'bl', width: 320, opacity: 0.45 },
-        ]} />
-        <div className="container">
 
-          {/* Breadcrumb */}
-          <nav className="at__breadcrumb">
-            <Link to="/">Home</Link>
-            <span className="at__breadcrumb-sep">/</span>
-            <span className="at__breadcrumb-current">Tours</span>
-          </nav>
-
-          {/* Header */}
-          <div className="at__header">
-            <p className="at__eyebrow">Plan Your Trip</p>
-            <h1 className="at__title">Tour Packages</h1>
-            <p className="at__subtitle">
-              Discover curated tour packages across Ghana, from cultural immersions
-              to coastal getaways and heritage trails.
-            </p>
+        {/* ── Dark hero band ─────────────────────────────────────── */}
+        <div
+          className="at__page-hero"
+          style={heroBgUrl ? { backgroundImage: `linear-gradient(to bottom, rgba(26,21,8,0.78) 0%, rgba(26,21,8,0.52) 50%, rgba(26,21,8,0.70) 100%), url('${heroBgUrl}')` } : undefined}
+        >
+          <PaintStrokes items={[
+            { variant: 'a', position: 'tr', width: 380, opacity: 0.28 },
+            { variant: 'b', position: 'bl', width: 280, opacity: 0.18 },
+          ]} />
+          <div className="container">
+            <nav className="at__breadcrumb">
+              <Link to="/">Home</Link>
+              <span className="at__breadcrumb-sep">/</span>
+              <span className="at__breadcrumb-current">Tours</span>
+            </nav>
+            <div className="at__header">
+              <p className="at__eyebrow">Plan Your Trip</p>
+              <h1 className="at__title">Tour Packages</h1>
+              <p className="at__subtitle">
+                Discover curated tour packages across Ghana, from cultural immersions
+                to coastal getaways and heritage trails.
+              </p>
+            </div>
           </div>
+        </div>
+
+        <div className="container">
 
           {/* ── Choose your path ─────────────────────────────────── */}
           <div className="at__choice-banner">

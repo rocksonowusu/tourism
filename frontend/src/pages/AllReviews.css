@@ -5,6 +5,8 @@
 .reviews-page__hero {
   padding: 140px 0 60px;
   background: linear-gradient(135deg, #1A1508 0%, #2C2510 50%, #1A1508 100%);
+  background-size: cover;
+  background-position: center;
   text-align: center;
   position: relative;
   overflow: hidden;

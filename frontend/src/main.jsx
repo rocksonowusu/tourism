@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 
-// Register service worker for PWA functionality
-if ('serviceWorker' in navigator) {
+// Register service worker only in production — in dev it intercepts Vite's
+// CSS/JS modules and prevents HMR from working correctly.
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/service-worker.js')
       .then((registration) => {

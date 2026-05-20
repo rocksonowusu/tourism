@@ -134,6 +134,7 @@ export default function AllEvents() {
   const [search, setSearch]     = useState('')
   const [filter, setFilter]     = useState('')
   const [category, setCategory] = useState('')
+  const [heroBgUrl, setHeroBgUrl] = useState('')
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -156,9 +157,12 @@ export default function AllEvents() {
 
   useEffect(() => { load() }, [load])
   useEffect(() => { setPage(1) }, [search, filter, category])
-
-  // scroll to top on page change
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }) }, [page])
+
+  useEffect(() => {
+    const url = events[0]?.media?.[0]?.file_url
+    if (url) setHeroBgUrl(url)
+  }, [events])
 
   const totalPages = Math.ceil(total / PAGE_SIZE)
 
@@ -166,28 +170,34 @@ export default function AllEvents() {
     <div className="app">
       <Header />
       <section className="all-events">
-        <PaintStrokes items={[
-          { variant: 'a', position: 'tr', width: 360, opacity: 0.5 },
-          { variant: 'b', position: 'bl', width: 320, opacity: 0.45 },
-        ]} />
-        <div className="container">
 
-          {/* Breadcrumb */}
-          <nav className="ae__breadcrumb">
-            <Link to="/">Home</Link>
-            <span className="ae__breadcrumb-sep">/</span>
-            <span className="ae__breadcrumb-current">Events</span>
-          </nav>
-
-          {/* Header */}
-          <div className="ae__header">
-            <p className="ae__eyebrow">What's On in Ghana</p>
-            <h1 className="ae__title">All Events</h1>
-            <p className="ae__subtitle">
-              Discover festivals, cultural celebrations, and unforgettable experiences
-              happening across Ghana.
-            </p>
+        {/* ── Dark hero band ─────────────────────────────────────── */}
+        <div
+          className="ae__page-hero"
+          style={heroBgUrl ? { backgroundImage: `linear-gradient(to bottom, rgba(26,21,8,0.78) 0%, rgba(26,21,8,0.52) 50%, rgba(26,21,8,0.70) 100%), url('${heroBgUrl}')` } : undefined}
+        >
+          <PaintStrokes items={[
+            { variant: 'a', position: 'tr', width: 380, opacity: 0.28 },
+            { variant: 'b', position: 'bl', width: 280, opacity: 0.18 },
+          ]} />
+          <div className="container">
+            <nav className="ae__breadcrumb">
+              <Link to="/">Home</Link>
+              <span className="ae__breadcrumb-sep">/</span>
+              <span className="ae__breadcrumb-current">Events</span>
+            </nav>
+            <div className="ae__header">
+              <p className="ae__eyebrow">What's On in Ghana</p>
+              <h1 className="ae__title">All Events</h1>
+              <p className="ae__subtitle">
+                Discover festivals, cultural celebrations, and unforgettable experiences
+                happening across Ghana.
+              </p>
+            </div>
           </div>
+        </div>
+
+        <div className="container">
 
           {/* Controls */}
           <div className="ae__controls">

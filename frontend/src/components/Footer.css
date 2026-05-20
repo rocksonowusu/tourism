@@ -47,6 +47,7 @@
   line-height: 1.65;
   color: var(--ash-medium, #6B6B6B);
   max-width: 280px;
+  text-align: justify;
 }
 
 /* ── Social icons ─────────────────────────────────────────── */
