@@ -68,9 +68,11 @@ function timeAgo(dateStr) {
 const STACK_SIZE = 5
 
 export default function ReviewsSection() {
-  const [reviews, setReviews] = useState([])
-  const [loading, setLoading]  = useState(true)
-  const [topIdx, setTopIdx]    = useState(0)
+  const [reviews, setReviews]   = useState([])
+  const [loading, setLoading]   = useState(true)
+  const [topIdx, setTopIdx]     = useState(0)
+  const [bgImages, setBgImages] = useState([])
+  const [bgIdx, setBgIdx]       = useState(0)
 
   useEffect(() => {
     let cancelled = false
@@ -93,7 +95,27 @@ export default function ReviewsSection() {
     return () => { cancelled = true }
   }, [])
 
-  // Auto-advance every 5 s
+  // Fetch background images from tours/events media
+  useEffect(() => {
+    let cancelled = false
+    async function loadBg() {
+      try {
+        const [toursRes, eventsRes] = await Promise.all([
+          api.tours.list({ page_size: 8, is_active: true }).catch(() => ({ results: [] })),
+          api.events.list({ page_size: 6, ordering: '-created_at' }).catch(() => ({ results: [] })),
+        ])
+        if (cancelled) return
+        const tourUrls  = (toursRes.results  || toursRes  || []).flatMap(t => t.media || []).map(m => m.file_url).filter(Boolean)
+        const eventUrls = (eventsRes.results || eventsRes || []).flatMap(e => e.media || []).map(m => m.file_url).filter(Boolean)
+        const combined  = [...tourUrls, ...eventUrls].slice(0, 8)
+        if (!cancelled && combined.length > 0) setBgImages(combined)
+      } catch {}
+    }
+    loadBg()
+    return () => { cancelled = true }
+  }, [])
+
+  // Auto-advance reviews every 5 s
   useEffect(() => {
     if (reviews.length <= 1) return
     const id = setInterval(() => {
@@ -101,6 +123,15 @@ export default function ReviewsSection() {
     }, 5000)
     return () => clearInterval(id)
   }, [reviews.length])
+
+  // Auto-cycle background images every 7 s (offset from card cycle)
+  useEffect(() => {
+    if (bgImages.length <= 1) return
+    const id = setInterval(() => {
+      setBgIdx(i => (i + 1) % bgImages.length)
+    }, 7000)
+    return () => clearInterval(id)
+  }, [bgImages.length])
 
   const advance = useCallback(() => {
     if (reviews.length <= 1) return
@@ -111,11 +142,20 @@ export default function ReviewsSection() {
 
   return (
     <section className="reviews-section" id="reviews">
-      <PaintStrokes items={[
-        { variant: 'b', position: 'tl', width: 300, opacity: 0.35 },
-        { variant: 'a', position: 'br', width: 320, opacity: 0.40 },
-      ]} />
-      <div className="container">
+      {/* Background slideshow */}
+      <div className="rs__bg" aria-hidden="true">
+        {bgImages.map((url, i) => (
+          <img
+            key={url}
+            src={url}
+            alt=""
+            className={`rs__bg-slide${i === bgIdx ? ' rs__bg-slide--active' : ''}`}
+          />
+        ))}
+        <div className="rs__bg-overlay" />
+      </div>
+
+      <div className="container" style={{ position: 'relative', zIndex: 1 }}>
 
         <div className="rs__header">
           <p className="rs__eyebrow">Testimonials</p>
@@ -141,8 +181,9 @@ export default function ReviewsSection() {
                     isTop  ? 'rs__card--top'    : '',
                     hidden ? 'rs__card--hidden' : '',
                   ].filter(Boolean).join(' ')}
-                  onClick={isTop ? advance : undefined}
-                  aria-label={isTop ? 'Next review' : undefined}
+                  onClick={hidden ? undefined : () => setTopIdx(idx)}
+                  style={!hidden && !isTop ? { cursor: 'pointer' } : undefined}
+                  aria-label={isTop ? 'Next review' : !hidden ? 'Bring to front' : undefined}
                 >
                   {/* Head */}
                   <div className="rs__card-head">
@@ -184,7 +225,7 @@ export default function ReviewsSection() {
           </div>
 
           {reviews.length > 1 && (
-            <p className="rs__hint">Tap card to browse</p>
+            <p className="rs__hint">Click any card to focus it</p>
           )}
         </div>
 
